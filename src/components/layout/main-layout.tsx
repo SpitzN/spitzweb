@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 import { Footer } from "./footer";
-// import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-// import { AppSidebar } from "@/components/layout/AppSidebar";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -9,7 +7,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div className="relative flex flex-col min-h-screen">
+    <div className="relative flex min-h-screen flex-col">
       <main className="flex-1">{children}</main>
       <Footer />
     </div>

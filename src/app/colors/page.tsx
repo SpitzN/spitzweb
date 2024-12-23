@@ -1,5 +1,3 @@
-// import { ColorsDocs } from "@/features/colors/components/color-docs";
-
 import { AccessibilitySection } from "@/features/colors/components/sections/accessibility-section";
 import { ColorPaletteConstruction } from "@/features/colors/components/sections/color-palette-construction";
 import { DesignPhilosophy } from "@/features/colors/components/sections/design-philosophy";

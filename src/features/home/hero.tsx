@@ -9,10 +9,10 @@ import { SocialLinks } from "@/components/common/social-links";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden">
       {/* Content container */}
-      <div className="container px-4 relative z-30">
-        <div className="flex flex-col items-center text-center space-y-8">
+      <div className="container relative z-30 px-4">
+        <div className="flex flex-col items-center space-y-8 text-center">
           {/* Greeting */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -28,8 +28,8 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold">
-              <span className="bg-gradient-to-r from-aurora-primary via-aurora-secondary to-aurora-accent bg-clip-text text-transparent animate-gradient-flow">
+            <h1 className="text-4xl font-bold md:text-6xl">
+              <span className="animate-gradient-flow bg-gradient-to-r from-aurora-primary via-aurora-secondary to-aurora-accent bg-clip-text text-transparent">
                 Nadav Spitzer
               </span>
             </h1>
@@ -40,7 +40,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="text-xl md:text-2xl text-muted-foreground max-w-2xl"
+            className="max-w-2xl text-xl text-muted-foreground md:text-2xl"
           >
             Full Stack Developer specializing in building exceptional digital experiences with
             React, Next.js, and TypeScript.
@@ -51,7 +51,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col gap-4 sm:flex-row"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild size="lg" className="bg-aurora-primary hover:bg-aurora-primary/90">
@@ -66,7 +66,7 @@ export function Hero() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-aurora-border hover:bg-aurora-surface-100"
+                className="hover:bg-aurora-surface-100 border-aurora-border"
                 asChild
               >
                 <Link href="/contact">Contact Me</Link>

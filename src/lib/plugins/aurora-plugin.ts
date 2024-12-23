@@ -2,7 +2,7 @@
 import plugin from "tailwindcss/plugin";
 
 export const auroraPlugin = plugin(
-  function ({ addBase }) {
+  function ({ addBase, addUtilities }) {
     addBase({
       ":root": {
         // Base color palette - Warm to Cool Progression
@@ -70,6 +70,18 @@ export const auroraPlugin = plugin(
         "--aurora-layer-700": "210 9% 31%", // Outer Space
         "--aurora-layer-800": "210 10% 23%", // Onyx
         "--aurora-layer-900": "210 11% 15%", // Eerie Black
+
+        // Gradient definitions
+        // "--aurora":
+        //   "repeating-linear-gradient(100deg,hsl(var(--aurora-electric-pink)) 10%,hsl(var(--aurora-french-violet)) 15%,hsl(var(--aurora-turquoise)) 20%,hsl(var(--aurora-fashion-fuchsia)) 25%,hsl(var(--aurora-aquamarine)) 30%)",
+        "--aurora-light":
+          "repeating-linear-gradient(100deg,hsl(var(--aurora-picton-blue)) 10%,hsl(var(--aurora-byzantine-blue)) 15%,hsl(var(--aurora-turquoise)) 20%,hsl(var(--aurora-united-nations-blue)) 25%,hsl(var(--aurora-aquamarine)) 30%)",
+        "--aurora-dark":
+          "repeating-linear-gradient(100deg,hsl(var(--aurora-electric-pink)) 10%,hsl(var(--aurora-french-violet)) 15%,hsl(var(--aurora-turquoise)) 20%,hsl(var(--aurora-fashion-fuchsia)) 25%,hsl(var(--aurora-aquamarine)) 30%)",
+        "--dark-gradient":
+          "repeating-linear-gradient(100deg,hsl(var(--aurora-depth-rich-black)) 0%,hsl(var(--aurora-depth-rich-black)) 7%,transparent 10%,transparent 12%,hsl(var(--aurora-depth-rich-black)) 16%)",
+        "--white-gradient":
+          "repeating-linear-gradient(100deg,hsl(var(--aurora-seasalt)) 0%,hsl(var(--aurora-seasalt)) 7%,transparent 10%,transparent 12%,hsl(var(--aurora-seasalt)) 16%)",
       },
       ".dark": {
         // Semantic colors - Dark mode
@@ -91,6 +103,23 @@ export const auroraPlugin = plugin(
         "--aurora-layer-700": "231 57% 36%", // depth-egyptian
         "--aurora-layer-800": "231 57% 44%", // depth-violet
         "--aurora-layer-900": "231 57% 52%", // depth-byzantine},
+      },
+    });
+    addUtilities({
+      ".aurora-effect": {
+        "background-image": "var(--white-gradient), var(--aurora-light)",
+        "background-position": "50% 50%, 50% 50%",
+        "background-size": "300%, 200%",
+        ".dark &": {
+          "background-image": "var(--dark-gradient), var(--aurora-dark)",
+        },
+        "&::after": {
+          "background-image": "var(--white-gradient), var(--aurora-light)",
+          "background-size": "200%, 100%",
+          ".dark &": {
+            "background-image": "var(--dark-gradient), var(--aurora-dark)",
+          },
+        },
       },
     });
   },
@@ -171,56 +200,18 @@ export const auroraPlugin = plugin(
             },
           },
         },
-        backgroundImage: {
-          "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-          "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-          "aurora-grid":
-            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+        animation: {
+          aurora: "aurora 60s linear infinite",
         },
         keyframes: {
-          shimmer: {
-            "0%": { backgroundPosition: "-1000px 0" },
-            "100%": { backgroundPosition: "1000px 0" },
-          },
-          float: {
-            "0%, 100%": { transform: "translateY(0)" },
-            "50%": { transform: "translateY(-10px)" },
-          },
-          "gradient-flow": {
-            "0%, 100%": {
-              "background-size": "200% 200%",
-              "background-position": "left center",
+          aurora: {
+            from: {
+              backgroundPosition: "50% 50%, 50% 50%",
             },
-            "50%": {
-              "background-size": "200% 200%",
-              "background-position": "right center",
+            to: {
+              backgroundPosition: "350% 50%, 350% 50%",
             },
           },
-          "border-flow": {
-            "0%, 100%": {
-              "background-position": "0% 50%",
-            },
-            "50%": {
-              "background-position": "100% 50%",
-            },
-          },
-          "fade-in-up": {
-            "0%": {
-              opacity: "0",
-              transform: "translateY(20px)",
-            },
-            "100%": {
-              opacity: "1",
-              transform: "translateY(0)",
-            },
-          },
-        },
-        animation: {
-          shimmer: "shimmer 2s linear infinite",
-          float: "float 3s ease-in-out infinite",
-          "gradient-flow": "gradient-flow 15s ease infinite",
-          "border-flow": "border-flow 3s ease infinite",
-          "fade-in-up": "fade-in-up 0.2s ease-out",
         },
       },
     },
