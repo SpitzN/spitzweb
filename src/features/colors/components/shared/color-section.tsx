@@ -1,7 +1,7 @@
-// src/features/colors/components/color-section.tsx
+// src/features/colors/components/shared/color-section.tsx
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { ColorDefinition } from "@/lib/config/colors";
+import type { ColorDefinition } from "@/types/color-system";
 import { ColorGrid } from "./color-grid";
 import { cn } from "@/lib/utils/utils";
 

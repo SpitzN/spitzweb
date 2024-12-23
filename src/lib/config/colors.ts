@@ -1,19 +1,6 @@
 // src/lib/config/colors.ts
 
-export interface ColorDefinition {
-  name: string;
-  variable: string;
-  hsl: string;
-  hex: string;
-  description?: string;
-  backgroundColor: string;
-  basedOn?: string;
-  darkMode?: {
-    hsl: string;
-    hex: string;
-    basedOn?: string;
-  };
-}
+import type { ColorDefinition } from "@/types/color-system";
 
 export const baseColors: ColorDefinition[] = [
   {

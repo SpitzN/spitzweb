@@ -1,5 +1,6 @@
 // src/utils/color-utils.ts
-import { ColorDefinition } from "@/lib/config/colors";
+import type { ColorDefinition } from "@/types/color-system";
+import type { ColorGroups } from "@/types/color-system";
 
 // Convert HEX to RGB
 export function hexToRgb(hex: string): { r: number; g: number; b: number } {
@@ -141,3 +142,32 @@ export function findBaseColor(hslOrHex: string, colorSet: ColorDefinition[]): st
 
   return foundColor ? foundColor.name : null;
 }
+
+export const colorGroups: ColorGroups = {
+  warm: { minHue: 263, maxHue: 360 }, // Pinks, Magentas, Violets
+  transition: { minHue: 220, maxHue: 262 }, // Purples, Blue-Purples
+  cool: { minHue: 160, maxHue: 219 }, // Blues, Aquas
+} as const;
+
+export const getGroupColors = (
+  colors: ColorDefinition[],
+  group: keyof typeof colorGroups
+): ColorDefinition[] => {
+  if (group === "warm") {
+    // Include colors with hue 0-30 as well
+    const lowHueColors = filterColorsByHue(colors, 0, 30);
+    const warmColors = filterColorsByHue(colors, colorGroups.warm.minHue, colorGroups.warm.maxHue);
+    return [...warmColors, ...lowHueColors];
+  }
+
+  const hueRange = colorGroups[group];
+  return filterColorsByHue(colors, hueRange.minHue, hueRange.maxHue);
+};
+
+export const calculateGroupColors = (colors: ColorDefinition[]) => {
+  return {
+    warmGroupColors: getGroupColors(colors, "warm"),
+    transitionGroupColors: getGroupColors(colors, "transition"),
+    coolGroupColors: getGroupColors(colors, "cool"),
+  };
+};

@@ -1,5 +1,5 @@
-// src/features/colors/components/color-bar.tsx
-import { ColorDefinition } from "@/lib/config/colors";
+// src/features/colors/components/shared/color-bar.tsx
+import type { ColorDefinition } from "@/types/color-system";
 import { cn } from "@/lib/utils/utils";
 
 interface ColorBarProps {

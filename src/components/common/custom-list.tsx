@@ -1,84 +1,3 @@
-// import React from "react";
-// import { type LucideIcon, Circle } from "lucide-react";
-// import { cn } from "@/lib/utils";
-// import { cva, type VariantProps } from "class-variance-authority";
-
-// // Define the structure for list items
-// interface ListItem {
-//   text: string;
-//   subtitle: string;
-//   icon?: LucideIcon;
-// }
-
-// // Define base styles and variants for the CustomList component
-// const listVariants = cva("w-full mx-auto", {
-//   variants: {
-//     size: {
-//       xs: "max-w-xs text-xs",
-//       sm: "max-w-sm text-sm",
-//       md: "max-w-md text-base",
-//       lg: "max-w-lg text-lg",
-//       xl: "max-w-xl text-xl",
-//       full: "max-w-full",
-//     },
-//     variant: {
-//       simple: "border-none",
-//       bordered: "border border-muted rounded-lg p-4",
-//       elevated: "shadow-md rounded-lg p-4",
-//     },
-//     orientation: {
-//       vertical: "",
-//       horizontal: "",
-//     },
-//   },
-//   defaultVariants: {
-//     size: "md",
-//     variant: "simple",
-//     orientation: "vertical",
-//   },
-// });
-
-// // Define the props for our component
-// interface CustomListProps
-//   extends React.HTMLAttributes<HTMLDivElement>,
-//     VariantProps<typeof listVariants> {
-//   title: string;
-//   items: ListItem[];
-//   iconSize?: number;
-// }
-
-// export default function CustomList({
-//   title,
-//   items,
-//   size,
-//   variant,
-//   orientation,
-//   iconSize = 18,
-//   className,
-//   ...props
-// }: CustomListProps) {
-//   return (
-//     <div className={cn(listVariants({ size, variant, orientation }), className)} {...props}>
-//       <h4 className="text-2xl font-bold mb-4">{title}</h4>
-//       <ul className="space-y-4">
-//         {items.map((item, index) => {
-//           const ItemIcon = item.icon || Circle;
-//           return (
-//             <li key={index} className="flex items-start">
-//               <span className="mt-1 mr-3">
-//                 <ItemIcon size={iconSize} />
-//               </span>
-//               <div>
-//                 <p className="font-medium">{item.subtitle}</p>
-//                 <p className="text-sm text-muted-foreground">{item.text}</p>
-//               </div>
-//             </li>
-//           );
-//         })}
-//       </ul>
-//     </div>
-//   );
-// }
 import React from "react";
 import { type LucideIcon, Circle } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
@@ -129,7 +48,7 @@ interface CustomListProps
   layout?: Layout;
 }
 
-export default function CustomList({
+export function CustomList({
   title,
   items,
   size,

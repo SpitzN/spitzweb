@@ -1,7 +1,8 @@
+// src/features/colors/components/shared/color-card.tsx
 "use client";
 
-import { ColorDefinition } from "@/lib/config/colors";
-import { ColorSwatch } from "./color-swatch";
+import type { ColorDefinition } from "@/types/color-system";
+import { ColorSwatch } from "@/features/colors/components/shared/color-swatch";
 import { cn } from "@/lib/utils/utils";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";

@@ -1,7 +1,7 @@
-// src/features/colors/components/color-grid.tsx
+// src/features/colors/components/shared/color-grid.tsx
 "use client";
 
-import { ColorDefinition } from "@/lib/config/colors";
+import type { ColorDefinition } from "@/types/color-system";
 import { cn } from "@/lib/utils/utils";
 import { ColorCard } from "./color-card";
 import { motion } from "motion/react";

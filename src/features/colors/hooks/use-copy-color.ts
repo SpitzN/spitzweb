@@ -1,9 +1,7 @@
-// src/hooks/useCopyColor.ts
+// src/features/colors/hooks/use-copy-color.ts
 "use client";
 import { useState } from "react";
-import type { ColorDefinition } from "@/lib/config/colors";
-
-type CopyableColor = Pick<ColorDefinition, "variable" | "hsl" | "hex">;
+import type { CopyableColor } from "@/types/color-system";
 
 export function useCopyColor() {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);

@@ -1,7 +1,7 @@
-// src/features/colors/components/color-preview.tsx
+// src/features/colors/components/shared/color-preview.tsx
 "use client";
 
-import { ColorDefinition } from "@/lib/config/colors";
+import type { ColorDefinition } from "@/types/color-system";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { ColorSwatch } from "./color-swatch";
 import { cn } from "@/lib/utils/utils";

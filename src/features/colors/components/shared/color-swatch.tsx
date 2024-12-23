@@ -1,10 +1,9 @@
-// src/features/colors/components/color-swatch.tsx
+// src/features/colors/components/shared/color-swatch.tsx
 "use client";
 
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils/utils";
-// import { ColorDefinition } from "@/lib/config/colors";
 import { useColorContext } from "@/features/colors/context/color-context";
 import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
