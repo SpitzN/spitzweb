@@ -1,6 +1,12 @@
+// src/app/layout.tsx
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import "@/styles/globals.css";
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { MainLayout } from "@/components/layout/main-layout";
+import { FloatingThemeToggle } from "@/components/theme/floating-theme-toggle";
+import { ColorProvider } from "@/features/colors/context/color-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,11 +30,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" suppressHydrationWarning={true}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ColorProvider>
+            <MainLayout>{children}</MainLayout>
+            <FloatingThemeToggle />
+          </ColorProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
