@@ -1,4 +1,3 @@
-// src/features/colors/components/sections/header-section.tsx
 export function HeaderSection() {
   return (
     <header className="space-y-8">

@@ -1,4 +1,3 @@
-// src/features/colors/hooks/use-color-comparison.ts
 "use client";
 
 import { useState, useCallback } from "react";

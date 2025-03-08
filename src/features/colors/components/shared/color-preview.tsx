@@ -1,4 +1,3 @@
-// src/features/colors/components/shared/color-preview.tsx
 "use client";
 
 import type { ColorDefinition } from "@/types/color-system";
@@ -19,16 +18,16 @@ export function ColorPreview({
   variant = "rounded",
   className,
 }: ColorPreviewProps) {
-  const { name, description, variable, hex, hsl, backgroundColor } = color;
+  const { name, description, backgroundColor } = color;
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <div className={className}>
             <ColorSwatch
-              color={{ variable, hex, hsl }}
-              size={size} // Use the size variant from ColorSwatch
-              variant={variant} // or "circle" if you want a circular preview
+              color={color}
+              size={size}
+              variant={variant}
               showCopyButton
               className={cn(backgroundColor)}
             />
@@ -37,10 +36,7 @@ export function ColorPreview({
         <TooltipContent>
           <div className="text-xs">
             <p className="font-medium">{name}</p>
-            {color.description && <p className="text-muted-foreground">{description}</p>}
-            {/* <p className="text-muted-foreground">HSL: {color.hsl}</p>
-            <p className="text-muted-foreground">HEX: {color.hex}</p>
-            <p className="text-muted-foreground font-mono">{color.variable}</p> */}
+            {description && <p className="text-muted-foreground">{description}</p>}
           </div>
         </TooltipContent>
       </Tooltip>

@@ -1,7 +1,6 @@
-// src/features/colors/components/sections/extensions-overview.tsx
 import { semanticColors, layerColors, interactiveColors } from "@/lib/config/colors";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ColorSection } from "../shared/color-section";
+import { ColorGroup } from "../shared/color-group";
 import { CustomList } from "@/components/common/custom-list";
 import { Palette, Contrast, Layout } from "lucide-react";
 
@@ -70,21 +69,21 @@ export function ExtensionsOverview() {
         </CardContent>
       </Card>
 
-      <ColorSection
+      <ColorGroup
         title="Semantic Colors"
         description="The semantic color system ensures consistent color meanings across themes while adapting their appearance for light and dark modes."
         colors={semanticColors}
         size="sm"
       />
 
-      <ColorSection
+      <ColorGroup
         title="Layer Colors"
         description="Layer colors include both light-mode luminance layers and dark-mode depth layers for a balanced user experience."
         colors={layerColors}
         size="sm"
       />
 
-      <ColorSection
+      <ColorGroup
         title="Interactive States"
         description="Interactive states provide clear feedback to users, with distinct colors for info, success, warning, and error states."
         colors={interactiveColors}

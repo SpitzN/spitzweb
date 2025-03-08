@@ -1,4 +1,3 @@
-// src/features/colors/components/sections/color-grid.tsx
 import { CustomList } from "@/components/common/custom-list";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 

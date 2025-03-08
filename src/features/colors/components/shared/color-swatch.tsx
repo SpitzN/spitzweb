@@ -1,4 +1,3 @@
-// src/features/colors/components/shared/color-swatch.tsx
 "use client";
 
 import * as React from "react";
@@ -7,12 +6,7 @@ import { cn } from "@/lib/utils/utils";
 import { useColorContext } from "@/features/colors/context/color-context";
 import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
-
-interface CopyableColor {
-  variable: string;
-  hsl: string;
-  hex: string;
-}
+import type { ColorDefinition } from "@/types/color-system";
 
 const swatchVariants = cva("relative group overflow-hidden transition-colors", {
   variants: {
@@ -39,7 +33,7 @@ const swatchVariants = cva("relative group overflow-hidden transition-colors", {
 interface ColorSwatchProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">,
     VariantProps<typeof swatchVariants> {
-  color: CopyableColor;
+  color: ColorDefinition;
   showCopyButton?: boolean;
 }
 
@@ -61,6 +55,8 @@ export function ColorSwatch({
     }
   );
 
+  const { variable, hsl, hex } = color;
+
   return (
     <div className={cn(swatchVariants({ variant, size, className }))} {...props}>
       {showCopyButton && (
@@ -68,9 +64,9 @@ export function ColorSwatch({
           variant="ghost"
           size="icon"
           className={buttonClasses}
-          onClick={() => copyColor(color)}
+          onClick={() => copyColor({ variable, hsl, hex })}
         >
-          {copiedColor === color.variable ? <Check /> : <Copy />}
+          {copiedColor === variable ? <Check /> : <Copy />}
         </Button>
       )}
     </div>

@@ -1,4 +1,3 @@
-// src/features/colors/components/sections/color-palette-construction.tsx
 import { baseColors } from "@/lib/config/colors";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ColorBar } from "../shared/color-bar";

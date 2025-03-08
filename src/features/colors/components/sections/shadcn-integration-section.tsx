@@ -1,4 +1,3 @@
-// src/features/colors/components/sections/shadcn-integration.tsx
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CustomList } from "@/components/common/custom-list";
 import { Circle } from "lucide-react";

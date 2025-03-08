@@ -1,4 +1,3 @@
-// src/features/colors/hooks/use-color-groups.ts
 import { useMemo } from "react";
 import type { ColorDefinition } from "@/types/color-system";
 import { calculateGroupColors } from "@/lib/utils/color-utils";

@@ -1,4 +1,3 @@
-// src/features/colors/components/shared/color-compare.tsx
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

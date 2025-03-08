@@ -1,4 +1,3 @@
-// src/features/colors/components/shared/color-bar.tsx
 import type { ColorDefinition } from "@/types/color-system";
 import { cn } from "@/lib/utils/utils";
 

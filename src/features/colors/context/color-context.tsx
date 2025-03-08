@@ -1,4 +1,3 @@
-// src/features/colors/context/color-context.tsx
 "use client";
 import * as React from "react";
 import { useCopyColor } from "@/features/colors/hooks/use-copy-color";

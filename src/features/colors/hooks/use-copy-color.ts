@@ -1,4 +1,3 @@
-// src/features/colors/hooks/use-copy-color.ts
 "use client";
 import { useState } from "react";
 import type { CopyableColor } from "@/types/color-system";

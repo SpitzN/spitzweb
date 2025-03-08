@@ -1,8 +1,7 @@
-// src/features/colors/components/sections/surface-system.tsx
 import { luminanceColors, depthColors } from "@/lib/config/colors";
 import { Card, CardContent } from "@/components/ui/card";
 import { ColorBar } from "../shared/color-bar";
-import { ColorSection } from "../shared/color-section";
+import { ColorGroup } from "../shared/color-group";
 import { CustomList } from "@/components/common/custom-list";
 
 export function SurfaceSystem() {
@@ -91,7 +90,7 @@ export function SurfaceSystem() {
         </CardContent>
       </Card>
 
-      <ColorSection
+      <ColorGroup
         title="Luminance Scale Palette"
         description="The luminance scale maintains a consistent hue (210) while varying saturation and lightness to create natural depth."
         colors={luminanceColors}
@@ -99,7 +98,7 @@ export function SurfaceSystem() {
         className="mt-6"
       />
 
-      <ColorSection
+      <ColorGroup
         title="Depth Scale Palette"
         description="The depth scale uses a consistent blue hue (231-232) with carefully calibrated saturation and lightness to create depth while maintaining readability."
         colors={depthColors}

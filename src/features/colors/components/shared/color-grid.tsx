@@ -1,4 +1,3 @@
-// src/features/colors/components/shared/color-grid.tsx
 "use client";
 
 import type { ColorDefinition } from "@/types/color-system";

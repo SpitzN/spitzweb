@@ -9,11 +9,6 @@ export interface ColorGroups {
   cool: ColorGroup;
 }
 
-export interface ColorSection {
-  title: string;
-  description: string;
-}
-
 export interface DesignPrinciple {
   subtitle: string;
   text: string;
@@ -31,7 +26,7 @@ export interface ColorDefinition {
   darkMode?: {
     hsl: string;
     hex: string;
-    basedOn?: string;
+    basedOn: string;
   };
 }
 

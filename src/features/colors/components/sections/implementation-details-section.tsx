@@ -1,4 +1,3 @@
-// src/features/colors/components/sections/implementation-details.tsx
 import { CustomList } from "@/components/common/custom-list";
 import { CodeBlock } from "@/components/common/code-block";
 

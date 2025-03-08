@@ -72,8 +72,6 @@ export const auroraPlugin = plugin(
         "--aurora-layer-900": "210 11% 15%", // Eerie Black
 
         // Gradient definitions
-        // "--aurora":
-        //   "repeating-linear-gradient(100deg,hsl(var(--aurora-electric-pink)) 10%,hsl(var(--aurora-french-violet)) 15%,hsl(var(--aurora-turquoise)) 20%,hsl(var(--aurora-fashion-fuchsia)) 25%,hsl(var(--aurora-aquamarine)) 30%)",
         "--aurora-light":
           "repeating-linear-gradient(100deg,hsl(var(--aurora-picton-blue)) 10%,hsl(var(--aurora-byzantine-blue)) 15%,hsl(var(--aurora-turquoise)) 20%,hsl(var(--aurora-united-nations-blue)) 25%,hsl(var(--aurora-aquamarine)) 30%)",
         "--aurora-dark":
@@ -82,6 +80,21 @@ export const auroraPlugin = plugin(
           "repeating-linear-gradient(100deg,hsl(var(--aurora-depth-rich-black)) 0%,hsl(var(--aurora-depth-rich-black)) 7%,transparent 10%,transparent 12%,hsl(var(--aurora-depth-rich-black)) 16%)",
         "--white-gradient":
           "repeating-linear-gradient(100deg,hsl(var(--aurora-seasalt)) 0%,hsl(var(--aurora-seasalt)) 7%,transparent 10%,transparent 12%,hsl(var(--aurora-seasalt)) 16%)",
+
+        "--aurora-conic-light":
+          "conic-gradient(hsl(var(--aurora-aero)) 0deg, hsl(var(--aurora-sky-blue)) 72deg, hsl(var(--aurora-tiffany-blue)) 144deg, hsl(var(--aurora-turquoise)) 216deg, hsl(var(--aurora-aquamarine)) 288deg, hsl(var(--aurora-aero)) 360deg)",
+        "--aurora-conic-dark":
+          "conic-gradient(hsl(var(--aurora-electric-pink)) 0deg, hsl(var(--aurora-fashion-fuchsia)) 72deg, hsl(var(--aurora-deep-magenta)) 144deg, hsl(var(--aurora-french-violet)) 216deg, hsl(var(--aurora-grape)) 288deg, hsl(var(--aurora-electric-pink)) 360deg)",
+        "--aurora-conic-muted":
+          "conic-gradient(hsl(var(--aurora-depth-rich-black)) 0deg, hsl(var(--aurora-depth-rich-black)) 10deg, transparent 50deg, hsl(var(--aurora-depth-rich-black)) 100deg)",
+        "--aurora-conic-bright":
+          "conic-gradient(hsl(var(--aurora-seasalt)) 0deg, hsl(var(--aurora-seasalt)) 20deg, transparent 50deg, hsl(var(--aurora-seasalt)) 100deg)",
+        "--aurora-conic-transparent":
+          "conic-gradient(hsl(var(--aurora-electric-pink)) 0deg, hsl(var(--aurora-fashion-fuchsia)) 20deg, hsl(var(--aurora-deep-magenta)) 40deg, hsl(var(--aurora-french-violet)) 60deg, hsl(var(--aurora-grape)) 80deg, transparent 100deg)",
+        // "--aurora-conic-full":
+        //   "conic-gradient(hsl(var(--aurora-electric-pink)) 0deg, hsl(var(--aurora-fashion-fuchsia)) 72deg, hsl(var(--aurora-deep-magenta)) 144deg, hsl(var(--aurora-french-violet)) 216deg, hsl(var(--aurora-grape)) 288deg, hsl(var(--aurora-electric-pink)) 360deg)",
+        "--aurora-conic-full":
+          "conic-gradient(hsl(var(--aurora-electric-pink)) 0deg, hsl(var(--aurora-fashion-fuchsia)) 24deg, hsl(var(--aurora-deep-magenta)) 48deg,hsl(var(--aurora-french-violet)) 72deg,hsl(var(--aurora-grape)) 96deg,hsl(var(--aurora-slate-blue)) 120deg,hsl(var(--aurora-byzantine-blue)) 144deg,hsl(var(--aurora-royal-blue)) 168deg,hsl(var(--aurora-united-nations-blue)) 192deg,hsl(var(--aurora-picton-blue)) 216deg,hsl(var(--aurora-aero)) 240deg,hsl(var(--aurora-sky-blue)) 264deg,hsl(var(--aurora-tiffany-blue)) 288deg,hsl(var(--aurora-turquoise)) 312deg,hsl(var(--aurora-aquamarine)) 336deg,hsl(var(--aurora-electric-pink)) 360deg)",
       },
       ".dark": {
         // Semantic colors - Dark mode
@@ -202,6 +215,9 @@ export const auroraPlugin = plugin(
         },
         animation: {
           aurora: "aurora 60s linear infinite",
+          fullSpin: "fullSpin 7s linear infinite",
+          tilt: "tilt 10s linear infinite",
+          glow: "glow 2s ease-in-out infinite",
         },
         keyframes: {
           aurora: {
@@ -210,6 +226,24 @@ export const auroraPlugin = plugin(
             },
             to: {
               backgroundPosition: "350% 50%, 350% 50%",
+            },
+          },
+          fullSpin: {
+            "100%": { transform: "rotate(-360deg)" },
+          },
+          tilt: {
+            "0%, 50, 100%": { transform: "rotate(0deg)" },
+            "25%": { transform: "rotate(1deg)" },
+            "75%": { transform: "rotate(-1deg)" },
+          },
+          glow: {
+            "0%, 100%": {
+              filter: "blur(3px)",
+              boxShadow: "0 0 10px hsl(var(--aurora-primary))",
+            },
+            "50%": {
+              filter: "blur(4px)",
+              boxShadow: "0 0 20px hsl(var(--aurora-primary))",
             },
           },
         },

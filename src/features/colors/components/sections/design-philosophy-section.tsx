@@ -1,6 +1,5 @@
-// src/features/colors/components/sections/design-philosophy.tsx
 import { CustomList } from "@/components/common/custom-list";
-import { ColorSection } from "../shared/color-section";
+import { ColorGroup } from "../shared/color-group";
 import { baseColors } from "@/lib/config/colors";
 
 export function DesignPhilosophy() {
@@ -34,7 +33,7 @@ export function DesignPhilosophy() {
       </div>
 
       <div className="space-y-4">
-        <ColorSection
+        <ColorGroup
           title="Base Colors"
           description="Core color palette progressing from warm to cool tones, forming the foundation of my design system"
           colors={baseColors}
