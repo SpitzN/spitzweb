@@ -4,10 +4,9 @@
     "config:recommended",
     ":semanticCommits",
     "group:allNonMajor",
-    ":maintainLockFilesWeekly",
     "helpers:pinGitHubActionDigests"
   ],
-  "schedule": ["before 6am on monday"],
+  "schedule": ["before 6am on thursday"],
   "minimumReleaseAge": "3 days",
   "labels": ["dependencies"],
   "packageRules": [
@@ -21,5 +20,9 @@
       "matchPackageNames": ["@types/node"],
       "allowedVersions": "<25"
     }
-  ]
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on thursday"]
+  }
 }
