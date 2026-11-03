@@ -10,7 +10,7 @@ web
 
 ## Stack
 
-A pnpm + Turborepo monorepo (ADR 0001), starting with one Next.js app (App Router, TypeScript, Tailwind v4) in `apps/site`. Articles and Project write-ups are MDX in the repo; dynamic data lives in Postgres (Neon) via Drizzle. Deployed on Vercel at `spitzweb.dev`. A Hosted project that needs isolation moves into its own app at `<name>.spitzweb.dev` (ADR 0002). Next.js was chosen over Astro because Hosted projects may be full apps with server code, data and auth.
+A pnpm + Turborepo monorepo (ADR 0001), starting with one Next.js app (App Router, TypeScript, Tailwind v4) in `apps/site`. Articles and Project write-ups are MDX in the repo; dynamic data lives in Postgres (Neon) via Drizzle. Deployed on Vercel at `spitzweb.dev`. A Hosted project that needs isolation moves into its own app at `<name>.spitzweb.dev` (ADR 0002). Next.js was chosen over Astro because Hosted projects may be full apps (ADR 0003).
 
 ## Users
 
