@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import eslintReact from "@eslint-react/eslint-plugin";
 import nextPlugin from "@next/eslint-plugin-next";
 import prettier from "eslint-config-prettier/flat";
 import tailwind from "eslint-plugin-better-tailwindcss";
@@ -173,11 +174,14 @@ export default defineConfig(
     },
   },
 
-  // --- React, React Compiler, Next.js, accessibility
+  // --- React, React Compiler, Next.js, accessibility. @eslint-react replaces eslint-plugin-react,
+  // which supports ESLint up to 9 only (docs/tooling.md).
   {
     files: ["src/**/*.{ts,tsx}"],
     extends: [
       reactHooks.configs.flat["recommended-latest"],
+      eslintReact.configs["strict-type-checked"],
+      eslintReact.configs["disable-conflict-eslint-plugin-react-hooks"],
       nextPlugin.configs["core-web-vitals"],
       jsxA11y.flatConfigs.strict,
     ],

@@ -15,6 +15,11 @@
       "description": "typescript-eslint supports TypeScript below 6.1 only; see docs/tooling.md.",
       "matchPackageNames": ["typescript"],
       "allowedVersions": "<6.1"
+    },
+    {
+      "description": "Node types follow the runtime in .nvmrc; bump both together.",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<25"
     }
   ]
 }
