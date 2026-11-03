@@ -38,3 +38,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# impeccable-ignore-start (runtime state; config.json and design artifacts are committed)
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/hook.pending.json
+.impeccable/live/server.json
+.impeccable/live/sessions/
+.impeccable/questions/
+.impeccable/review/
+.impeccable/screenshots/
+# impeccable-ignore-end
