@@ -13,4 +13,4 @@ Articles and Project write-ups are MDX files in the repo, so they are versioned,
 
 - Each Hosted project that needs data owns its own Postgres schema, so it can move out with its data (ADR 0002).
 - Tests run against in-memory PGlite with the real migrations applied, without needing a network or a Neon account.
-- Neon's free tier suspends the database when idle, so the first query after a pause is slow. Pages that read data have to survive a slow or failing database (`docs/conventions.md`, Fail soft).
+- Neon's free tier suspends the database when idle, so the first query after a pause is slow. Pages that read data have to survive a slow or failing database (`.claude/rules/server.md`, Data).

@@ -1,64 +1,78 @@
 # Conventions
 
-How code in this repo is written. Every rule here applies to every app in `apps/*` and every package in `packages/*`. Tooling enforces most of them. The config files are the source of truth for exact settings, so this file only records the rules and the reasons behind them.
+The standards that cut across the whole repo, as opposed to rules for one kind of file. Code rules for specific paths live in `.claude/rules/`. How each standard is enforced, and every exception, is in `docs/tooling.md`. A project-wide departure from a convention needs an ADR.
 
-## TypeScript
+## Where a rule lives
 
-- `strict` and `noUncheckedIndexedAccess` are on everywhere. An indexed read is `T | undefined` until you prove otherwise.
-- Use named exports. Default exports appear only where Next.js or a tool requires them: `page`, `layout`, `loading`, `error`, `not-found`, `route`, `opengraph-image` and config files.
-- File and folder names are kebab-case (`activity-list.tsx`), including components. Next.js's reserved file names are already kebab-case.
+Each rule has exactly one home, the first one in this list that can hold it:
 
-## Boundaries and failures
+1. **The compiler and lint**, for anything a tool can check. These rules are listed in `docs/tooling.md`. `noInlineConfig` makes disable comments inert.
+2. **`.claude/rules/<topic>.md`**, for code conventions lint cannot check, scoped to the paths they govern.
+3. **This file**, for standards that cut across the whole repo.
+4. **An ADR**, for a decision with a real alternative, together with its reason.
+5. **`GLOSSARY.md`**, for the name and meaning of a domain concept.
 
-- **Parse at every boundary with zod.** That means form data, search params, route params, request bodies, environment variables, MDX frontmatter, third-party API responses and JSON columns. Code past the boundary trusts its types.
-- **Expected failures are values.** A function that can fail for a known reason, such as invalid input, a missing Entry, a rate limit or an API being down, returns `{ ok: true, value } | { ok: false, error }`. Throw only for bugs and broken invariants.
-- **Fail soft and say so.** When the database or a third-party API is down, only the section that needs it degrades, and it shows an honest "unavailable" message. The page still returns 200 (PRODUCT.md: Honest about state).
-- **Env is read lazily.** Read env through one zod-validated accessor, called at use, never at module top level. Builds and CI run with fake values and no real secrets.
-- **Inject the database.** Data-access functions take the database as their first parameter, so tests can pass an in-memory PGlite instance.
+When the same review comment comes up a second time, it becomes a rule in its home. When a rule stops matching the code, fix one of the two in the same change.
 
-## Server code
+## The gate
 
-- **Server Actions** handle mutations from the site's own UI.
-- **Route Handlers** serve external callers: OAuth callbacks, webhooks, feeds and anything with a public URL contract.
-- **Every privileged entry point checks the admin session itself.** That covers every Server Action, Route Handler and Admin panel layout. A proxy may redirect early, but it is never the only check (ADR 0005).
+`pnpm check` runs typecheck, lint, format check and tests through Turborepo. Passing it is the definition of done. It runs at three points:
 
-## Security invariants
+| When | What runs | Scope |
+| --- | --- | --- |
+| Commit | Prettier on staged files, commitlint on the message | Staged files |
+| Push | `pnpm check` | The whole workspace. Turborepo's cache skips unchanged packages. |
+| CI on a PR | `pnpm check`, build, Playwright e2e and axe | Packages affected relative to `main` (`--affected`) |
 
-Each of these is pinned by a test once the code it governs exists.
+lefthook runs the commit and push hooks. CI also checks the PR title. Unchanged apps skip their Vercel deploy (`turbo-ignore`).
 
-- **Draft** Entries are reachable only by Nadav. **Unlisted** Entries are reachable at their URL but appear in no list, Activity, search, sitemap or feed.
-- Any GitHub account other than Nadav's is rejected before a user record is created.
-- Text entered through the Admin panel or by visitors renders as text, never as HTML. A user-supplied link is accepted only with the `https:` protocol.
-- A Hosted project that calls a paid API needs three things:
-  - A per-visitor rate limit, incremented atomically in a single upsert statement so concurrent requests can't all slip under the limit.
-  - A kill switch in the Admin panel.
-  - A spend cap set in the provider's dashboard.
+## Git and pull requests
 
-## Module boundaries
+- Trunk-based: short-lived branches off `main`, named `<type>/<issue>-<slug>`, for example `feat/12-activity-list`.
+- Commit messages follow Conventional Commits. The subject is a lower-case imperative and says what changed, for example `fix(site): keep long names inside their boxes`. The scope is optional and names the app or package. commitlint enforces the format.
+- Every PR is squash-merged. Its title becomes the commit on `main`, so the title follows the same format.
+- The PR body is written with `pr`. It covers what changed, the evidence (what was run and what it showed), what could go wrong, and `Closes #<issue>`.
 
-- Boundaries are enforced by workspace dependencies (ADR 0001) and by lint rules.
-- The lint rules are written when the code they protect exists. Modules and folders get their names then, and not in advance.
-- Hosted projects never import from each other, which keeps each one ready to move out (ADR 0002).
+## Dependencies
 
-## Styling and accessibility
-
-- Use Tailwind v4.
-- Use logical CSS properties only (`ms-*`/`me-*`, `ps-*`/`pe-*`, `start`/`end`, `inline`/`block`), so RTL stays cheap to add.
-- Every public page meets WCAG 2.2 AA. Playwright runs axe on each public route.
-- Motion respects `prefers-reduced-motion`.
-- The Admin panel is usable at phone width.
-- Impeccable owns design decisions. `DESIGN.md`, once it exists, is the source of truth for tokens and components.
+- Use pnpm only.
+- Prefer a maintained package to writing the same thing ourselves.
+- Before adding a package, compare the main options on maintenance, size (and whether it ends up in the client bundle), types, licence and known advisories. Record the pick and the runner-up in the PR.
+- Renovate opens one grouped PR of dependency updates a week. Majors arrive as separate PRs.
 
 ## Testing
 
-- Use Vitest for unit and integration tests and Playwright for end-to-end and accessibility tests.
-- Test behaviour through public interfaces, and write the test first (`tdd`).
+- Vitest tests sit beside the code they test. Playwright covers end-to-end flows and accessibility.
+- Logic is written test-first (`tdd`). A bug fix starts with a failing test.
+- Test behaviour through public interfaces, not internals.
 - Database tests run against PGlite with the real migrations applied.
+- Every public route gets an axe check in Playwright.
 
-## Workflow
+## Security invariants
 
-- **pnpm** only. Turborepo runs tasks across the workspace.
-- **Trunk-based:** short-lived branches off `main`, merged by squash-merged PR. The PR title becomes the commit on `main`.
-- **Conventional Commits** for commit messages and PR titles, enforced by commitlint.
-- **lefthook** runs lint and format on staged files before each commit, and commitlint on the message.
-- **Renovate** opens grouped dependency PRs once a week.
+Each invariant is covered by a test once the code it governs exists.
+
+- **Draft** Entries are reachable only by Nadav. **Unlisted** Entries are reachable at their URL but appear in no list, Activity, search, sitemap or feed.
+- Any GitHub account other than Nadav's is rejected before a user record is created (ADR 0005).
+- Text entered through the Admin panel or by visitors renders as text, never as HTML. A user-supplied link is accepted only with the `https:` protocol.
+- A Hosted project that calls a paid API has three guards:
+  - a per-visitor rate limit, incremented atomically in a single upsert statement;
+  - a kill switch in the Admin panel;
+  - a spend cap in the provider's dashboard.
+
+## Accessibility and performance
+
+- Every public page meets WCAG 2.2 AA in both themes, and the Admin panel is usable at phone width. The UI floor is in `.claude/rules/ui.md`.
+- Public pages meet Core Web Vitals' "good" thresholds on mobile: LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1.
+- Content pages render statically. Client JavaScript ships only where a page needs interaction.
+
+## Strict by default, loosened by folder
+
+Lint rules hold everywhere, including the Tailwind rule of tokens only, no arbitrary values and no raw palette colours.
+
+A surface that needs freedom, such as a creative Hosted project or the home page, gets an override for its folder in `eslint.config`. The override is never inline, it appears as a config change in the PR, and it is listed in `docs/tooling.md` with its reason.
+
+Before reaching for an override, try two things:
+
+- give the surface its own tokens, defined in its own stylesheet;
+- use plain CSS, SVG or canvas, which the Tailwind rules don't check.

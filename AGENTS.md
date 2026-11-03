@@ -1,27 +1,35 @@
 # AGENTS.md
 
-spitzweb is Nadav Spitzer's personal site: what Nadav builds, writes and is doing. Read before acting:
+spitzweb is Nadav Spitzer's personal site: what Nadav builds, writes and is doing. It publishes Entries (Projects, Articles, Updates) and Features such as Activity. The repo is a pnpm + Turborepo monorepo; the site is the Next.js app in `apps/site`.
 
-- `PRODUCT.md`: who the site is for, what it is made of, its principles.
-- `GLOSSARY.md`: the only names for domain concepts.
-- `docs/adr/`: decisions already made, and why. Read the ADRs touching an area before changing it.
-- `docs/conventions.md`: code standards. Read before writing or reviewing code.
-- `docs/setup.md`: accounts, environment variables and deploy steps that Nadav performs.
+## Where things are
 
-## Hard rules
+- `PRODUCT.md`: audiences, purpose and principles. Read before deciding what a page or Feature should do.
+- `GLOSSARY.md`: the domain terms. Use them in code names, UI copy, commits and docs; every _Avoid_ term is wrong. A new concept gets its name settled here (domain-modeling) before it gets code.
+- `docs/adr/`: decisions already made. Read the ones touching an area before changing it. If a change conflicts with one, flag the conflict and leave the decision standing.
+- `docs/conventions.md`: workflow, commits, dependencies, testing, and the security, accessibility and performance bars. Read before starting a ticket or opening a PR.
+- `docs/architecture.md` (written at scaffold): the stack, code layout, where state lives, and boundaries. Read before adding a module, a route or a dependency.
+- `docs/tooling.md`: the gate, what lint enforces and why, and the lint exceptions. Read when a check fails for a reason you don't recognise.
+- `DESIGN.md` (written by Impeccable): the visual system. Read before changing how anything looks.
+- `docs/setup.md`: the steps only Nadav performs (accounts, secrets, domains). Read when work depends on one of them.
 
-- **Glossary names only.** Use `GLOSSARY.md` terms in code, copy, docs, issues and commits. Every _Avoid_ term is wrong everywhere, including the retired v1 names Lab, Writing, Now, Sandbox and Experiment. A new concept gets its name settled in the glossary (domain-modeling) before it gets code.
-- **Secrets stay unseen.** `.env*` files are off-limits to read, print or commit; variable names live in `.env.example`. Never echo a secret into chat, logs, code or commits.
-- **Migrations move forward.** Generate a new migration for every schema change; a committed migration is immutable. Never run a migration against production: Nadav runs it.
-- **Branch, then PR.** `main` takes only squash-merged PRs (GitHub enforces it). On your own feature branch, rewrite history freely and push with `git push --force-with-lease`.
-- **Green before done.** Run `pnpm lint`, `pnpm typecheck` and `pnpm test` from the repo root before saying work is done, and report the output as it is.
-- **Every dependency is argued.** A PR that adds a dependency says what it does, why the platform or existing code can't, and its install size.
-- **Real content or a visible placeholder.** Never invent Projects, Articles, metrics, clients, quotes or Nadav's voice; mark placeholders as placeholders.
-- **Pronouns.** Refer to Nadav as "Nadav" or they/them.
+## Rules
 
-## Hosted projects
+Code rules that lint cannot check live in `.claude/rules/`. Read the matching file before writing or changing code:
 
-A Hosted project lives in a self-contained folder inside `apps/site`, with its own Postgres schema if it needs data, and imports nothing from other Hosted projects. It moves to `apps/<name>` at `<name>.spitzweb.dev` only when it hits a trigger in ADR 0002. Raise the move with Nadav rather than making it unasked.
+- `code-design.md`: every source file.
+- `structure.md`: where a new file goes.
+- `react.md`: components.
+- `server.md`: Server Actions, Route Handlers, data access, env and migrations.
+- `ui.md`: the UI floor every surface meets.
+
+## Working agreements
+
+- `pnpm check` passes before work is called done; report its output as it is.
+- A failing check is fixed in the code. A config change is made on purpose, with its reason recorded in `docs/tooling.md`.
+- Work happens on a branch and reaches `main` through a squash-merged PR.
+- When a review changes a rule, the same change updates the rule's home (an ADR, `.claude/rules/`, `docs/conventions.md` or `docs/tooling.md`).
+- A Hosted project moves out of `apps/site` only on a trigger in ADR 0002. Raise the move with Nadav rather than making it unasked.
 
 ## Skill routing
 
@@ -29,7 +37,7 @@ Three skill packs share the work; superpowers and frontend-design are disabled i
 
 - **Matt Pocock (`mattpocock-skills:*`) decides and delivers.** `grilling` / `grill-with-docs` and `domain-modeling` settle decisions, names and ADRs; `codebase-design` places module seams; `tdd` writes code test-first; `diagnosing-bugs` hunts bugs; `code-review` reviews; `pr` writes PR bodies. Nadav starts `to-spec`, `to-tickets`, `implement` and `triage` by slash command; when work needs one of them, say so.
 - **Addy Osmani (`agent-skills:*`) runs specialist passes:** security, performance, observability, CI/CD, shipping and launch, code simplification, deprecation and migration.
-- **Impeccable (`impeccable:impeccable`) owns every UI and UX change**, from a new page to a spacing tweak. It reads `PRODUCT.md` and `DESIGN.md`.
+- **Impeccable (`impeccable:impeccable`) owns every UI and UX change**, from a new page to a spacing tweak.
 
 ## Agent skills
 
