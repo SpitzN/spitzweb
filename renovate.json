@@ -18,7 +18,7 @@
     {
       "description": "Node types follow the runtime in .nvmrc; bump both together.",
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "<25"
+      "allowedVersions": "<27"
     }
   ],
   "lockFileMaintenance": {
