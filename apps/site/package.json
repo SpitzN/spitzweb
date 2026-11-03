@@ -13,14 +13,12 @@
   },
   "dependencies": {
     "next": "16.4.4",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
-    "@eslint-react/eslint-plugin": "^5.28.8",
     "@eslint/js": "^10.0.1",
-    "@next/eslint-plugin-next": "16.4.4",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4.3.3",
     "@types/node": "^24.19.2",
@@ -28,6 +26,7 @@
     "@types/react-dom": "^19.3.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^10.14.0",
+    "eslint-config-next": "16.4.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-better-tailwindcss": "^4.10.0",

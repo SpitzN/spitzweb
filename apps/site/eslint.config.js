@@ -1,16 +1,17 @@
 import js from "@eslint/js";
-import eslintReact from "@eslint-react/eslint-plugin";
-import nextPlugin from "@next/eslint-plugin-next";
 import prettier from "eslint-config-prettier/flat";
 import tailwind from "eslint-plugin-better-tailwindcss";
 import boundaries from "eslint-plugin-boundaries";
+import nextTypescript from "eslint-config-next/typescript";
+import nextVitals from "eslint-config-next/core-web-vitals";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import reactHooks from "eslint-plugin-react-hooks";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-// The rules and the reason for each are listed in docs/tooling.md at the repo root.
+// Next.js's own config is the base; the stricter layers below build on it. The rules and the
+// reason for each are listed in docs/tooling.md at the repo root.
 
 const PALETTE =
   "red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone|mauve|olive|mist|taupe";
@@ -26,6 +27,9 @@ const NEXT_DEFAULT_EXPORTS = [
 
 export default defineConfig(
   globalIgnores([".next", "coverage", "playwright-report", "test-results", "next-env.d.ts"]),
+
+  ...nextVitals,
+  ...nextTypescript,
 
   // Disable comments are inert and reported; with --max-warnings 0 they fail the run.
   {
@@ -174,18 +178,20 @@ export default defineConfig(
     },
   },
 
-  // --- React, React Compiler, Next.js, accessibility. @eslint-react replaces eslint-plugin-react,
-  // which supports ESLint up to 9 only (docs/tooling.md).
+  // --- React, React Compiler, accessibility, on top of Next.js's React rules.
   {
     files: ["src/**/*.{ts,tsx}"],
-    extends: [
-      reactHooks.configs.flat["recommended-latest"],
-      eslintReact.configs["strict-type-checked"],
-      eslintReact.configs["disable-conflict-eslint-plugin-react-hooks"],
-      nextPlugin.configs["core-web-vitals"],
-      jsxA11y.flatConfigs.strict,
-    ],
+    // Rules only: Next.js's config already registers these plugins, and ESLint refuses a second copy.
     rules: {
+      ...reactHooks.configs.flat["recommended-latest"].rules,
+      ...jsxA11y.flatConfigs.strict.rules,
+      // eslint-plugin-react rules Next.js leaves off.
+      "react/no-danger": "error",
+      "react/jsx-no-leaked-render": "error",
+      "react/no-unstable-nested-components": "error",
+      "react/no-array-index-key": "error",
+      "react/jsx-no-useless-fragment": "error",
+      "react/jsx-no-constructed-context-values": "error",
       "react-hooks/no-deriving-state-in-effects": "error",
       "react-hooks/exhaustive-deps": "error",
       "react-hooks/incompatible-library": "error",
