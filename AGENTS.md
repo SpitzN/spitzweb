@@ -8,7 +8,7 @@ spitzweb is Nadav Spitzer's personal site: what Nadav builds, writes and is doin
 - `GLOSSARY.md`: the domain terms. Use them in code names, UI copy, commits and docs; every _Avoid_ term is wrong. A new concept gets its name settled here (domain-modeling) before it gets code.
 - `docs/adr/`: decisions already made. Read the ones touching an area before changing it. If a change conflicts with one, flag the conflict and leave the decision standing.
 - `docs/conventions.md`: workflow, commits, dependencies, testing, and the security, accessibility and performance bars. Read before starting a ticket or opening a PR.
-- `docs/architecture.md` (written at scaffold): the stack, code layout, where state lives, and boundaries. Read before adding a module, a route or a dependency.
+- `docs/architecture.md`: the stack, workspace, code layout, where state lives, and boundaries. Read before adding a module, a route or a dependency.
 - `docs/tooling.md`: the gate, what lint enforces and why, and the lint exceptions. Read when a check fails for a reason you don't recognise.
 - `DESIGN.md` (written by Impeccable): the visual system. Read before changing how anything looks.
 - `docs/setup.md`: the steps only Nadav performs (accounts, secrets, domains). Read when work depends on one of them.

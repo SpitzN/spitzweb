@@ -1,67 +1,115 @@
 # Tooling
 
-How the code is checked, and why each tool is set up the way it is. The config files are the source of truth for the exact rules. This document records the decisions, the exceptions and the traps behind them.
+How the code is checked, and why each tool is set up the way it is. The config files are the source of truth for the exact rules; this document records the decisions, the exceptions and the traps behind them.
 
-> **Status:** planned. Nothing is installed yet. Each section is filled in at scaffold time, when every rule has been probed with a file that must fail it. Record the probe run and its date here.
+The setup was built and probed on 2026-11-03. Each rule that must fail got a "bad" file, and each one failed it. The current page and layout passed as "good" files. The one gap found is listed under "What lint cannot enforce". Probe again whenever you add or change a rule, and record the run here.
 
 ## The gate
 
-`pnpm check` runs typecheck, lint, format check and tests across the workspace through Turborepo. When each layer runs is in `docs/conventions.md`, "The gate". The setup:
+`pnpm check` is the definition of done. Turborepo runs these steps; each one is cached by its inputs, so a package that hasn't changed is skipped.
 
-- **lefthook** (`lefthook.yml`):
-  - pre-commit runs Prettier on staged files and re-stages them;
-  - commit-msg runs commitlint;
-  - pre-push runs `pnpm check`.
-- **CI** (GitHub Actions) runs `turbo run … --affected` against `main`, then build, Playwright e2e and axe for the affected apps. It also lints the PR title. The required checks are added to the `protect-main` ruleset.
-- **Turborepo remote cache** (Vercel, free) shares task results between local runs and CI.
-- **`turbo-ignore`** skips the Vercel deploy of an app that didn't change.
+| Step         | Command (per app)                       |
+| ------------ | --------------------------------------- |
+| Typecheck    | `next typegen && tsc --noEmit`          |
+| Lint         | `eslint . --max-warnings 0`             |
+| Tests        | `vitest run`                            |
+| Format check | `prettier --check .` (root, whole repo) |
 
-## Planned lint set
+It runs at three points (`docs/conventions.md`, "The gate"):
 
-The set follows the agent-playbook stack, adapted for Next.js. It is kept lean, and every rule must be defensible.
+| When                   | What runs                                                               | Where it's set up                |
+| ---------------------- | ----------------------------------------------------------------------- | -------------------------------- |
+| Commit                 | Prettier on staged files (re-staged), commitlint on the message         | `lefthook.yml`                   |
+| Push                   | `pnpm check`                                                            | `lefthook.yml`                   |
+| PR and merge to `main` | Format check, then `turbo run typecheck lint test build e2e --affected` | `.github/workflows/ci.yml`       |
+| PR title               | Conventional Commits, lower-case subject, no trailing full stop         | `.github/workflows/pr-title.yml` |
 
-- **TypeScript:**
-  - Compiler: `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noUnusedLocals`, `noUnusedParameters`, `erasableSyntaxOnly`.
-  - typescript-eslint `strictTypeChecked` + `stylisticTypeChecked`.
-  - No type assertions (`as const` and `satisfies` are allowed), no `any`, no non-null assertions, no `@ts-*` comments.
-- **Shape:**
-  - `complexity` 10, `max-depth` 2, `max-params` 3, `max-nested-callbacks` 2.
-  - `no-else-return`, `no-nested-ternary`.
-- **Modules:**
-  - No re-exports, export lists or `../` imports.
-  - Default exports only in files Next.js or a tool requires: `page`, `layout`, `loading`, `error`, `not-found`, `route`, metadata images and config files.
-  - `eslint-plugin-boundaries` with `default: "disallow"` and the layer table from `docs/architecture.md`.
-- **React and Next.js:**
-  - `eslint-plugin-react-hooks` with the React Compiler rules.
-  - `@next/eslint-plugin-next`.
-  - `eslint-plugin-jsx-a11y`, strict.
-- **Tailwind:**
-  - `eslint-plugin-better-tailwindcss`: tokens only, no arbitrary values, no raw palette colours.
-  - There is no cap on text size; display type comes from `DESIGN.md` tokens.
-- **Inline disables:** `linterOptions.noInlineConfig: true`, so disable comments are inert.
-- **Formatting:** Prettier with `prettier-plugin-tailwindcss`, and `eslint-config-prettier` last in the lint config.
+`pnpm e2e` builds the site, starts it, and runs Playwright on desktop Chrome and on a Pixel 7 viewport. Every route in `e2e/public-routes.spec.ts` has to return 200 and pass axe with the WCAG 2.2 AA tags.
+
+## Decisions
+
+| Decision                              | Why                                                                                                                                                                                                                       |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TypeScript pinned to `~6.0`           | npm's `latest` is TypeScript 7, but typescript-eslint 8 supports TypeScript below 6.1 only. This way one compiler both type-checks and lints. Renovate holds TypeScript below 6.1.                                        |
+| ESLint 10                             | ESLint 9 reached end-of-life in August 2026. `eslint-plugin-jsx-a11y` only declares support up to 9, but every probe ran correctly on 10. `pnpm peers check` reports the mismatch.                                        |
+| No `eslint-config-next`               | It bundles `eslint-plugin-react` and `eslint-plugin-import`, which we don't need. Instead we use its parts directly: `@next/eslint-plugin-next` (core-web-vitals), react-hooks and jsx-a11y.                              |
+| `typecheck` runs `next typegen` first | `LayoutProps`, `PageProps` and typed routes are generated into `.next/types`. Without them, `tsc` fails on a clean clone.                                                                                                 |
+| Next.js rewrites `tsconfig.json`      | During typegen it adds `esModuleInterop`, which SWC needs, and expands the arrays. The file is kept in the shape Next.js writes, formatted by Prettier, so later runs leave it alone.                                     |
+| Prettier formats, ESLint lints        | `eslint-config-prettier` comes last in the lint config, so no formatting rule stays active. Prettier's options are all written out, at 100 columns, so a new Prettier major can't restyle the code.                       |
+| `prettier-plugin-tailwindcss`         | Class order counts as formatting. The plugin reads `apps/site/src/app/globals.css` and sorts classes in `className`, `cn()` and `cva()`.                                                                                  |
+| Disable comments are inert            | `noInlineConfig` is on, so a file can't switch a rule off. The ignored comment shows up as a warning, and `--max-warnings 0` fails on it.                                                                                 |
+| `process.env` is banned in source     | Env is read through one validated accessor (`.claude/rules/server.md`). Config files are exempt. The accessor file gets its own exception when it lands.                                                                  |
+| pnpm minimum release age              | pnpm 11 refuses versions published less than a day ago. `next@16.4.5` was a few hours old at scaffold time, so `16.4.4` is pinned. Renovate waits 3 days before proposing an update.                                      |
+| Install scripts allowed one by one    | `pnpm-workspace.yaml` lists every package that ships an install script. `lefthook`'s is refused because `prepare` installs the hooks. `sharp`'s and `unrs-resolver`'s are refused because their binaries arrive prebuilt. |
+| Actions pinned by commit SHA          | A moved tag can't change what CI runs. Renovate (`helpers:pinGitHubActionDigests`) keeps the SHAs current.                                                                                                                |
+| `--affected` in CI                    | CI checks only what changed relative to the base, plus everything that depends on it. The checkout uses `fetch-depth: 0` so Turborepo can diff, and `TURBO_SCM_BASE` sets the base for PRs and pushes.                    |
+| `passWithNoTests`                     | `vitest run` exits 1 when there are no test files, which would fail the gate before the first tested module lands.                                                                                                        |
+
+## What lint enforces
+
+| Convention                                                                              | How                                                                                                                |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| No type assertions (`as const` and `satisfies` are allowed)                             | `@typescript-eslint/consistent-type-assertions`                                                                    |
+| No `any`, no non-null assertions, no floating promises, no unsafe use of untyped values | typescript-eslint `strictTypeChecked`                                                                              |
+| No `@ts-ignore`, `@ts-expect-error` or `@ts-nocheck`                                    | `@typescript-eslint/ban-ts-comment`                                                                                |
+| Limits on tangled code                                                                  | `complexity` 10, `max-depth` 2, `max-params` 3, `max-nested-callbacks` 2 (off in tests)                            |
+| Guard clauses, flat logic                                                               | `no-else-return` (`allowElseIf: false`), `no-nested-ternary`, `no-lonely-if`, `no-unneeded-ternary`                |
+| Destructuring when reading from objects and arrays                                      | `@typescript-eslint/prefer-destructuring`                                                                          |
+| No re-exports, no export lists                                                          | `no-restricted-syntax` selectors                                                                                   |
+| No default exports, except where Next.js or a tool needs one                            | `no-restricted-exports`, with the exceptions listed below                                                          |
+| `@/` for any import outside the folder; no `../`                                        | `no-restricted-imports`                                                                                            |
+| Env only through the accessor                                                           | `no-restricted-properties` on `process.env`                                                                        |
+| Import direction and known folders                                                      | `eslint-plugin-boundaries` (see the table below)                                                                   |
+| React Compiler rules, such as state set or derived in effects, and impure render        | `eslint-plugin-react-hooks` `recommended-latest`, plus `no-deriving-state-in-effects`, with every rule an error    |
+| Next.js pitfalls, such as `<img>` or sync scripts                                       | `@next/eslint-plugin-next` core-web-vitals                                                                         |
+| Accessibility basics                                                                    | `eslint-plugin-jsx-a11y`, strict                                                                                   |
+| Theme tokens only: no arbitrary values, no raw palette colours                          | `better-tailwindcss/no-restricted-classes`                                                                         |
+| Logical properties only (RTL-ready)                                                     | `better-tailwindcss/enforce-logical-properties`                                                                    |
+| No unknown, conflicting, duplicate or deprecated classes                                | `better-tailwindcss/no-unknown-classes`, `no-conflicting-classes`, `no-duplicate-classes`, `no-deprecated-classes` |
+
+### Import direction
+
+`eslint-plugin-boundaries` classifies each file under `src/`. An import between project files is allowed only when a policy permits it (`default: "disallow"`). A file outside every known folder fails `boundaries/no-unknown-files`. That means the first file in a new top-level folder fails lint until the folder is added to this table and to `docs/architecture.md`.
+
+| Layer | Files        | May import |
+| ----- | ------------ | ---------- |
+| `app` | `src/app/**` | `app`, CSS |
+
+On top of the table:
+
+- No file imports a test file.
+- An `@/` import the resolver can't follow fails `boundaries/no-unknown-dependencies`.
+
+The layers grow with the code, and they are designed with `codebase-design` before the first slice lands.
 
 ## Lint exceptions
 
-Per-folder overrides in `eslint.config`. Each needs a reason (`docs/conventions.md`, "Strict by default, loosened by folder").
+Each exception is set up per folder in `apps/site/eslint.config.js`, never inline (`docs/conventions.md`, "Strict by default, loosened by folder").
 
-| Folder | Rules relaxed | Why | Added |
-| --- | --- | --- | --- |
-| _none yet_ | | | |
+| Files                                                                                                                          | Rules relaxed                                       | Why                                                            | Added      |
+| ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- | -------------------------------------------------------------- | ---------- |
+| Next.js special files (`page`, `layout`, `loading`, `error`, `not-found`, metadata images, `sitemap`, `robots`, `manifest`, …) | `no-restricted-exports`                             | Next.js requires a default export                              | 2026-11-03 |
+| `*.config.{js,ts}`                                                                                                             | `no-restricted-exports`, `no-restricted-properties` | Tools require a default export, and config reads `process.env` | 2026-11-03 |
+| `e2e/**`, `**/*.test.{ts,tsx}`                                                                                                 | `max-nested-callbacks`                              | `describe` → `test` → callback nests by design                 | 2026-11-03 |
 
-## Known traps to re-verify
+## What lint cannot enforce
 
-These come from earlier projects. Each must be confirmed or dropped at scaffold.
+These stay as review rules in `.claude/rules/`.
 
-- When npm's `latest` TypeScript is ahead of what typescript-eslint supports, pin TypeScript to the newest supported minor.
-- `vitest run` exits 1 when there are no test files, so set `passWithNoTests`.
-- `eslint-plugin-boundaries` treats an `@/` import it cannot resolve as external and skips it. Add `eslint-import-resolver-typescript` and set `flag-as-external: { unresolvableAlias: false }`, plus `checkInternals` and `checkUnknownLocals`.
-- In boundaries v7 an element is a folder. Single files have to be classified with `boundaries/files`.
-- pnpm refuses dependency build scripts unless they are listed under `allowBuilds` in `pnpm-workspace.yaml`.
-- `pnpm-lock.yaml` goes in `.prettierignore`.
-- Prettier reads `.gitignore`, but ESLint and Vitest do not. Ignore `.claude/worktrees/` in all three.
-- typescript-eslint presets reject ordinary React code in three places. Relax:
-  - `no-misused-promises` with `checksVoidReturn.attributes: false`;
-  - `restrict-template-expressions` with `allowNumber`;
-  - `no-confusing-void-expression` with `ignoreArrowShorthand`.
-- CI's `--affected` needs the git history of the base branch. Check out with `fetch-depth: 0`.
+- **Mutating a prop inside a component** (`items.push(...)`) passes. The React Compiler rules didn't report it in the probe.
+- **A function or component that only forwards its arguments.**
+- **A route segment that holds business logic**, or a domain file that only one slice uses.
+- **A Hosted project importing another Hosted project.** This becomes enforceable once the layers exist.
+- **Physical CSS in a `.css` file**, such as `margin-left`. The Tailwind rules only see class names.
+
+## Traps
+
+- **Prettier reads `.gitignore`; ESLint and Vitest don't.** Here ESLint and Vitest run inside `apps/site` only, so agents' worktrees in `.claude/worktrees/` at the root never reach them.
+- **`eslint-plugin-boundaries` skips an `@/` import it can't resolve.** It needs `eslint-import-resolver-typescript` with `flag-as-external: { unresolvableAlias: false }`, plus `checkInternals` and `checkUnknownLocals`.
+- **In boundaries v7 an element is a folder.** Single files, such as tests and CSS, are classified with `boundaries/files` categories.
+- **typescript-eslint presets reject ordinary React code in three places**, which are relaxed on purpose:
+  - `no-misused-promises` (`checksVoidReturn.attributes: false`)
+  - `restrict-template-expressions` (`allowNumber`)
+  - `no-confusing-void-expression` (`ignoreArrowShorthand`)
+- **`pnpm-lock.yaml` and `.impeccable/` are in `.prettierignore`.** Without that, the format check flags the lockfile and Impeccable's generated files.
+- **`next dev` rewrites `apps/site/AGENTS.md`** when it detects a coding agent. The block is committed as written. `apps/site/CLAUDE.md` imports it, so Claude Code loads Next.js's pointer to the docs bundled in `node_modules/next/dist/docs/`.

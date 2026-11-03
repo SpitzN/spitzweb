@@ -13,10 +13,11 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
    - set the production environment variables;
    - set the build command to migrate before building (ADR 0009) and the ignored build step to `turbo-ignore`;
    - turn on Vercel Analytics.
-4. **Turborepo remote cache**: run `pnpm dlx turbo login` and `pnpm dlx turbo link`. Then add `TURBO_TOKEN` and `TURBO_TEAM` as GitHub Actions secrets.
-5. **Sentry**: create a project for `apps/site` and add its DSN to the Vercel environment.
-6. **Uptime monitor**: add a check on `https://spitzweb.dev` that alerts Nadav.
-7. **Paid APIs**: set a spend cap in each provider's dashboard before its key goes into Vercel.
+4. **Turborepo remote cache**: run `pnpm exec turbo login` and `pnpm exec turbo link`. Then in GitHub, add `TURBO_TOKEN` as an Actions secret and `TURBO_TEAM` as an Actions variable.
+5. **Renovate**: install the Renovate GitHub app on `SpitzN/spitzweb`. It reads `renovate.json`.
+6. **Sentry**: create a project for `apps/site` and add its DSN to the Vercel environment.
+7. **Uptime monitor**: add a check on `https://spitzweb.dev` that alerts Nadav.
+8. **Paid APIs**: set a spend cap in each provider's dashboard before its key goes into Vercel.
 
 ## Domains
 
@@ -31,4 +32,4 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
 - Admin panel sign-in works on a phone, and a different GitHub account is rejected.
 - An Update posted from the Admin panel appears in Activity.
 - Analytics shows the visit, Sentry receives a test error, and the uptime monitor reports the site as up.
-- The CI checks are required in the `protect-main` ruleset.
+- The `check` and `pr-title` CI checks are required in the `protect-main` ruleset.

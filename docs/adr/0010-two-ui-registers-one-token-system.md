@@ -2,11 +2,11 @@
 
 spitzweb has to look professional where people get work done and creative where it shows Nadav's work. So it uses two registers on one shared token system in `DESIGN.md`:
 
-| Surface | Register | Impeccable mode | Built from |
-| --- | --- | --- | --- |
-| Admin panel | Professional | Operate | shadcn/ui on Base UI, with variants added to each primitive's `cva` |
-| Articles, Entry lists, Activity | Professional | Read | Project components on the shared tokens |
-| Home, Project pages, Hosted projects | Creative | Experience or Persuade | Custom components; may add their own tokens and per-folder lint exceptions |
+| Surface                              | Register     | Impeccable mode        | Built from                                                                 |
+| ------------------------------------ | ------------ | ---------------------- | -------------------------------------------------------------------------- |
+| Admin panel                          | Professional | Operate                | shadcn/ui on Base UI, with variants added to each primitive's `cva`        |
+| Articles, Entry lists, Activity      | Professional | Read                   | Project components on the shared tokens                                    |
+| Home, Project pages, Hosted projects | Creative     | Experience or Persuade | Custom components; may add their own tokens and per-folder lint exceptions |
 
 Both registers meet the same UI floor (`.claude/rules/ui.md`): tokens, WCAG 2.2 AA and the required states.
 
