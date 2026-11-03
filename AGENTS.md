@@ -33,11 +33,12 @@ Code rules that lint cannot check live in `.claude/rules/`. Read the matching fi
 
 ## Skill routing
 
-Three skill packs share the work; superpowers and frontend-design are disabled in this repo. When two skills overlap, the owner below wins.
+Each area of work below has one owning skill pack; when skills overlap, the owner wins. Other plugins are welcome alongside them. superpowers and frontend-design are disabled in this repo.
 
 - **Matt Pocock (`mattpocock-skills:*`) decides and delivers.** `grilling` / `grill-with-docs` and `domain-modeling` settle decisions, names and ADRs; `codebase-design` places module seams; `tdd` writes code test-first; `diagnosing-bugs` hunts bugs; `code-review` reviews; `pr` writes PR bodies. Nadav starts `to-spec`, `to-tickets`, `implement` and `triage` by slash command; when work needs one of them, say so.
 - **Addy Osmani (`agent-skills:*`) runs specialist passes:** security, performance, observability, CI/CD, shipping and launch, code simplification, deprecation and migration.
 - **Impeccable (`impeccable:impeccable`) owns every UI and UX change**, from a new page to a spacing tweak.
+- **Vercel (`vercel:*`) owns platform work:** deploys, environment variables, domains, logs and build settings. Drive it through the `vercel` CLI, and reach for the Vercel MCP only for an operation the CLI lacks.
 
 ## Agent skills
 
