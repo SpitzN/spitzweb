@@ -6,6 +6,36 @@ import { expect, test } from "@playwright/test";
 const PUBLIC_ROUTES = ["/", "/articles", "/articles/published-featured", "/articles/archived"];
 const THEMES = ["dark", "light"] as const;
 
+// ADR 0007: these are enforced on every response. The full CSP is report-only and is checked by
+// its console reports below; only frame-ancestors is enforced, because browsers ignore it in a
+// report-only policy.
+const ENFORCED_HEADERS = {
+  "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+  "x-content-type-options": "nosniff",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "permissions-policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+  "content-security-policy": "frame-ancestors 'none'",
+};
+
+for (const route of PUBLIC_ROUTES) {
+  test(`${route} sends the security headers and breaks no CSP rule`, async ({ page }) => {
+    const cspReports: string[] = [];
+    page.on("console", (message) => {
+      if (message.text().includes("Content Security Policy")) cspReports.push(message.text());
+    });
+
+    const response = await page.goto(route);
+    await page.waitForLoadState("load");
+    const headers = response?.headers() ?? {};
+
+    for (const [name, value] of Object.entries(ENFORCED_HEADERS)) {
+      expect(headers[name], name).toBe(value);
+    }
+    expect(headers["content-security-policy-report-only"]).toContain("default-src 'self'");
+    expect(cspReports).toEqual([]);
+  });
+}
+
 for (const route of PUBLIC_ROUTES) {
   for (const theme of THEMES) {
     test(`${route} responds and meets WCAG 2.2 AA in the ${theme} theme`, async ({ page }) => {
