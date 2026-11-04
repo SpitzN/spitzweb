@@ -99,14 +99,14 @@ components:
 
 spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project titles, Funnel Sans for everything else, with weight rather than decoration carrying state.
 
-Dark is the default theme and was chosen first; light is a full alternative, switched by `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, provisionally lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals everywhere, hairlines instead of containers, one exponential ease-out for every change of state.
+Dark is the default theme and was chosen first; light is a full alternative, switched by `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals everywhere, hairlines instead of containers, one exponential ease-out for every change of state.
 
 The system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.
 
 **Key Characteristics:**
 
 - Drenched ultramarine ground, warm off-white ink, periwinkle muted ink, ultramarine hairlines.
-- One provisional accent that marks only the live or selected thing.
+- One accent that marks only the live or selected thing.
 - Funnel Display for headings and Project titles, Funnel Sans for everything else.
 - Weight carries state: Project titles go from 400 at rest to 800 when selected.
 - Hairline rules, tabular numerals, no cards, no badges, no kickers or eyebrows.
@@ -115,11 +115,11 @@ The system serves both UI registers from ADR 0010 on one set of tokens. Read and
 
 ## Colors
 
-A drenched ultramarine world with warm paper ink and a single provisional accent kept for the live or selected thing.
+A drenched ultramarine world with warm paper ink and a single lime accent kept for the live or selected thing.
 
 ### Primary
 
-- **Live Lime** (accent): the only accent. It fills the Featured panel, colours the selected Project title, draws the focus ring and backs text selection. Provisional: pink (#ff8ad8) is the alternative, and Nadav decides between them. The accent is the same in both themes.
+- **Live Lime** (accent): the only accent. It fills the Featured panel, colours the selected Project title, draws the focus ring and backs text selection. The accent is the same in both themes.
 - **Lime Ink** (accent-ink, accent-ink-light): the accent when it colours text on the ground. In dark it is the accent itself; in light it deepens to a dark olive so selected text keeps AA contrast on paper.
 - **Accent Shadow Ink** (on-accent): text and marks set on an accent fill.
 - **Accent Shadow Muted** (on-accent-muted): secondary text and quiet fills inside an accent fill, such as the track of a live readout.

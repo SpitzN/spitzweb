@@ -23,14 +23,13 @@ STORY: A visitor reads one line about what Nadav does, sees a Featured Project a
 
 FIRST VIEWPORT: Header rule with wordmark and nav (Projects, Articles, Activity). Left seven columns: the statement in heavy Funnel Display, then the latest Update beneath. Right five columns: the lime Featured panel with its title, a live readout of the Hosted project and one line on what it is. The Projects list starts just above the fold, full width: title, one-line summary, year and Status.
 
-FORM: user-pinned typographic mix (proof C's grid, ground and live panel, set in Funnel, with a lime accent, provisional against pink), not a rolled world; seed: seed:c4b7fbbe4fe7a06a. Signature interaction: weight carries state (titles turn heavy when selected, J/K moves the selection, Enter opens). Motion grammar: one exponential ease-out for weight and colour changes; the live readout is the only thing that moves on its own; all of it stills under reduced motion.
+FORM: user-pinned typographic mix (proof C's grid, ground and live panel, set in Funnel, with a lime accent), not a rolled world; seed: seed:c4b7fbbe4fe7a06a. Signature interaction: weight carries state (titles turn heavy when selected, J/K moves the selection, Enter opens). Motion grammar: one exponential ease-out for weight and colour changes; the live readout is the only thing that moves on its own; all of it stills under reduced motion.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Unresolved
 
 - Nadav's local time: a candidate Feature (a clock relative to the visitor's own time), to be named in GLOSSARY.md before it is built.
-- Accent: lime (provisional) or pink; Nadav decides on the tracked mock.
 - Light theme: designed alongside dark in the build, not yet proven.
 - Article body text: Funnel Sans or a paired text face; decide on the first Article page.
 - The statement's wording is a stand-in until Nadav writes it.

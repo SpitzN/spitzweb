@@ -14,7 +14,7 @@
   --ink: #f4f1ea;
   --ink-muted: #aeb2d6;
   --rule: #2c3482;
-  /* The accent marks only the live or selected thing. Lime is provisional; the alternative is pink (#ff8ad8). */
+  /* The accent (lime) marks only the live or selected thing. */
   --accent: #c8f25a;
   --on-accent: #18210a;
   --on-accent-muted: #2f4114;

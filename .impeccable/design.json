@@ -81,7 +81,7 @@
       },
       "accent": {
         "role": "primary",
-        "displayName": "Live Lime (provisional; alternative pink #ff8ad8)",
+        "displayName": "Live Lime",
         "canonical": "oklch(90.3% 0.182 123.2)",
         "tonalRamp": [
           "oklch(15% 0.083 123)",
@@ -289,15 +289,6 @@
         "accent-ink": "#3b5c00"
       }
     },
-    "provisional": {
-      "accent": {
-        "current": "#c8f25a",
-        "alternative": "#ff8ad8",
-        "alternativeOnAccent": "#2a0b20",
-        "alternativeOnAccentMuted": "#4a1a3c",
-        "decision": "Nadav decides on the tracked mock; light-theme accent-ink for pink is not yet derived."
-      }
-    },
     "breakpoints": [
       {
         "name": "sm",
@@ -349,10 +340,10 @@
   ],
   "narrative": {
     "northStar": "The Precision Instrument",
-    "overview": "spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project titles, Funnel Sans for everything else, with weight rather than decoration carrying state.\n\nDark is the default theme and was chosen first; light is a full alternative, switched by `data-theme=\"light\"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, provisionally lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals everywhere, hairlines instead of containers, one exponential ease-out for every change of state.\n\nThe system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.",
+    "overview": "spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project titles, Funnel Sans for everything else, with weight rather than decoration carrying state.\n\nDark is the default theme and was chosen first; light is a full alternative, switched by `data-theme=\"light\"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals everywhere, hairlines instead of containers, one exponential ease-out for every change of state.\n\nThe system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.",
     "keyCharacteristics": [
       "Drenched ultramarine ground, warm off-white ink, periwinkle muted ink, ultramarine hairlines.",
-      "One provisional accent that marks only the live or selected thing.",
+      "One accent that marks only the live or selected thing.",
       "Funnel Display for headings and Project titles, Funnel Sans for everything else.",
       "Weight carries state: Project titles go from 400 at rest to 800 when selected.",
       "Hairline rules, tabular numerals, no cards, no badges, no kickers or eyebrows.",
