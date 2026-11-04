@@ -16,6 +16,18 @@ import tseslint from "typescript-eslint";
 const PALETTE =
   "red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone|mauve|olive|mist|taupe";
 
+// The layers of src/ (docs/architecture.md, Code layout). Shared code has no domain meaning.
+const SHARED_CODE = ["components", "hooks", "lib"];
+const ALL_LAYERS = [
+  "app",
+  "entry-type",
+  "feature",
+  "admin",
+  "hosted-project",
+  "domain",
+  ...SHARED_CODE,
+];
+
 const NO_REEXPORT = "No re-exports: import from the file that declares the symbol.";
 
 // Files whose default export Next.js requires.
@@ -145,9 +157,19 @@ export default defineConfig(
       // An @/ import the resolver cannot follow counts as an unknown local file, which fails lint.
       // The default would treat it as an external package and skip every boundary check.
       "boundaries/flag-as-external": { unresolvableAlias: false },
-      "boundaries/elements": [{ type: "app", pattern: "src/app", partialMatch: false }],
+      "boundaries/elements": [
+        { type: "app", pattern: "src/app", partialMatch: false },
+        { type: "entry-type", pattern: "src/entry-types/*", capture: ["name"] },
+        { type: "feature", pattern: "src/features/*", capture: ["name"] },
+        { type: "admin", pattern: "src/admin" },
+        { type: "hosted-project", pattern: "src/hosted-projects/*", capture: ["name"] },
+        { type: "domain", pattern: "src/domain" },
+        { type: "components", pattern: "src/components" },
+        { type: "hooks", pattern: "src/hooks" },
+        { type: "lib", pattern: "src/lib" },
+      ],
       "boundaries/files": [
-        { category: "test", pattern: ["src/app/**/*.test.{ts,tsx}"] },
+        { category: "test", pattern: ["src/**/*.test.{ts,tsx}"] },
         { category: "style", pattern: "src/**/*.css" },
       ],
     },
@@ -161,9 +183,49 @@ export default defineConfig(
           message:
             "This import crosses a layer boundary ({{#if from.element.types}}{{from.element.types}}{{else}}{{from.file.path}}{{/if}} → {{#if to.element.types}}{{to.element.types}}{{else}}{{to.file.path}}{{/if}}): see Import direction in docs/tooling.md.",
           policies: [
+            // Routes compose: they may import every layer.
             {
               from: { element: { type: "app" } },
-              allow: { to: [{ element: { type: "app" } }, { file: { categories: "style" } }] },
+              allow: { to: [{ element: { type: ALL_LAYERS } }, { file: { categories: "style" } }] },
+            },
+            // A slice imports its own files, never another slice's (.claude/rules/structure.md).
+            ...["entry-type", "feature", "hosted-project"].map((type) => ({
+              from: { element: { type } },
+              allow: {
+                to: { element: { type, captured: { name: "{{ from.element.captured.name }}" } } },
+              },
+            })),
+            {
+              from: { element: { type: "admin" } },
+              allow: { to: { element: { type: "admin" } } },
+            },
+            // Entry types, Features and the Admin panel read the shared domain and shared code.
+            {
+              from: { element: { type: ["entry-type", "feature", "admin"] } },
+              allow: { to: { element: { type: ["domain", ...SHARED_CODE] } } },
+            },
+            // A Hosted project knows nothing about Entries, so it can move out (ADR 0002).
+            {
+              from: { element: { type: "hosted-project" } },
+              allow: { to: { element: { type: SHARED_CODE } } },
+            },
+            {
+              from: { element: { type: "domain" } },
+              allow: { to: { element: { type: ["domain", "lib"] } } },
+            },
+            {
+              from: { element: { type: "components" } },
+              allow: {
+                to: [{ element: { type: SHARED_CODE } }, { file: { categories: "style" } }],
+              },
+            },
+            {
+              from: { element: { type: "hooks" } },
+              allow: { to: { element: { type: ["hooks", "lib"] } } },
+            },
+            {
+              from: { element: { type: "lib" } },
+              allow: { to: { element: { type: "lib" } } },
             },
             // Last, so it overrides every allow above: the last matching policy wins.
             {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Funnel_Display, Funnel_Sans } from "next/font/google";
-import { SiteHeader } from "./site-header";
+import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
 const funnelDisplay = Funnel_Display({
