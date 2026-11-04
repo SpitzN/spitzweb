@@ -4,14 +4,14 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
 
 ## Accounts and services
 
-1. **Neon**: create the project `spitzweb` in the region closest to the Vercel region, and copy the pooled connection string.
+1. **Neon**: create the project `spitzweb` in the region closest to the Vercel function region (`iad1`, so AWS US East 1). Add a `development` branch and put its pooled and direct connection strings in `apps/site/.env.local`. The `production` branch's URL never leaves Vercel (ADR 0009).
 2. **GitHub OAuth apps**: create two.
    - Production, with callback `https://spitzweb.dev/api/auth/callback/github`.
    - Local development, with callback `http://localhost:3000/api/auth/callback/github`. Its credentials go in `.env.local` only.
 3. **Vercel**: import `SpitzN/spitzweb` on the Hobby plan, with root directory `apps/site`. Then:
-   - install the Neon integration, so every preview build gets its own database branch;
+   - install the Neon integration with **Link Existing Neon Account**, so every preview build gets its own database branch and production uses `production`. Leave **Create a branch for your development environment** off, and set Vercel's Development `DATABASE_URL` and `DATABASE_URL_UNPOOLED` from the `development` branch;
    - set the production environment variables;
-   - set the build command to migrate before building (ADR 0009) and the ignored build step to `turbo-ignore`;
+   - once the app has a migrate script, set the build command to migrate before building (ADR 0009). The ignored build step is `turbo-ignore`, set in `apps/site/vercel.json`;
    - turn on Vercel Analytics.
 4. **Turborepo remote cache**: run `pnpm exec turbo login` and `pnpm exec turbo link`. Then in GitHub, add `TURBO_TOKEN` as an Actions secret and `TURBO_TEAM` as an Actions variable.
 5. **Renovate**: install the Renovate GitHub app on `SpitzN/spitzweb`. It reads `renovate.json`.
@@ -21,13 +21,12 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
 
 ## Domains
 
-1. Buy `spitzweb.dev` and `spitzweb.com` on Cloudflare Registrar, plus `nadavspitzer.com` if you want it.
-2. In Vercel, add `spitzweb.dev` as the primary domain. Add `www.spitzweb.dev`, `spitzweb.com` and `www.spitzweb.com`, each 308-redirecting to `spitzweb.dev`.
-3. In Cloudflare DNS, add the records Vercel shows, set to **DNS only** (grey cloud).
+1. Buy `spitzweb.dev` on Vercel (ADR 0006). Vercel serves its DNS, so there are no records to add.
+2. In the Vercel project, add `spitzweb.dev` as the primary domain, and add `www.spitzweb.dev` 308-redirecting to it.
 
 ## First-deploy check
 
-- `https://spitzweb.dev` loads, and `http://spitzweb.com` 308-redirects to it.
+- `https://spitzweb.dev` loads, and `https://www.spitzweb.dev` 308-redirects to it.
 - `robots.txt`, `sitemap.xml` and the feeds are correct and leave out Draft and Unlisted Entries.
 - Admin panel sign-in works on a phone, and a different GitHub account is rejected.
 - An Update posted from the Admin panel appears in Activity.
