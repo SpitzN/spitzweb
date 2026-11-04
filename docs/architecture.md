@@ -2,7 +2,7 @@
 
 How spitzweb is built: the stack, the workspace, the code layout and where state lives. The reasons for each choice are in the ADRs linked below. Exact versions are in each `package.json`.
 
-> **Status:** skeleton from the scaffold (2026-11-03). Two parts are still to come. The code layout inside `apps/site` and the "where state lives" table will be designed with `codebase-design` once the visual direction is set and before the first slice lands. Until then, `src/app/` is the only known folder (`docs/tooling.md`, Import direction).
+> **Status:** code layout, state and zod boundaries designed with `codebase-design` on 2026-11-04, before the first slice. Folders appear with their first file; lint already knows every layer below.
 
 ## Stack
 
@@ -30,7 +30,8 @@ How spitzweb is built: the stack, the workspace, the code layout and where state
 ```
 apps/
   site/            the site at spitzweb.dev (Next.js)
-    src/app/       routes only: they compose slices
+    content/       MDX: Articles and Project write-ups
+    src/           code, laid out below
     e2e/           Playwright specs, one list of public routes
 packages/          created when a second app needs shared code
 docs/              ADRs, conventions, tooling, setup, this file
@@ -38,19 +39,63 @@ docs/              ADRs, conventions, tooling, setup, this file
 
 ## Code layout
 
-_To be designed with `codebase-design`._ Expected shape, per `.claude/rules/structure.md`:
+```
+apps/site/src/
+├── app/                   routes only: they read params and compose slices
+├── entry-types/<name>/    one slice per Entry type: projects, articles, updates
+├── features/<name>/       one slice per Feature: activity
+├── admin/                 the Admin panel slice: shell, session check, settings
+├── hosted-projects/<name>/ one slice per Hosted project
+├── domain/                facts several slices read: Entry, Topic, publication rules
+├── components/            shared UI with no domain meaning; ui/ holds shadcn primitives
+├── hooks/                 shared hooks with no domain meaning
+└── lib/                   shared plumbing: db client, env, auth, MDX loading
+```
 
-- route segments in `src/app/`;
-- one folder per slice (an Entry type, a Feature, the Admin panel, a Hosted project);
-- a shared domain folder;
-- shared components, hooks and lib folders.
+Inside a slice, files sit in folders named for what they are (`components/`, `server/`), and the slice's tables are in its own `schema.ts`. Lint enforces who may import whom ([`docs/tooling.md`](tooling.md), Import direction):
 
-Each folder gets a row in the import-direction table in `docs/tooling.md`.
+- **Routes** may import every layer. They are where slices meet.
+- **A slice** imports its own files, the domain and shared code. It never imports another slice, not even a type.
+- **A Hosted project** imports shared code only, never the domain. It knows nothing about Entries, so moving it out (ADR 0002) is a copy, not a rewrite.
+- **The domain** imports only itself and `lib`. **Shared code** never imports the domain.
+
+### How the slices meet
+
+- **Lists that span Entry types** (the home page, Activity, the sitemap, feeds). Each Entry type slice exposes a loader that returns domain Entries from its own source. The route calls the loaders it needs and passes the merged, plain values to the slice that renders them. Ordering, Featured and visibility rules live in `domain/`, so every list applies them the same way.
+- **The Admin panel** owns its shell, the admin-session check and the Hosted project switches. A slice that Nadav edits from the Admin panel ships its own admin parts: the Updates slice owns the form and the Server Action that posts an Update. The admin route composes the shell with those parts.
+- **Activity** owns Events. Updates already are Entries, so Activity lists them through the Updates loader. An Event comes from GitHub or from a publish (an Entry published, a Project's Status changing) and is recorded by the Activity slice itself.
 
 ## Where state lives
 
-_To be filled with `codebase-design`._ Every piece of state gets a row: what it is, its home (MDX, Postgres, URL, cache, client), who owns it, and why.
+| State                                                                                           | Home                                                           | Owner                | Why                                                                            |
+| ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------ |
+| Article and Project write-up text                                                               | MDX in `apps/site/content/`                                    | Nadav, by commit     | Long-form writing belongs in version control (ADR 0004)                        |
+| An MDX Entry's facts: title, date, Topics, Featured, publication state, Status, Related entries | MDX frontmatter                                                | Nadav, by commit     | One file per Entry; zod parses it at load                                      |
+| Updates                                                                                         | Postgres, the Updates slice's table                            | Admin panel          | Posted from a phone in minutes (PRODUCT.md, Cheap to publish)                  |
+| Events                                                                                          | Postgres, the Activity slice's table                           | Activity             | Recorded once, listed many times                                               |
+| The Topic set                                                                                   | `domain/`, in code                                             | Nadav, by commit     | Small and curated; changing it is a deliberate deploy                          |
+| Admin session                                                                                   | Better Auth tables in Postgres, plus its cookie                | `lib/` auth          | ADR 0005                                                                       |
+| Whether a Hosted project is switched on                                                         | Postgres, the Admin panel's table                              | Admin panel          | Switched off without a deploy (PRODUCT.md, Operating context)                  |
+| A Hosted project's own data                                                                     | Postgres, in that project's own schema                         | That Hosted project  | Moves out with it (ADR 0002, 0004)                                             |
+| Rendered pages and loader results                                                               | Next.js cache, tagged per slice; a mutation calls `updateTag`  | The slice that loads | A static shell with dynamic holes (ADR 0011)                                   |
+| List filters (Topic, Entry type)                                                                | URL search params                                              | The route            | Shareable and linkable                                                         |
+| The light or dark theme                                                                         | `localStorage`, applied by an inline script before first paint | `components/`        | Reading a cookie would make every page dynamic (ADR 0011); dark is the default |
+| Selection in a list (J/K)                                                                       | Client component state                                         | The component        | Ephemeral; nothing to share                                                    |
+
+Undecided until their tickets: where a Hosted project's per-visitor rate limits are counted, and how GitHub activity becomes Events (webhook or polling).
 
 ## Boundaries where zod parses
 
-_To be listed as they land._ So far: none.
+Data from outside the type system is parsed where it enters. Inside, types are trusted.
+
+| Boundary                                      | Where it is parsed                      |
+| --------------------------------------------- | --------------------------------------- |
+| Environment variables                         | One accessor in `lib/`, read where used |
+| MDX frontmatter                               | The Entry type's loader, at load        |
+| Route params and search params                | The route, before it calls a slice      |
+| Server Action input (`FormData`)              | The Server Action, first thing          |
+| Route Handler input (webhooks, OAuth, feeds)  | The Route Handler, first thing          |
+| Third-party API responses (GitHub, paid APIs) | The adapter that calls the API          |
+| Input to a Hosted project                     | The Hosted project's own entry points   |
+
+Database rows are not on this list: Drizzle types them from the slice's `schema.ts`.

@@ -73,16 +73,26 @@ It runs at three points (`docs/conventions.md`, "The gate"):
 
 `eslint-plugin-boundaries` classifies each file under `src/`. An import between project files is allowed only when a policy permits it (`default: "disallow"`). A file outside every known folder fails `boundaries/no-unknown-files`. That means the first file in a new top-level folder fails lint until the folder is added to this table and to `docs/architecture.md`.
 
-| Layer | Files        | May import |
-| ----- | ------------ | ---------- |
-| `app` | `src/app/**` | `app`, CSS |
+| Layer            | Files                           | May import                                         |
+| ---------------- | ------------------------------- | -------------------------------------------------- |
+| `app`            | `src/app/**`                    | every layer, CSS                                   |
+| `entry-type`     | `src/entry-types/<name>/**`     | the same Entry type, `domain`, shared code         |
+| `feature`        | `src/features/<name>/**`        | the same Feature, `domain`, shared code            |
+| `admin`          | `src/admin/**`                  | `admin`, `domain`, shared code                     |
+| `hosted-project` | `src/hosted-projects/<name>/**` | the same Hosted project, shared code (no `domain`) |
+| `domain`         | `src/domain/**`                 | `domain`, `lib`                                    |
+| `components`     | `src/components/**`             | shared code, CSS                                   |
+| `hooks`          | `src/hooks/**`                  | `hooks`, `lib`                                     |
+| `lib`            | `src/lib/**`                    | `lib`                                              |
+
+Shared code is `components`, `hooks` and `lib`. Why each row is shaped this way is in `docs/architecture.md`, Code layout.
 
 On top of the table:
 
 - No file imports a test file.
 - An `@/` import the resolver can't follow fails `boundaries/no-unknown-dependencies`.
 
-The layers grow with the code, and they are designed with `codebase-design` before the first slice lands.
+A new top-level folder under `src/` is a design change: it goes through `codebase-design`, then into this table, `docs/architecture.md` and the config together. Each rule above was probed with a file that breaks it (2026-11-04).
 
 ## Lint exceptions
 
