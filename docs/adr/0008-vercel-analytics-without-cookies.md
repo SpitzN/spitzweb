@@ -9,4 +9,4 @@ The site needs page views and referrers, and nothing about individual visitors. 
 
 ## Consequences
 
-- Analytics is wrapped in a single component, so swapping providers touches one file.
+- Analytics is wrapped in a single component, so swapping providers touches one file. Speed Insights shares that component (ADR 0012).
