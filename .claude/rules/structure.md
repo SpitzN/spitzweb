@@ -18,7 +18,7 @@ A **slice** is one vertical area of code: an Entry type, a Feature, the Admin pa
 4. **Code with no domain meaning that a second caller already needs** goes in the shared components, hooks or lib folders.
 5. **Code a second app needs** moves to `packages/<name>` (ADR 0001).
 
-Create a folder together with its first file: no empty folders, no placeholder files, no `index.ts` barrels. A test sits beside the file it tests.
+Create a folder together with its first file: no empty folders, no placeholder files. A test sits beside the file it tests.
 
 ## Crossing slices
 

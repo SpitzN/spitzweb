@@ -15,15 +15,25 @@
     "test": "turbo run test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "turbo run typecheck lint test //#format:check",
+    "knip": "knip",
+    "sherif": "sherif",
+    "check": "turbo run typecheck lint test //#format:check //#knip //#sherif",
     "prepare": "lefthook install"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
+    "knip": "^6.44.1",
     "lefthook": "^2.2.2",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "sherif": "^1.13.0",
     "turbo": "^2.11.10"
+  },
+  "sherif": {
+    "failOnWarnings": true,
+    "ignoreRule": [
+      "non-existant-packages"
+    ]
   }
 }

@@ -16,13 +16,13 @@ When the same review comment comes up a second time, it becomes a rule in its ho
 
 ## The gate
 
-`pnpm check` runs typecheck, lint, format check and tests through Turborepo. Passing it is the definition of done. It runs at three points:
+`pnpm check` runs typecheck, lint (ESLint and Stylelint), tests, the format check, Knip and sherif through Turborepo. Passing it is the definition of done. It runs at three points:
 
-| When                     | What runs                                                                | Scope                                                            |
-| ------------------------ | ------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-| Commit                   | Prettier on staged files, commitlint on the message                      | Staged files                                                     |
-| Push                     | `pnpm check`                                                             | The whole workspace. Turborepo's cache skips unchanged packages. |
-| CI on a PR and on `main` | Format check, then typecheck, lint, tests, build, Playwright e2e and axe | Packages affected relative to the base (`--affected`)            |
+| When                     | What runs                                                                                 | Scope                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Commit                   | Prettier on staged files, commitlint on the message                                       | Staged files                                                     |
+| Push                     | `pnpm check`                                                                              | The whole workspace. Turborepo's cache skips unchanged packages. |
+| CI on a PR and on `main` | Format check, Knip and sherif, then typecheck, lint, tests, build, Playwright e2e and axe | Packages affected relative to the base (`--affected`)            |
 
 lefthook runs the commit and push hooks. CI also checks the PR title. Unchanged apps skip their Vercel deploy (`turbo-ignore`).
 
