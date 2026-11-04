@@ -32,6 +32,9 @@ const ALL_LAYERS = [
   ...SHARED_CODE,
 ];
 
+const NO_CLASS_CONSTANTS =
+  "No class strings in variables: write the classes inline, or add an @utility in globals.css.";
+
 const NO_REEXPORT = "No re-exports: import from the file that declares the symbol.";
 
 // Files whose default export Next.js requires.
@@ -231,6 +234,18 @@ export default defineConfig(
           message:
             "No export lists: export at the declaration (export const / function / type / interface).",
         },
+        // Classes are written inline, or a repeated set becomes an @utility in globals.css.
+        // A className prop passed through by name is still allowed.
+        {
+          selector:
+            "JSXAttribute[name.name='className'] > JSXExpressionContainer > Identifier[name!='className']",
+          message: NO_CLASS_CONSTANTS,
+        },
+        {
+          selector:
+            "JSXAttribute[name.name='className'] > JSXExpressionContainer > TemplateLiteral > Identifier",
+          message: NO_CLASS_CONSTANTS,
+        },
       ],
       "no-restricted-exports": [
         "error",
@@ -273,8 +288,9 @@ export default defineConfig(
   // the code; docs/tooling.md has the current table.
   {
     files: ["src/**/*.{ts,tsx}"],
-    // Next.js requires mdx-components.tsx at the top of src/, outside every layer; it imports types only.
-    ignores: ["src/mdx-components.tsx"],
+    // Next.js requires these files at the top of src/, outside every layer. mdx-components.tsx
+    // imports types only; the instrumentation files import Sentry and lib/env.ts.
+    ignores: ["src/mdx-components.tsx", "src/instrumentation.ts", "src/instrumentation-client.ts"],
     plugins: { boundaries },
     settings: {
       "import/resolver": { typescript: { project: "./tsconfig.json" } },
@@ -463,6 +479,12 @@ export default defineConfig(
     // @next/mdx loads remark plugins by path and calls their default export.
     files: ["src/lib/remark-word-count.ts"],
     rules: { "no-restricted-exports": "off" },
+  },
+  {
+    // The env accessor itself, and the browser's Sentry setup, which reads the DSN raw so zod stays
+    // out of the client bundle (next.config.ts parses the same value at build time).
+    files: ["src/lib/env.ts", "src/instrumentation-client.ts"],
+    rules: { "no-restricted-properties": "off" },
   },
   {
     files: ["*.config.{js,ts}"],

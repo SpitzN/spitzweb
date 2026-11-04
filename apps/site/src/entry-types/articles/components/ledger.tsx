@@ -4,11 +4,6 @@ import type { ReactNode } from "react";
 // One row of the ledger on the 12-column grid: a muted label, the value, a muted end note. The
 // ledger bleeds past the page column by the amount each row pads, so every hairline, the first
 // included, spans the lifted ground while the text stays on the page column.
-const ROW =
-  "grid grid-cols-1 gap-x-5 border-be border-rule px-3 py-3 sm:grid-cols-12 sm:items-baseline";
-const LABEL = "text-ink-muted sm:col-span-2";
-const VALUE = "sm:col-span-7";
-const END = "text-ink-muted sm:col-span-3 sm:text-end";
 
 /** A ruled ledger: rows of facts and links set on hairlines, the first rule above them. */
 export function Ledger({ label, children }: { label: string; children: ReactNode }) {
@@ -30,10 +25,10 @@ export function LedgerFact({
   children: ReactNode;
 }) {
   return (
-    <div className={ROW}>
-      <dt className={LABEL}>{label}</dt>
-      <dd className={VALUE}>{children}</dd>
-      {end !== undefined && <dd className={END}>{end}</dd>}
+    <div className="grid grid-cols-1 gap-x-5 border-be border-rule px-3 py-3 sm:grid-cols-12 sm:items-baseline">
+      <dt className="text-ink-muted sm:col-span-2">{label}</dt>
+      <dd className="sm:col-span-7">{children}</dd>
+      {end !== undefined && <dd className="text-ink-muted sm:col-span-3 sm:text-end">{end}</dd>}
     </div>
   );
 }
@@ -55,19 +50,17 @@ export function LedgerLink({
   children: ReactNode;
 }) {
   return (
-    <li
-      className={`${ROW} group relative transition-all hover:bg-ground-raised has-focus-visible:bg-ground-raised`}
-    >
-      <span aria-hidden className={LABEL}>
+    <li className="group relative grid grid-cols-1 gap-x-5 border-be border-rule px-3 py-3 transition-all hover:bg-ground-raised has-focus-visible:bg-ground-raised sm:grid-cols-12 sm:items-baseline">
+      <span aria-hidden className="text-ink-muted sm:col-span-2">
         {label}
       </span>
       <Link
         href={href}
-        className={`${VALUE} transition-all group-hover:font-extrabold group-hover:text-accent-ink group-has-focus-visible:font-extrabold group-has-focus-visible:text-accent-ink after:absolute after:inset-0`}
+        className="transition-all group-hover:font-extrabold group-hover:text-accent-ink group-has-focus-visible:font-extrabold group-has-focus-visible:text-accent-ink after:absolute after:inset-0 sm:col-span-7"
       >
         {children}
       </Link>
-      {end !== undefined && <span className={END}>{end}</span>}
+      {end !== undefined && <span className="text-ink-muted sm:col-span-3 sm:text-end">{end}</span>}
     </li>
   );
 }

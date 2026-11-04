@@ -28,6 +28,8 @@ const config = {
   rules: {
     "at-rule-no-unknown": [true, { ignoreAtRules: TAILWIND_AT_RULES }],
     "at-rule-no-deprecated": [true, { ignoreAtRules: TAILWIND_AT_RULES }],
+    // `@apply` takes class names, which aren't a CSS prelude.
+    "at-rule-prelude-no-invalid": [true, { ignoreAtRules: TAILWIND_AT_RULES }],
     // Tailwind's theme namespaces (`--color-*`, `--text-title--line-height`) aren't kebab-case.
     "custom-property-pattern": null,
     // Tailwind documents `@import "tailwindcss"`; a token's comment sits tight against it.

@@ -16,8 +16,8 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
    - turn on Vercel Analytics.
 4. **Turborepo remote cache**: run `pnpm exec turbo login` and `pnpm exec turbo link`. Then in GitHub, add `TURBO_TOKEN` as an Actions secret and `TURBO_TEAM` as an Actions variable.
 5. **Renovate**: install the Renovate GitHub app on `SpitzN/spitzweb`. It reads `renovate.json`.
-6. **Sentry**: create a project for `apps/site` and add its DSN to the Vercel environment.
-7. **Uptime monitor**: add a check on `https://spitzweb.dev` that alerts Nadav.
+6. **Sentry**: create a Next.js project for `apps/site`. Add its DSN to Vercel as `NEXT_PUBLIC_SENTRY_DSN` (Config; it is public by design) and an organization auth token as `SENTRY_AUTH_TOKEN` (Secret), both for Production and Preview. In the organization's **Security & Privacy** settings, turn on **Prevent Storing of IP Addresses** (ADR 0007).
+7. **Uptime monitor**: in Sentry, add an uptime monitor on `https://spitzweb.dev` and connect it to the high-priority issue alert, so an outage emails Nadav.
 8. **Paid APIs**: set a spend cap in each provider's dashboard before its key goes into Vercel.
 
 ## Domains
