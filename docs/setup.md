@@ -10,6 +10,7 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
    - Local development, with callback `http://localhost:3000/api/auth/callback/github`. Its credentials go in `.env.local` only.
 3. **Vercel**: import `SpitzN/spitzweb` on the Hobby plan, with root directory `apps/site`. Then:
    - install the Neon integration with **Link Existing Neon Account**, so every preview build gets its own database branch and production uses `production`. Leave **Create a branch for your development environment** off, and set Vercel's Development `DATABASE_URL` and `DATABASE_URL_UNPOOLED` from the `development` branch;
+   - the integration saves Production's `DATABASE_URL` and `DATABASE_URL_UNPOOLED` as readable Config. Replace each with a Secret, which nobody can read back, so no agent can pull the production URL (ADR 0009). Copy the `production` branch's string from Neon, using the pooled one for `DATABASE_URL` and the direct one for `DATABASE_URL_UNPOOLED`, then run `vercel env rm <NAME> --environment production -y && pbpaste | vercel env add <NAME> --environment production --sensitive --yes` from `apps/site`. Piping from the clipboard keeps the value out of chat and shell history;
    - set the production environment variables;
    - once the app has a migrate script, set the build command to migrate before building (ADR 0009). The ignored build step is `turbo-ignore`, set in `apps/site/vercel.json`;
    - turn on Vercel Analytics.
@@ -31,4 +32,5 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
 - Admin panel sign-in works on a phone, and a different GitHub account is rejected.
 - An Update posted from the Admin panel appears in Activity.
 - Analytics shows the visit, Sentry receives a test error, and the uptime monitor reports the site as up.
+- `vercel env ls --environment production` lists `DATABASE_URL` and `DATABASE_URL_UNPOOLED` as Secret.
 - The `check` and `pr-title` CI checks are required in the `protect-main` ruleset.
