@@ -1,15 +1,21 @@
 import path from "node:path";
 import createMDX from "@next/mdx";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
+import { cspReportUriFromDsn } from "./src/lib/csp-report-uri";
+import { readPublicEnv } from "./src/lib/env";
 
 // The e2e suite builds the site against fixture content (e2e/content) into its own folder, so the
 // production build only ever sees content/ and the two builds never overwrite each other.
 const isE2eBuild = process.env.SPITZWEB_E2E === "1";
 const isDev = process.env.NODE_ENV === "development";
+// Parsed here as well as read in the browser, so a malformed DSN fails the build.
+const sentryDsn = readPublicEnv().NEXT_PUBLIC_SENTRY_DSN;
 
 // ADR 0007. The CSP allows inline scripts and styles: Next.js inlines both, and the only way to
 // allow them without 'unsafe-inline' is a per-request nonce, which would make every page dynamic
-// (ADR 0011). It runs report-only until the reports are clean. React's dev build needs eval.
+// (ADR 0011). It runs report-only until the reports are clean, and reports go to Sentry when a
+// DSN is set. React's dev build needs eval.
 const reportOnlyCsp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
@@ -19,6 +25,7 @@ const reportOnlyCsp = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
+  ...(sentryDsn ? [`report-uri ${cspReportUriFromDsn(sentryDsn)}`] : []),
 ].join("; ");
 
 const securityHeaders = [
@@ -72,4 +79,13 @@ const withMDX = createMDX({
   },
 });
 
-export default withMDX(nextConfig);
+// Source maps upload only when SENTRY_AUTH_TOKEN is set (Vercel production and preview builds);
+// elsewhere the build skips the upload. Browser events go through /monitoring, a rewrite to
+// Sentry on our own origin, so ad blockers don't drop them and the CSP needs no Sentry origin.
+export default withSentryConfig(withMDX(nextConfig), {
+  org: "spitzweb-site",
+  project: "site",
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+  silent: !process.env.CI,
+});
