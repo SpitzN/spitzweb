@@ -36,6 +36,19 @@ for (const route of PUBLIC_ROUTES) {
   });
 }
 
+// ADR 0008 and ADR 0012: the root layout loads Analytics and Speed Insights on every page, and
+// neither sets a cookie. Off Vercel their scripts 404, so this checks they are requested, not
+// what they send; the deployed site is checked by hand (docs/setup.md, First-deploy check).
+test("the analytics scripts load and the site sets no cookie", async ({ page }) => {
+  const analyticsScript = page.waitForRequest("**/_vercel/insights/script.js");
+  const speedInsightsScript = page.waitForRequest("**/_vercel/speed-insights/script.js");
+
+  await page.goto("/");
+  await Promise.all([analyticsScript, speedInsightsScript]);
+
+  expect(await page.context().cookies()).toEqual([]);
+});
+
 for (const route of PUBLIC_ROUTES) {
   for (const theme of THEMES) {
     test(`${route} responds and meets WCAG 2.2 AA in the ${theme} theme`, async ({ page }) => {

@@ -15,10 +15,11 @@ const sentryDsn = readPublicEnv().NEXT_PUBLIC_SENTRY_DSN;
 // ADR 0007. The CSP allows inline scripts and styles: Next.js inlines both, and the only way to
 // allow them without 'unsafe-inline' is a per-request nonce, which would make every page dynamic
 // (ADR 0011). It runs report-only until the reports are clean, and reports go to Sentry when a
-// DSN is set. React's dev build needs eval.
+// DSN is set. React's dev build needs eval, and in dev Vercel Analytics and Speed Insights load
+// debug scripts from Vercel's CDN; on Vercel both load from the site's own /_vercel path.
 const reportOnlyCsp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data:",
   "font-src 'self'",
