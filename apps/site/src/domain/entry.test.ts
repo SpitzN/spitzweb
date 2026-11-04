@@ -14,7 +14,9 @@ function entry(slug: string, overrides: Partial<Entry> = {}): Entry {
   };
 }
 
-const slugs = (entries: readonly Entry[]) => entries.map(({ slug }) => slug);
+function slugs(entries: readonly Entry[]) {
+  return entries.map(({ slug }) => slug);
+}
 
 describe("listedEntries", () => {
   test("lists Published Entries newest first", () => {
@@ -24,7 +26,7 @@ describe("listedEntries", () => {
       entry("january", { date: "2026-01-15" }),
     ];
 
-    expect(slugs(listedEntries(entries))).toEqual(["may", "march", "january"]);
+    expect(slugs(listedEntries(entries))).toStrictEqual(["may", "march", "january"]);
   });
 
   test("leaves out Draft, Unlisted and Archived Entries", () => {
@@ -35,7 +37,7 @@ describe("listedEntries", () => {
       entry("published"),
     ];
 
-    expect(slugs(listedEntries(entries))).toEqual(["published"]);
+    expect(slugs(listedEntries(entries))).toStrictEqual(["published"]);
   });
 
   test("shows Featured Entries first, each group newest first", () => {
@@ -46,7 +48,12 @@ describe("listedEntries", () => {
       entry("new-featured", { date: "2026-04-01", featured: true }),
     ];
 
-    expect(slugs(listedEntries(entries))).toEqual(["new-featured", "old-featured", "new", "older"]);
+    expect(slugs(listedEntries(entries))).toStrictEqual([
+      "new-featured",
+      "old-featured",
+      "new",
+      "older",
+    ]);
   });
 
   test("returns a new list and leaves the input order alone", () => {
@@ -54,7 +61,7 @@ describe("listedEntries", () => {
 
     listedEntries(entries);
 
-    expect(slugs(entries)).toEqual(["a", "b"]);
+    expect(slugs(entries)).toStrictEqual(["a", "b"]);
   });
 });
 

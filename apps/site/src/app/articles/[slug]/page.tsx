@@ -26,8 +26,9 @@ export function generateStaticParams() {
 
 /** The reachable Article a request names, or undefined for a malformed or unknown slug. */
 async function requestedArticle(params: PageProps<"/articles/[slug]">["params"]) {
-  const slug = entrySlugSchema.safeParse((await params).slug);
-  return slug.success ? findReachableArticle(slug.data) : undefined;
+  const { slug } = await params;
+  const parsed = entrySlugSchema.safeParse(slug);
+  return parsed.success ? findReachableArticle(parsed.data) : undefined;
 }
 
 export async function generateMetadata({

@@ -22,7 +22,7 @@ const tocNodeSchema: z.ZodType<TocNode> = z.object({
 });
 
 /** A heading in an Article's body that a contents link can point to. */
-export interface ArticleHeading {
+interface ArticleHeading {
   text: string;
   id: string;
   /** 2 for a section, 3 and deeper for the headings inside it. */

@@ -33,7 +33,7 @@ describe("parseArticles", () => {
   test("turns each MDX file into an Article named by its file", () => {
     const [article] = parseArticles([file("test-at-seams", validFrontmatter)]);
 
-    expect(article).toEqual({
+    expect(article).toStrictEqual({
       slug: "test-at-seams",
       title: "Why I test at seams",
       summary: "Tests that survive a refactor.",

@@ -14,12 +14,14 @@ export function countWords(node: Nodes): number {
   return node.children.reduce((total, child) => total + countWords(child), 0);
 }
 
+function defineWordCount(tree: Root, file: VFile) {
+  define(tree, file, { wordCount: { type: "Literal", value: countWords(tree) } });
+}
+
 /**
  * A remark plugin that exports `wordCount` from every MDX module (next.config.ts). @next/mdx loads
  * plugins by path and calls their default export, so this file keeps one.
  */
 export default function remarkWordCount() {
-  return (tree: Root, file: VFile) => {
-    define(tree, file, { wordCount: { type: "Literal", value: countWords(tree) } });
-  };
+  return defineWordCount;
 }
