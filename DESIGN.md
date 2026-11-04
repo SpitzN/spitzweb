@@ -281,7 +281,7 @@ The Article page's signature: a ruled ledger of facts, contents and the way onwa
 - **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first. Each row: a label in muted ink (two columns), the value in ink (seven), an optional end note in muted ink (three, end-aligned). Body type throughout; rank comes from weight and rule, not size.
 - **Bleed:** the ledger bleeds 0.75rem past the page column and each row pads 0.75rem inline and block, so hairlines span the lifted ground.
 - **Rows, in order (top):** Archived (Archived Articles only, first: "No longer maintained."; Status is a Project word); Published (the date, reading time as the end note); Topics; Contents (only when an Article has more than three headings; one row per heading, the label on the first row only, third-level headings indented 1.25rem); Next (the next Article's title, its date as the end note).
-- **Rows (end):** Next again, then Articles ("All Articles").
+- **Rows (end):** Next again, then Articles ("All Articles"), then Contact (Nadav on LinkedIn).
 - **Link rows:** the whole row is the target and its name is the value alone. Under pointer or focus the row takes the lifted ground and the value turns 800 in the accent ink, through the shared ease-out.
 - **Never:** section numbers, arrows or glyphs.
 - **Narrow screens:** each row stacks label, value and end note in one column.

@@ -4,6 +4,7 @@ import { ArticleBody } from "@/entry-types/articles/components/article-body";
 import { EntryDate } from "@/entry-types/articles/components/entry-date";
 import { Ledger, LedgerFact, LedgerLink } from "@/entry-types/articles/components/ledger";
 import type { Article } from "@/entry-types/articles/server/parse-articles";
+import { CONTACT } from "@/lib/contact";
 
 // Contents earn their rows only in a long piece: more than three headings.
 const MIN_HEADINGS_FOR_CONTENTS = 4;
@@ -74,6 +75,9 @@ export function ArticleView({ article, next }: { article: Article; next?: Entry 
           <ul>
             <LedgerLink href="/articles" label="Articles">
               All Articles
+            </LedgerLink>
+            <LedgerLink href={CONTACT.href} label="Contact">
+              {CONTACT.label}
             </LedgerLink>
           </ul>
         </Ledger>

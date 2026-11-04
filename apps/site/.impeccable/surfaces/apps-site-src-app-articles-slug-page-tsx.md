@@ -27,6 +27,4 @@ FORM: Colophon ledger, position 6 on the ordered list of seven, dealt as the lea
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-## Unresolved
-
-- A contact line at the end ("a way onward" for hiring managers and clients) waits for Nadav's contact method.
+The end ledger closes with a Contact row linking Nadav's LinkedIn profile (Nadav, 2026-11-04).

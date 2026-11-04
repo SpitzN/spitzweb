@@ -64,6 +64,20 @@ test("the list says which Article is Featured", async ({ page }) => {
   await expect(rows.filter({ hasText: "Featured ·" })).toHaveCount(1);
 });
 
+test("an Article ends with the way onward and how to reach Nadav", async ({ page }) => {
+  await page.goto("/articles/published-featured");
+
+  const onward = page.getByRole("region", { name: "Where to go next" });
+  await expect(onward.getByRole("link", { name: "All Articles" })).toHaveAttribute(
+    "href",
+    "/articles",
+  );
+  await expect(onward.getByRole("link", { name: "Nadav Spitzer on LinkedIn" })).toHaveAttribute(
+    "href",
+    "https://www.linkedin.com/in/nspitzer1/",
+  );
+});
+
 test("a Draft Article is not reachable", async ({ page }) => {
   const response = await page.goto("/articles/draft");
 
