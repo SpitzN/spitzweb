@@ -19,6 +19,7 @@ How spitzweb is built: the stack, the workspace, the code layout and where state
 | Hosting           | Vercel Hobby, kept portable                                                              | [0006](adr/0006-vercel-hosting-kept-portable.md)               |
 | Monitoring        | Sentry, security headers, report-only CSP, uptime monitor                                | [0007](adr/0007-production-monitoring-baseline.md)             |
 | Analytics         | Vercel Analytics, cookieless                                                             | [0008](adr/0008-vercel-analytics-without-cookies.md)           |
+| Field Web Vitals  | Vercel Speed Insights                                                                    | [0012](adr/0012-vercel-speed-insights-for-field-web-vitals.md) |
 | UI                | Two registers on one token system (`DESIGN.md`); shadcn/ui on Base UI in the Admin panel | [0010](adr/0010-two-ui-registers-one-token-system.md)          |
 | Styling           | Tailwind v4, tokens in `apps/site/src/app/globals.css`                                   |                                                                |
 | Validation        | zod at every boundary                                                                    |                                                                |
