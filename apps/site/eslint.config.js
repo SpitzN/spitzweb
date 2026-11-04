@@ -5,7 +5,11 @@ import boundaries from "eslint-plugin-boundaries";
 import nextTypescript from "eslint-config-next/typescript";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import jsxA11y from "eslint-plugin-jsx-a11y";
+import vitest from "@vitest/eslint-plugin";
+import playwright from "eslint-plugin-playwright";
 import reactHooks from "eslint-plugin-react-hooks";
+import regexp from "eslint-plugin-regexp";
+import unicorn from "eslint-plugin-unicorn";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -37,6 +41,19 @@ const NEXT_DEFAULT_EXPORTS = [
   "src/app/**/{sitemap,robots,manifest}.ts",
 ];
 
+// Boolean names read as a question (docs/tooling.md, Naming).
+const BOOLEAN_PREFIXES = ["is", "has", "should", "can", "did", "will"];
+// Boolean props that mirror an HTML attribute keep the attribute's name.
+const HTML_BOOLEAN_ATTRIBUTES =
+  "^(disabled|hidden|open|required|checked|selected|multiple|readOnly|autoFocus|inert)$";
+
+// Some presets report at "warn"; here every reported rule fails the run outright.
+function asErrors(rules) {
+  return Object.fromEntries(
+    Object.entries(rules).map(([name, level]) => [name, level === "warn" ? "error" : level]),
+  );
+}
+
 export default defineConfig(
   globalIgnores([".next", "coverage", "playwright-report", "test-results", "next-env.d.ts"]),
 
@@ -52,6 +69,37 @@ export default defineConfig(
   },
 
   { files: ["**/*.js"], extends: [js.configs.recommended] },
+
+  // --- Modern, unsurprising JavaScript: unicorn's recommended set, minus the rules that clash
+  // with a decision recorded in docs/tooling.md. regexp catches broken and slow patterns.
+  {
+    files: ["**/*.{js,ts,tsx}"],
+    extends: [unicorn.configs.recommended, regexp.configs["flat/recommended"]],
+    rules: {
+      "unicorn/filename-case": "off",
+      "unicorn/no-null": "off",
+      "unicorn/prefer-export-from": "off",
+      "unicorn/name-replacements": "off",
+      "unicorn/consistent-boolean-name": "off",
+      // Interface comments are TSDoc (.claude/rules/code-design.md, Comments).
+      "unicorn/single-line-block-comment-style": "off",
+      "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
+      "unicorn/consistent-destructuring": "error",
+    },
+  },
+
+  // --- Core style that holds for every file.
+  {
+    files: ["**/*.{js,ts,tsx}"],
+    rules: {
+      eqeqeq: ["error", "always"],
+      "no-console": "error",
+      "object-shorthand": ["error", "always"],
+      "prefer-template": "error",
+      "no-param-reassign": ["error", { props: true }],
+      "func-style": ["error", "declaration"],
+    },
+  },
 
   {
     files: ["**/*.{ts,tsx}"],
@@ -80,6 +128,72 @@ export default defineConfig(
       ],
       "@typescript-eslint/restrict-template-expressions": ["error", { allowNumber: true }],
       "@typescript-eslint/no-confusing-void-expression": ["error", { ignoreArrowShorthand: true }],
+      // `type` and `interface` are both fine (docs/tooling.md, Decisions).
+      "@typescript-eslint/consistent-type-definitions": "off",
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports", fixStyle: "separate-type-imports" },
+      ],
+      "@typescript-eslint/no-import-type-side-effects": "error",
+      "@typescript-eslint/switch-exhaustiveness-check": [
+        "error",
+        { considerDefaultExhaustiveForUnions: true },
+      ],
+      "@typescript-eslint/prefer-readonly": "error",
+
+      // --- Naming (docs/tooling.md, Naming)
+      "@typescript-eslint/naming-convention": [
+        "error",
+        { selector: "default", format: ["camelCase"] },
+        { selector: "import", format: ["camelCase", "PascalCase"] },
+        // Module-level constants may be UPPER_CASE; components assigned to a const are PascalCase.
+        {
+          selector: "variable",
+          modifiers: ["const", "global"],
+          format: ["camelCase", "PascalCase", "UPPER_CASE"],
+        },
+        { selector: "function", format: ["camelCase", "PascalCase"] },
+        { selector: "parameter", format: ["camelCase", "PascalCase"], leadingUnderscore: "allow" },
+        // A destructured name is chosen by the source object, not by this file.
+        { selector: ["variable", "parameter"], modifiers: ["destructured"], format: null },
+        // A component held in a variable or property is PascalCase, so it renders as <Content />.
+        // The rule can't tell a component by type (ComponentType includes classes), so PascalCase
+        // is allowed on these names whatever they hold.
+        { selector: ["variable", "typeProperty"], format: ["camelCase", "PascalCase"] },
+        // Env names such as SPITZWEB_E2E are UPPER_CASE wherever they appear as keys.
+        { selector: "objectLiteralProperty", format: ["camelCase", "PascalCase", "UPPER_CASE"] },
+        { selector: "typeLike", format: ["PascalCase"] },
+        {
+          selector: ["interface", "typeAlias", "class"],
+          format: ["PascalCase"],
+          custom: { regex: "^[IT][A-Z]", match: false },
+        },
+        // Keys such as "Desktop Chrome", "*.css" or "aria-label" belong to someone else's API.
+        {
+          selector: ["objectLiteralProperty", "typeProperty"],
+          modifiers: ["requiresQuotes"],
+          format: null,
+        },
+        {
+          selector: ["variable", "parameter"],
+          types: ["boolean"],
+          format: ["PascalCase"],
+          prefix: BOOLEAN_PREFIXES,
+        },
+        {
+          selector: "typeProperty",
+          types: ["boolean"],
+          format: ["PascalCase"],
+          prefix: BOOLEAN_PREFIXES,
+          filter: { regex: HTML_BOOLEAN_ATTRIBUTES, match: false },
+        },
+        {
+          selector: ["variable", "parameter"],
+          modifiers: ["destructured"],
+          types: ["boolean"],
+          format: null,
+        },
+      ],
 
       // --- Shape of code
       complexity: ["error", 10],
@@ -96,7 +210,7 @@ export default defineConfig(
         "error",
         {
           VariableDeclarator: { array: true, object: true },
-          AssignmentExpression: { array: false, object: false },
+          AssignmentExpression: { array: true, object: true },
         },
       ],
 
@@ -127,7 +241,10 @@ export default defineConfig(
         "error",
         {
           patterns: [
-            { regex: "^\\.\\./", message: "Use the @/ alias instead of parent-relative imports." },
+            {
+              regex: String.raw`^\.\./`,
+              message: "Use the @/ alias instead of parent-relative imports.",
+            },
           ],
         },
       ],
@@ -254,6 +371,7 @@ export default defineConfig(
       "react/no-array-index-key": "error",
       "react/jsx-no-useless-fragment": "error",
       "react/jsx-no-constructed-context-values": "error",
+      "react/destructuring-assignment": ["error", "always", { destructureInSignature: "always" }],
       "react-hooks/no-deriving-state-in-effects": "error",
       "react-hooks/exhaustive-deps": "error",
       "react-hooks/incompatible-library": "error",
@@ -273,11 +391,11 @@ export default defineConfig(
         {
           restrict: [
             {
-              pattern: "\\[([^\\[\\]]*?)\\](?!:)",
+              pattern: String.raw`\[([^\[\]]*?)\](?!:)`,
               message: "No arbitrary values: add a theme token.",
             },
             {
-              pattern: `^(.*[:-])?(${PALETTE})-(50|[1-9]00|950)(\\/.+)?$`,
+              pattern: String.raw`^(.*[:-])?(${PALETTE})-(50|[1-9]00|950)(\/.+)?$`,
               message: "No raw palette colours: use a theme token.",
             },
           ],
@@ -289,6 +407,39 @@ export default defineConfig(
       "better-tailwindcss/no-duplicate-classes": "error",
       "better-tailwindcss/no-deprecated-classes": "error",
     },
+  },
+
+  // --- No index barrels (.claude/rules/structure.md): a file is named for what it holds.
+  {
+    files: ["src/**/index.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        { selector: "Program", message: "No index files: name the file for what it holds." },
+      ],
+    },
+  },
+
+  // --- Tests. Unit tests run on Vitest, end-to-end tests on Playwright.
+  {
+    files: ["src/**/*.test.{ts,tsx}"],
+    extends: [vitest.configs.recommended],
+    rules: {
+      ...asErrors(vitest.configs.recommended.rules),
+      "vitest/consistent-test-it": ["error", { fn: "test", withinDescribe: "test" }],
+      "vitest/no-focused-tests": "error",
+      "vitest/no-disabled-tests": "error",
+      "vitest/no-standalone-expect": "error",
+      "vitest/prefer-hooks-on-top": "error",
+      "vitest/prefer-hooks-in-order": "error",
+      "vitest/prefer-to-be": "error",
+      "vitest/prefer-strict-equal": "error",
+    },
+  },
+  {
+    files: ["e2e/**/*.ts"],
+    extends: [playwright.configs["flat/recommended"]],
+    rules: asErrors(playwright.configs["flat/recommended"].rules),
   },
 
   // --- Exceptions. Each one is listed in docs/tooling.md with its reason.

@@ -12,7 +12,6 @@ Impeccable owns design, so run `impeccable` for every UI change. `DESIGN.md` is 
 
 - Every colour, type size, space, radius, shadow and motion value comes from a token defined for light and dark.
 - A creative surface may define its own tokens in its own stylesheet. A lint exception is granted per folder and listed in `docs/tooling.md` (`docs/conventions.md`, "Strict by default, loosened by folder").
-- Use logical properties and utilities only (`ms-*`, `pe-*`, `start-*`, `inline`, `block`), so RTL stays cheap to add.
 
 ## Accessibility (WCAG 2.2 AA)
 

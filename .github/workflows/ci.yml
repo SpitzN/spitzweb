@@ -36,6 +36,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
+      # Knip and sherif read the whole workspace, so they run outside --affected.
+      - run: pnpm knip
+      - run: pnpm sherif
       - run: pnpm --filter site exec playwright install --with-deps chromium
       - run: pnpm turbo run typecheck lint test build e2e --affected
       - if: failure()
