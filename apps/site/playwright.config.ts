@@ -7,15 +7,18 @@ export default defineConfig({
   forbidOnly: isCi,
   retries: isCi ? 1 : 0,
   reporter: isCi ? "github" : "list",
-  use: { baseURL: "http://localhost:3000", trace: "on-first-retry" },
+  use: { baseURL: "http://localhost:3100", trace: "on-first-retry" },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
-  // Turborepo builds before e2e runs, so this only starts the production server.
+  // The suite builds its own copy of the site against fixture content (e2e/content, swapped in by
+  // next.config.ts) into .next-e2e, and serves it on its own port so a dev server can keep running.
   webServer: {
-    command: "pnpm start",
-    url: "http://localhost:3000",
+    command: "pnpm build && pnpm start --port 3100",
+    env: { SPITZWEB_E2E: "1" },
+    url: "http://localhost:3100",
     reuseExistingServer: !isCi,
+    timeout: 300_000,
   },
 });

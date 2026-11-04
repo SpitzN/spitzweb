@@ -1,0 +1,48 @@
+---
+title: Fixture — a Featured Article that tests every element of the Read register
+summary: A Published, Featured fixture with headings, lists, code, quotes and links.
+date: 2026-03-02
+state: published
+topics: [developer-tools, frontend]
+featured: true
+---
+
+This Article is an e2e fixture. It exists so the Articles page can be built, tested and checked for accessibility before Nadav publishes real writing. Its paragraphs run long on purpose, so line length, leading and rhythm can be judged at a real measure rather than on a sentence or two.
+
+A test earns its place when it fails for a reason a reader can name. Tests written against a seam keep passing while the code behind it changes shape, and they fail only when the behaviour does. That is the whole argument, and the rest of this fixture is here to exercise the typography.
+
+## A second-level heading
+
+Inline elements need to sit well inside running text: **strong emphasis**, _emphasis_, `inline code` such as `listedEntries(entries)`, and [a link to the Next.js documentation](https://nextjs.org/docs) all appear in this paragraph.
+
+## Lists
+
+- An unordered list item that is short.
+- A second item that runs long enough to wrap onto another line at most widths, so the hanging indent shows.
+- A third item.
+
+1. An ordered list item.
+2. A second ordered item.
+3. A third ordered item.
+
+### A third-level heading
+
+A short paragraph under the third-level heading.
+
+## Quotes and code
+
+> A blockquote: the content of someone else's words, set apart from the Article's own voice and long enough to wrap across two lines.
+
+```ts
+export function listedEntries<T extends Entry>(entries: readonly T[]) {
+  return entries
+    .filter(({ state }) => isListed(state))
+    .toSorted((a, b) => Number(b.featured) - Number(a.featured) || b.date.localeCompare(a.date));
+}
+```
+
+A closing paragraph after the code block, to check the space around it.
+
+---
+
+A paragraph after a thematic break.

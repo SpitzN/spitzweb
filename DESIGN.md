@@ -48,6 +48,29 @@ typography:
     fontWeight: 400
     lineHeight: 1.5
     fontFeature: "tnum"
+  prose:
+    fontFamily: "Funnel Sans, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 400
+    lineHeight: "1.75rem"
+    fontFeature: "pnum"
+  prose-heading:
+    fontFamily: "Funnel Display, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.875rem"
+    fontWeight: 700
+    lineHeight: 1.25
+    letterSpacing: "-0.025em"
+  prose-subheading:
+    fontFamily: "Funnel Display, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.25rem"
+    fontWeight: 700
+    lineHeight: 1.375
+    letterSpacing: "-0.025em"
+  code:
+    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+    fontSize: "0.875rem"
+    fontWeight: 400
+    lineHeight: "1.5rem"
 rounded:
   focus: "2px"
 spacing:
@@ -58,6 +81,12 @@ spacing:
   header-block-start: "1.5rem"
   header-block-end: "1.25rem"
   section-block: "4rem"
+  page-block-end: "6rem"
+  grid-gap: "1.25rem"
+  row-bleed: "0.75rem"
+  ledger-row-block: "0.75rem"
+  list-row-block: "1rem"
+  prose-measure: "36rem"
 components:
   site-header:
     backgroundColor: "{colors.ground}"
@@ -83,6 +112,44 @@ components:
     typography: "{typography.title-selected}"
   project-row-selected:
     backgroundColor: "{colors.ground-raised}"
+  ledger-row:
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    padding: "0.75rem"
+  ledger-label:
+    textColor: "{colors.ink-muted}"
+  ledger-link-hover:
+    backgroundColor: "{colors.ground-raised}"
+    textColor: "{colors.accent-ink}"
+  article-row:
+    textColor: "{colors.ink-muted}"
+    padding: "1rem 0.75rem"
+  article-row-hover:
+    backgroundColor: "{colors.ground-raised}"
+  article-title:
+    textColor: "{colors.ink}"
+    typography: "{typography.title}"
+  article-title-hover:
+    textColor: "{colors.accent-ink}"
+    typography: "{typography.title-selected}"
+  prose:
+    textColor: "{colors.ink}"
+    typography: "{typography.prose}"
+    width: "36rem"
+  prose-heading:
+    textColor: "{colors.ink}"
+    typography: "{typography.prose-heading}"
+  prose-subheading:
+    textColor: "{colors.ink}"
+    typography: "{typography.prose-subheading}"
+  code-block:
+    backgroundColor: "{colors.ground-raised}"
+    textColor: "{colors.ink}"
+    typography: "{typography.code}"
+    padding: "1.25rem"
+  code-inline:
+    backgroundColor: "{colors.ground-raised}"
+    textColor: "{colors.ink}"
   featured-panel:
     backgroundColor: "{colors.accent}"
     textColor: "{colors.on-accent}"
@@ -97,9 +164,9 @@ components:
 
 **Creative North Star: "The Precision Instrument"**
 
-spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project titles, Funnel Sans for everything else, with weight rather than decoration carrying state.
+spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included, with weight rather than decoration carrying state.
 
-Dark is the default theme and was chosen first; light is a full alternative, switched by `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals everywhere, hairlines instead of containers, one exponential ease-out for every change of state.
+Dark is the default theme and was chosen first; light is a full alternative, switched by `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals outside running prose, hairlines instead of containers, one exponential ease-out for every change of state.
 
 The system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.
 
@@ -107,9 +174,9 @@ The system serves both UI registers from ADR 0010 on one set of tokens. Read and
 
 - Drenched ultramarine ground, warm off-white ink, periwinkle muted ink, ultramarine hairlines.
 - One accent that marks only the live or selected thing.
-- Funnel Display for headings and Project titles, Funnel Sans for everything else.
+- Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included.
 - Weight carries state: Project titles go from 400 at rest to 800 when selected.
-- Hairline rules, tabular numerals, no cards, no badges, no kickers or eyebrows.
+- Hairline rules, tabular numerals outside prose, no cards, no badges, no kickers or eyebrows.
 - One exponential ease-out (450ms) for every change of state; all motion stills under reduced motion.
 - Logical properties only, so RTL stays cheap.
 
@@ -144,9 +211,10 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 ## Typography
 
 **Display Font:** Funnel Display (with ui-sans-serif, system-ui, sans-serif)
-**Body Font:** Funnel Sans (with ui-sans-serif, system-ui, sans-serif)
+**Body Font:** Funnel Sans (with ui-sans-serif, system-ui, sans-serif), roman and true italic
+**Code Font:** the platform monospace stack (ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace), for code only
 
-**Character:** One family in two cuts: Funnel Display is tight, heavy and confident at the top of a page and quiet at 400 in a list; Funnel Sans is plain and even for everything that reads. Both are self-hosted at build through next/font.
+**Character:** One family in two cuts: Funnel Display is tight, heavy and confident at the top of a page and quiet at 400 in a list; Funnel Sans is plain and even for everything that reads, long-form Articles included. Both are self-hosted at build through next/font; Funnel Sans loads its italic too, so emphasis is never a synthesized slant.
 
 ### Hierarchy
 
@@ -154,21 +222,29 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 - **Wordmark** (Funnel Display 700, 1.25rem, tracking -0.025em): the spitzweb wordmark in the header.
 - **Title** (Funnel Display 400, 1.5rem, line-height 1.15, tracking -0.015em): a Project title in a list, at rest.
 - **Title, selected** (Funnel Display 800, same size): the selected or hovered Project title, in the accent ink.
-- **Body** (Funnel Sans 400, 1rem, line-height 1.5): everything else, including nav, summaries and metadata. Tabular numerals are on for the whole document.
+- **Body** (Funnel Sans 400, 1rem, line-height 1.5): everything else, including nav, summaries, metadata and ledger rows. Tabular numerals are on for the whole document.
+- **Prose** (Funnel Sans 400, 1.125rem, line-height 1.75rem, proportional figures): Article body text in the Read register. Capped at 36rem, about 68 characters to the line, with pretty wrapping.
+- **Prose heading** (Funnel Display 700, 1.875rem, line-height 1.25, tracking -0.025em): a second-level heading inside an Article, balanced, with more space above (2.5rem) than below (0.75rem).
+- **Prose subheading** (Funnel Display 700, 1.25rem, line-height 1.375, tracking -0.025em): a third-level heading inside an Article, 1.5rem above and 0.5rem below.
+- **Code** (monospace, 0.875rem, line-height 1.5rem in blocks; 1rem inline): code samples, always on the lifted ground.
 
 ### Named Rules
 
 **The Weight Carries State Rule.** State is shown by weight, not by boxes or badges. A Project title sits at 400 at rest and moves to 800 with the accent ink when selected, through the shared ease-out.
 
-**The Tabular Rule.** Numerals are tabular everywhere (set on `html`), so years, times and readouts never jitter.
+**The Tabular Rule.** Numerals are tabular everywhere (set on `html`), so years, times and readouts never jitter. Running prose is the one exception: Article body text switches to proportional figures, because numbers there are read, not compared.
+
+**The One Family Rule.** Funnel is the only family on the site, Article body text included. Literata, Geist, Atkinson Hyperlegible Next, Source Serif 4 and Spectral were proofed for Article body text and rejected. A monospace sets code and nothing else.
 
 ## Layout
 
-The page has an inline padding of 1rem, widening to 2rem from the `sm` breakpoint (40rem). Spacing comes from Tailwind's 0.25rem scale; the steps in use are recorded in the frontmatter. The header wraps its wordmark and nav on a shared baseline, with 3rem between them inline and 0.75rem when they wrap, 1.5rem between nav links, and a hairline below. Page content opens with 4rem of block padding.
+The page has an inline padding of 1rem, widening to 2rem from the `sm` breakpoint (40rem). Spacing comes from Tailwind's 0.25rem scale; the steps in use are recorded in the frontmatter. The header wraps its wordmark and nav on a shared baseline, with 3rem between them inline and 0.75rem when they wrap, 1.5rem between nav links, and a hairline below. Page content opens with 4rem of block padding; Article pages close with 6rem.
+
+Built surfaces sit on a 12-column grid from the `sm` breakpoint, with a 1.25rem column gap, and collapse to one column below it. Rows that lift their ground on hover (ledger rows, list rows) bleed 0.75rem past the page column and pad inline by the same amount, so the hairlines span the lifted ground while the text stays on the page column. The Article body starts at column three and is capped at the 36rem measure.
 
 All layout uses logical properties and utilities only (`pbs-*`, `pbe-*`, `border-be`, `max-inline-*`, `min-block-dvh`), so an RTL locale needs no layout rewrite. Lint enforces this.
 
-**Intended home composition (designed, not yet built).** The tracked mock (`.impeccable/mocks/typographic/e-funnel-accent.html`) sets the home page on a strict 12-column grid: the header rule spans all columns; the statement in heavy Funnel Display takes the start seven columns with the latest Update beneath it; the Featured panel takes the end five, filled with the accent and holding the Project's title, a live readout of the Hosted project and one line on what it is; the Projects list runs full width from just above the fold, each row on the same 12 columns (title in four, one-line summary in five, year and Status in three, aligned to the end), divided by hairlines. Below the small breakpoint everything collapses to one column and each row stacks its summary under the title. Selection moves by pointer or by J and K, and Enter opens. The exact grid gap and breakpoint are not yet tokens.
+**Intended home composition (designed, not yet built).** The tracked mock (`.impeccable/mocks/typographic/e-funnel-accent.html`) sets the home page on a strict 12-column grid: the header rule spans all columns; the statement in heavy Funnel Display takes the start seven columns with the latest Update beneath it; the Featured panel takes the end five, filled with the accent and holding the Project's title, a live readout of the Hosted project and one line on what it is; the Projects list runs full width from just above the fold, each row on the same 12 columns (title in four, one-line summary in five, year and Status in three, aligned to the end), divided by hairlines. Below the small breakpoint everything collapses to one column and each row stacks its summary under the title. Selection moves by pointer or by J and K, and Enter opens. The Articles list and Article page now carry this grid as built (above).
 
 ## Elevation & Depth
 
@@ -196,7 +272,43 @@ The site header: quiet, exact, on a hairline.
 
 ### Statement
 
-The page-opening heading: heavy Display type in full ink, balanced, capped at 56rem. On the home page its wording is a stand-in until Nadav writes it.
+The page-opening heading: heavy Display type in full ink, balanced, capped at 56rem. On the home page its wording is a stand-in until Nadav writes it. The Articles list opens with it ("Articles"), followed by one line in muted ink at 1.125rem (capped at 42rem) and 3rem of space before the list. An Article's title is a Statement too, capped wider at 64rem, with 2.5rem before the ledger.
+
+### Ledger
+
+The Article page's signature: a ruled ledger of facts, contents and the way onward, set before the first paragraph and repeated at the end.
+
+- **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first. Each row: a label in muted ink (two columns), the value in ink (seven), an optional end note in muted ink (three, end-aligned). Body type throughout; rank comes from weight and rule, not size.
+- **Bleed:** the ledger bleeds 0.75rem past the page column and each row pads 0.75rem inline and block, so hairlines span the lifted ground.
+- **Rows, in order (top):** Archived (Archived Articles only, first: "No longer maintained."; Status is a Project word); Published (the date, reading time as the end note); Topics; Contents (only when an Article has more than three headings; one row per heading, the label on the first row only, third-level headings indented 1.25rem); Next (the next Article's title, its date as the end note).
+- **Rows (end):** Next again, then Articles ("All Articles"), then Contact (Nadav on LinkedIn).
+- **Link rows:** the whole row is the target and its name is the value alone. Under pointer or focus the row takes the lifted ground and the value turns 800 in the accent ink, through the shared ease-out.
+- **Never:** section numbers, arrows or glyphs.
+- **Narrow screens:** each row stacks label, value and end note in one column.
+
+### Article list row
+
+The Projects list row grammar applied to Articles, built.
+
+- **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first: the title in Title type (four columns), the summary in muted ink (five), the date and Topics in muted ink on two lines (three, end-aligned). Rows pad 1rem block and 0.75rem inline and bleed the same 0.75rem.
+- **Featured:** Featured Articles lead the list and carry "Featured ·" in semibold ink before the date. No badge, no accent.
+- **Hover / Focus:** the whole row is the link; the row takes the lifted ground and the title turns 800 in the accent ink, through the shared ease-out.
+- **Empty:** "No Articles yet." in muted ink, 1.5rem under the top hairline.
+- **Narrow screens:** one column; summary and meta stack under the title.
+
+### Prose
+
+Article body text in the Read register: a calm column, not a blog template.
+
+- **Column:** Prose type, 36rem measure, starting at column three; paragraphs 1.5rem apart, pretty wrapping, proportional figures.
+- **Headings:** Prose heading and subheading, more space above than below; anchored headings stop 1.5rem clear of the top when a Contents row scrolls to them.
+- **Links:** ink text underlined in muted ink (4px offset); the underline turns ink on hover.
+- **Lists:** 1.5rem start indent, markers in muted ink, 0.5rem between items.
+- **Blockquote:** text in muted ink behind a 1px start rule in the rule colour, with 1.5rem start padding.
+- **Inline code:** monospace at 1rem on the lifted ground.
+- **Code blocks:** monospace 0.875rem on the lifted ground, 1.25rem padding; they scroll sideways instead of wrapping and are a focusable, labelled region ("Code sample").
+- **Thematic break:** a hairline in the rule colour.
+- **Emphasis:** Funnel Sans true italic; strong is 700.
 
 ### Project list row (designed, not yet built)
 
@@ -227,7 +339,9 @@ Built from shadcn/ui on Base UI (ADR 0010). Each primitive's variants map onto t
 - **Do** keep the accent for the live or selected thing.
 - **Do** show state with weight: Project titles at 400 at rest, 800 with the accent ink when selected.
 - **Do** separate with hairline rules in the rule colour.
-- **Do** keep numerals tabular.
+- **Do** keep numerals tabular, except in running prose, which takes proportional figures.
+- **Do** set Article body text in Funnel Sans at 1.125rem on a 36rem measure.
+- **Do** give rows that lift their ground the 0.75rem bleed and matching inline padding, so hairlines span the lift.
 - **Do** use logical properties and utilities only.
 - **Do** run every transition on the shared ease-out and let reduced motion still it.
 - **Do** meet WCAG 2.2 AA in both themes.
@@ -237,6 +351,8 @@ Built from shadcn/ui on Base UI (ADR 0010). Each primitive's variants map onto t
 - **Don't** use cards or boxed containers to group content.
 - **Don't** use badges or pills for Status, Topics or counts; set them as muted text.
 - **Don't** put kickers or eyebrows above headings.
+- **Don't** number ledger rows or sections, or add arrows or glyphs to rows.
+- **Don't** bring in a second text family for long-form reading.
 - **Don't** add shadows.
 - **Don't** use arbitrary Tailwind values or raw palette colours.
 - **Don't** replace the ultramarine ground with near-black.

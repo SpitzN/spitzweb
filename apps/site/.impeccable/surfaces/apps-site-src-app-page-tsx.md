@@ -31,6 +31,5 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 - Nadav's local time: a candidate Feature (a clock relative to the visitor's own time), to be named in GLOSSARY.md before it is built.
 - Light theme: designed alongside dark in the build, not yet proven.
-- Article body text: Funnel Sans or a paired text face; decide on the first Article page.
 - The statement's wording is a stand-in until Nadav writes it.
 - Titles longer than the title column need a rule (wrap or truncate with the full title reachable).

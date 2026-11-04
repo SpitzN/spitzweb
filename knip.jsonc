@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    "apps/site": {
+      // Files only the build reaches, which Knip cannot trace (docs/tooling.md, Decisions).
+      "entry": [
+        // @next/mdx loads this remark plugin by path from next.config.ts.
+        "src/lib/remark-word-count.ts",
+        // The e2e build aliases src/lib/content-glob.ts to this file in next.config.ts.
+        "e2e/content-glob.ts",
+        // Content is found by import.meta.glob, which Knip does not follow.
+        "content/**/*.mdx",
+        "e2e/content/**/*.mdx",
+      ],
+    },
+  },
+}

@@ -16,7 +16,7 @@ const funnelSans = Funnel_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "spitzweb",
+  title: { default: "spitzweb", template: "%s · spitzweb" },
   description: "What Nadav Spitzer builds, writes and is doing.",
 };
 

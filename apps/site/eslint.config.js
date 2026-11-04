@@ -55,7 +55,14 @@ function asErrors(rules) {
 }
 
 export default defineConfig(
-  globalIgnores([".next", "coverage", "playwright-report", "test-results", "next-env.d.ts"]),
+  globalIgnores([
+    ".next",
+    ".next-e2e",
+    "coverage",
+    "playwright-report",
+    "test-results",
+    "next-env.d.ts",
+  ]),
 
   ...nextVitals,
   ...nextTypescript,
@@ -266,6 +273,8 @@ export default defineConfig(
   // the code; docs/tooling.md has the current table.
   {
     files: ["src/**/*.{ts,tsx}"],
+    // Next.js requires mdx-components.tsx at the top of src/, outside every layer; it imports types only.
+    ignores: ["src/mdx-components.tsx"],
     plugins: { boundaries },
     settings: {
       "import/resolver": { typescript: { project: "./tsconfig.json" } },
@@ -376,6 +385,9 @@ export default defineConfig(
       "react-hooks/exhaustive-deps": "error",
       "react-hooks/incompatible-library": "error",
       "react-hooks/unsupported-syntax": "error",
+      // A scrollable region (a code block) must take keyboard focus (axe: scrollable-region-focusable),
+      // so a labelled region may carry tabIndex as well as a tab panel.
+      "jsx-a11y/no-noninteractive-tabindex": ["error", { tags: [], roles: ["tabpanel", "region"] }],
     },
   },
 
@@ -445,6 +457,11 @@ export default defineConfig(
   // --- Exceptions. Each one is listed in docs/tooling.md with its reason.
   {
     files: NEXT_DEFAULT_EXPORTS,
+    rules: { "no-restricted-exports": "off" },
+  },
+  {
+    // @next/mdx loads remark plugins by path and calls their default export.
+    files: ["src/lib/remark-word-count.ts"],
     rules: { "no-restricted-exports": "off" },
   },
   {
