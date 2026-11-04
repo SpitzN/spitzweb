@@ -32,6 +32,9 @@ const ALL_LAYERS = [
   ...SHARED_CODE,
 ];
 
+const NO_CLASS_CONSTANTS =
+  "No class strings in variables: write the classes inline, or add an @utility in globals.css.";
+
 const NO_REEXPORT = "No re-exports: import from the file that declares the symbol.";
 
 // Files whose default export Next.js requires.
@@ -230,6 +233,18 @@ export default defineConfig(
           selector: "ExportNamedDeclaration[declaration=null][source=null]",
           message:
             "No export lists: export at the declaration (export const / function / type / interface).",
+        },
+        // Classes are written inline, or a repeated set becomes an @utility in globals.css.
+        // A className prop passed through by name is still allowed.
+        {
+          selector:
+            "JSXAttribute[name.name='className'] > JSXExpressionContainer > Identifier[name!='className']",
+          message: NO_CLASS_CONSTANTS,
+        },
+        {
+          selector:
+            "JSXAttribute[name.name='className'] > JSXExpressionContainer > TemplateLiteral > Identifier",
+          message: NO_CLASS_CONSTANTS,
         },
       ],
       "no-restricted-exports": [

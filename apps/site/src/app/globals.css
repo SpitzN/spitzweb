@@ -69,6 +69,11 @@
   --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* A text link: ink text underlined in muted ink; the underline turns ink on hover (DESIGN.md, Prose). */
+@utility text-link {
+  @apply underline decoration-ink-muted underline-offset-4 transition-colors hover:decoration-ink;
+}
+
 @layer base {
   html {
     background-color: var(--color-ground);

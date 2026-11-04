@@ -30,10 +30,7 @@ const PROSE: MDXComponents = {
   ol: (props) => <ol className="list-decimal ps-6 pbe-6 marker:text-ink-muted" {...props} />,
   li: (props) => <li className="ps-1 pbe-2 text-pretty" {...props} />,
   a: ({ children, ...props }) => (
-    <a
-      className="underline decoration-ink-muted underline-offset-4 transition-colors hover:decoration-ink"
-      {...props}
-    >
+    <a className="text-link" {...props}>
       {children}
     </a>
   ),

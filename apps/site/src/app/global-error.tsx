@@ -20,9 +20,6 @@ const funnelSans = Funnel_Sans({
   display: "swap",
 });
 
-const ACTION =
-  "underline decoration-ink-muted underline-offset-4 transition-colors hover:decoration-ink";
-
 export default function GlobalError({ error, retry }: { error: unknown; retry: () => void }) {
   useEffect(() => {
     Sentry.captureException(error);
@@ -45,10 +42,10 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
             This page failed to load. Try again, or start from the home page.
           </p>
           <div className="flex flex-wrap gap-x-6 gap-y-3">
-            <button type="button" onClick={retry} className={`${ACTION} cursor-pointer`}>
+            <button type="button" onClick={retry} className="cursor-pointer text-link">
               Try again
             </button>
-            <Link href="/" className={ACTION}>
+            <Link href="/" className="text-link">
               Go to the home page
             </Link>
           </div>
