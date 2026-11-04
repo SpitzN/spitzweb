@@ -59,7 +59,7 @@ Open. To be written in Nadav's own words.
 
 ## Brand Commitments
 
-- Name: **spitzweb**, at `spitzweb.dev` (`spitzweb.com` redirects there).
+- Name: **spitzweb**, at `spitzweb.dev`.
 - Author: Nadav Spitzer; GitHub `SpitzN`.
 - No inherited visual identity. The v1 aurora color system was dropped on purpose.
 
