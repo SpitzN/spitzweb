@@ -39,3 +39,8 @@ blob-report/
 .impeccable/review/
 .impeccable/screenshots/
 # impeccable-ignore-end
+
+# Spent design explorations stay local; only the chosen reference mock is committed (DESIGN.md).
+.impeccable/mocks/decision/
+.impeccable/mocks/typographic/*
+!.impeccable/mocks/typographic/e-funnel-accent.html

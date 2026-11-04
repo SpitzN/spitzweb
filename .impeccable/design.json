@@ -1,0 +1,405 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T00:00:00Z",
+  "title": "Design System: spitzweb",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Drenched Ultramarine",
+        "canonical": "oklch(25.4% 0.101 272.2)",
+        "tonalRamp": [
+          "oklch(15% 0.046 272)",
+          "oklch(26% 0.061 272)",
+          "oklch(37% 0.076 272)",
+          "oklch(48% 0.091 272)",
+          "oklch(59% 0.095 272)",
+          "oklch(70% 0.080 272)",
+          "oklch(82% 0.064 272)",
+          "oklch(95% 0.046 272)"
+        ]
+      },
+      "ground-raised": {
+        "role": "neutral",
+        "displayName": "Lifted Ultramarine",
+        "canonical": "oklch(29.9% 0.124 272.1)",
+        "tonalRamp": [
+          "oklch(15% 0.056 272)",
+          "oklch(26% 0.075 272)",
+          "oklch(37% 0.094 272)",
+          "oklch(48% 0.112 272)",
+          "oklch(59% 0.117 272)",
+          "oklch(70% 0.099 272)",
+          "oklch(82% 0.078 272)",
+          "oklch(95% 0.056 272)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "oklch(95.9% 0.010 87.5)",
+        "tonalRamp": [
+          "oklch(15% 0.005 88)",
+          "oklch(26% 0.006 88)",
+          "oklch(37% 0.008 88)",
+          "oklch(48% 0.009 88)",
+          "oklch(59% 0.009 88)",
+          "oklch(70% 0.008 88)",
+          "oklch(82% 0.006 88)",
+          "oklch(95% 0.005 88)"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Periwinkle",
+        "canonical": "oklch(77.2% 0.051 280.1)",
+        "tonalRamp": [
+          "oklch(15% 0.023 280)",
+          "oklch(26% 0.031 280)",
+          "oklch(37% 0.038 280)",
+          "oklch(48% 0.046 280)",
+          "oklch(59% 0.048 280)",
+          "oklch(70% 0.041 280)",
+          "oklch(82% 0.032 280)",
+          "oklch(95% 0.023 280)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Ultramarine Hairline",
+        "canonical": "oklch(36.7% 0.130 273.7)",
+        "tonalRamp": [
+          "oklch(15% 0.059 274)",
+          "oklch(26% 0.079 274)",
+          "oklch(37% 0.098 274)",
+          "oklch(48% 0.118 274)",
+          "oklch(59% 0.123 274)",
+          "oklch(70% 0.103 274)",
+          "oklch(82% 0.082 274)",
+          "oklch(95% 0.059 274)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Live Lime",
+        "canonical": "oklch(90.3% 0.182 123.2)",
+        "tonalRamp": [
+          "oklch(15% 0.083 123)",
+          "oklch(26% 0.110 123)",
+          "oklch(37% 0.137 123)",
+          "oklch(48% 0.165 123)",
+          "oklch(59% 0.172 123)",
+          "oklch(70% 0.145 123)",
+          "oklch(82% 0.115 123)",
+          "oklch(95% 0.083 123)"
+        ]
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "Accent Shadow Ink",
+        "canonical": "oklch(23.2% 0.042 127.1)",
+        "tonalRamp": [
+          "oklch(15% 0.019 127)",
+          "oklch(26% 0.025 127)",
+          "oklch(37% 0.032 127)",
+          "oklch(48% 0.038 127)",
+          "oklch(59% 0.040 127)",
+          "oklch(70% 0.033 127)",
+          "oklch(82% 0.027 127)",
+          "oklch(95% 0.019 127)"
+        ]
+      },
+      "on-accent-muted": {
+        "role": "primary",
+        "displayName": "Accent Shadow Muted",
+        "canonical": "oklch(34.9% 0.072 128.1)",
+        "tonalRamp": [
+          "oklch(15% 0.033 128)",
+          "oklch(26% 0.044 128)",
+          "oklch(37% 0.054 128)",
+          "oklch(48% 0.065 128)",
+          "oklch(59% 0.068 128)",
+          "oklch(70% 0.057 128)",
+          "oklch(82% 0.045 128)",
+          "oklch(95% 0.033 128)"
+        ]
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Lime Ink",
+        "canonical": "oklch(90.3% 0.182 123.2)",
+        "tonalRamp": [
+          "oklch(15% 0.083 123)",
+          "oklch(26% 0.110 123)",
+          "oklch(37% 0.137 123)",
+          "oklch(48% 0.165 123)",
+          "oklch(59% 0.172 123)",
+          "oklch(70% 0.145 123)",
+          "oklch(82% 0.115 123)",
+          "oklch(95% 0.083 123)"
+        ]
+      },
+      "ground-light": {
+        "role": "neutral",
+        "displayName": "Paper Ground",
+        "canonical": "oklch(95.9% 0.010 87.5)",
+        "tonalRamp": [
+          "oklch(15% 0.005 88)",
+          "oklch(26% 0.006 88)",
+          "oklch(37% 0.008 88)",
+          "oklch(48% 0.009 88)",
+          "oklch(59% 0.009 88)",
+          "oklch(70% 0.008 88)",
+          "oklch(82% 0.006 88)",
+          "oklch(95% 0.005 88)"
+        ]
+      },
+      "ground-raised-light": {
+        "role": "neutral",
+        "displayName": "Lavender Lift",
+        "canonical": "oklch(93.0% 0.016 293.7)",
+        "tonalRamp": [
+          "oklch(15% 0.007 294)",
+          "oklch(26% 0.010 294)",
+          "oklch(37% 0.012 294)",
+          "oklch(48% 0.014 294)",
+          "oklch(59% 0.015 294)",
+          "oklch(70% 0.013 294)",
+          "oklch(82% 0.010 294)",
+          "oklch(95% 0.007 294)"
+        ]
+      },
+      "ink-light": {
+        "role": "neutral",
+        "displayName": "Ultramarine Ink",
+        "canonical": "oklch(25.4% 0.101 272.2)",
+        "tonalRamp": [
+          "oklch(15% 0.046 272)",
+          "oklch(26% 0.061 272)",
+          "oklch(37% 0.076 272)",
+          "oklch(48% 0.091 272)",
+          "oklch(59% 0.095 272)",
+          "oklch(70% 0.080 272)",
+          "oklch(82% 0.064 272)",
+          "oklch(95% 0.046 272)"
+        ]
+      },
+      "ink-muted-light": {
+        "role": "neutral",
+        "displayName": "Slate Periwinkle",
+        "canonical": "oklch(44.9% 0.090 278.2)",
+        "tonalRamp": [
+          "oklch(15% 0.041 278)",
+          "oklch(26% 0.054 278)",
+          "oklch(37% 0.068 278)",
+          "oklch(48% 0.081 278)",
+          "oklch(59% 0.085 278)",
+          "oklch(70% 0.072 278)",
+          "oklch(82% 0.057 278)",
+          "oklch(95% 0.041 278)"
+        ]
+      },
+      "rule-light": {
+        "role": "neutral",
+        "displayName": "Lavender Hairline",
+        "canonical": "oklch(85.7% 0.030 289.9)",
+        "tonalRamp": [
+          "oklch(15% 0.014 290)",
+          "oklch(26% 0.018 290)",
+          "oklch(37% 0.023 290)",
+          "oklch(48% 0.027 290)",
+          "oklch(59% 0.028 290)",
+          "oklch(70% 0.024 290)",
+          "oklch(82% 0.019 290)",
+          "oklch(95% 0.014 290)"
+        ]
+      },
+      "accent-ink-light": {
+        "role": "primary",
+        "displayName": "Lime Ink (light)",
+        "canonical": "oklch(43.3% 0.116 129.6)",
+        "tonalRamp": [
+          "oklch(15% 0.053 130)",
+          "oklch(26% 0.070 130)",
+          "oklch(37% 0.088 130)",
+          "oklch(48% 0.105 130)",
+          "oklch(59% 0.110 130)",
+          "oklch(70% 0.092 130)",
+          "oklch(82% 0.073 130)",
+          "oklch(95% 0.053 130)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Statement",
+        "purpose": "The home page statement and other page-opening headings."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "The spitzweb wordmark in the site header."
+      },
+      "title": {
+        "displayName": "Project title",
+        "purpose": "A Project title in a list, at rest."
+      },
+      "title-selected": {
+        "displayName": "Project title, selected",
+        "purpose": "The selected or hovered Project title; weight carries state."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Everything else: nav, summaries, metadata. Tabular numerals document-wide."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The one easing for every change of state (weight, colour)."
+      },
+      {
+        "name": "default-transition-duration",
+        "value": "450ms",
+        "purpose": "Default duration for every transition."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition-duration: 0s; animation-duration: 0s",
+        "purpose": "Applied to everything under prefers-reduced-motion: reduce."
+      }
+    ],
+    "focus": {
+      "value": "outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px",
+      "purpose": "Global :focus-visible ring."
+    },
+    "themes": {
+      "default": "dark",
+      "switch": "data-theme=\"light\" on <html>",
+      "light": {
+        "ground": "#f4f1ea",
+        "ground-raised": "#e8e6f2",
+        "ink": "#141a52",
+        "ink-muted": "#4a4f86",
+        "rule": "#cfcde3",
+        "accent": "#c8f25a",
+        "on-accent": "#18210a",
+        "on-accent-muted": "#2f4114",
+        "accent-ink": "#3b5c00"
+      }
+    },
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "40rem"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Site Header",
+      "kind": "nav",
+      "refersTo": "site-header",
+      "description": "Wordmark and section nav on a shared baseline over a hairline.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#\">spitzweb</a><nav aria-label=\"Sections\"><ul class=\"ds-nav\"><li><a class=\"ds-nav-link\" href=\"#\">Projects</a></li><li><a class=\"ds-nav-link\" href=\"#\">Articles</a></li><li><a class=\"ds-nav-link\" href=\"#\">Activity</a></li></ul></nav></header>",
+      "css": ".ds-header { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 3rem; row-gap: 0.75rem; padding-block: 1.5rem 1.25rem; padding-inline: 2rem; border-block-end: 1px solid var(--rule); background: var(--ground); color: var(--ink); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; } .ds-wordmark { font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; letter-spacing: -0.025em; color: var(--ink); text-decoration: none; } .ds-nav { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; } .ds-nav-link { color: var(--ink-muted); text-decoration: none; transition: color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav-link:hover { color: var(--ink); } .ds-wordmark:focus-visible, .ds-nav-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Statement",
+      "kind": "custom",
+      "refersTo": "statement",
+      "description": "The page-opening heading in heavy Funnel Display.",
+      "html": "<h1 class=\"ds-statement\">Nadav Spitzer is a full-stack product engineer.</h1>",
+      "css": ".ds-statement { margin: 0; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: clamp(2.75rem, 1.4rem + 4.6vw, 6rem); line-height: 0.95; letter-spacing: -0.035em; font-weight: 800; color: var(--ink); text-wrap: balance; max-inline-size: 56rem; }"
+    },
+    {
+      "name": "Project List Row (designed, not yet built)",
+      "kind": "custom",
+      "refersTo": "project-title-selected",
+      "description": "Full-width row between hairlines; weight carries state.",
+      "html": "<ul class=\"ds-list\" role=\"listbox\" aria-label=\"Projects\"><li role=\"option\" aria-selected=\"true\"><a class=\"ds-row\" href=\"#\"><span class=\"ds-row-title\">Example Project</span><span class=\"ds-row-meta\">Placeholder summary</span><span class=\"ds-row-meta\">2026 · Complete</span></a></li><li role=\"option\" aria-selected=\"false\"><a class=\"ds-row\" href=\"#\"><span class=\"ds-row-title\">Another Project</span><span class=\"ds-row-meta\">Placeholder summary</span><span class=\"ds-row-meta\">2026 · In progress</span></a></li></ul>",
+      "css": ".ds-list { list-style: none; margin: 0; padding: 0; border-block-start: 1px solid var(--rule); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-row { display: grid; grid-template-columns: 4fr 5fr 3fr; align-items: baseline; padding-block: 0.875rem; border-block-end: 1px solid var(--rule); color: var(--ink); text-decoration: none; transition: background-color 450ms cubic-bezier(0.16, 1, 0.3, 1), padding 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-row-title { font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em; font-weight: 400; transition: font-weight 450ms cubic-bezier(0.16, 1, 0.3, 1), color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-row-meta { color: var(--ink-muted); } .ds-row-meta:last-child { justify-self: end; } [aria-selected=\"true\"] > .ds-row, .ds-row:hover { background: var(--ground-raised); padding-inline: 0.75rem; } [aria-selected=\"true\"] .ds-row-title, .ds-row:hover .ds-row-title { font-weight: 800; color: var(--accent-ink); } .ds-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Featured Panel (designed, not yet built)",
+      "kind": "custom",
+      "refersTo": "featured-panel",
+      "description": "The one accent fill on a page, for the Featured Project running live.",
+      "html": "<aside class=\"ds-featured\" aria-label=\"Featured Project\"><h2 class=\"ds-featured-title\">Example Project</h2><div class=\"ds-readout\" aria-hidden=\"true\"><div class=\"ds-meter\"><b></b></div></div><p class=\"ds-featured-line\">Placeholder line on what it is.</p></aside>",
+      "css": ".ds-featured { display: grid; gap: 0.875rem; padding: 1.125rem; background: var(--accent); color: var(--on-accent); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; } .ds-featured-title { margin: 0; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 2.5rem; line-height: 1; letter-spacing: -0.03em; font-weight: 800; } .ds-readout { background: var(--on-accent); padding: 0.875rem; } .ds-meter { block-size: 6px; background: var(--on-accent-muted); overflow: hidden; } .ds-meter b { display: block; block-size: 100%; inline-size: 62%; background: var(--accent); transition: inline-size 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-featured-line { margin: 0; font-size: 0.875rem; }"
+    },
+    {
+      "name": "Text Link",
+      "kind": "custom",
+      "refersTo": "nav-link",
+      "description": "Muted ink at rest, full ink on hover, global focus ring.",
+      "html": "<a class=\"ds-link\" href=\"#\">Articles</a>",
+      "css": ".ds-link { color: var(--ink-muted); text-decoration: none; font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; transition: color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link:hover { color: var(--ink); } .ds-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Precision Instrument",
+    "overview": "spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project titles, Funnel Sans for everything else, with weight rather than decoration carrying state.\n\nDark is the default theme and was chosen first; light is a full alternative, switched by `data-theme=\"light\"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals everywhere, hairlines instead of containers, one exponential ease-out for every change of state.\n\nThe system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.",
+    "keyCharacteristics": [
+      "Drenched ultramarine ground, warm off-white ink, periwinkle muted ink, ultramarine hairlines.",
+      "One accent that marks only the live or selected thing.",
+      "Funnel Display for headings and Project titles, Funnel Sans for everything else.",
+      "Weight carries state: Project titles go from 400 at rest to 800 when selected.",
+      "Hairline rules, tabular numerals, no cards, no badges, no kickers or eyebrows.",
+      "One exponential ease-out (450ms) for every change of state; all motion stills under reduced motion.",
+      "Logical properties only, so RTL stays cheap."
+    ],
+    "rules": [
+      {
+        "name": "The Live Thing Rule",
+        "body": "The accent marks only the live or selected thing: the running Featured Project, the selected row, focus, selection. It never decorates, never fills a primary button by default, and never colours a heading for emphasis.",
+        "section": "colors"
+      },
+      {
+        "name": "The Token-Only Rule",
+        "body": "Every colour comes from a theme token defined for both themes. The Tailwind palette is reset (`--color-*: initial`) and lint rejects arbitrary values and raw palette colours (apps/site/eslint.config.js, docs/tooling.md). Components use the generated utilities (`bg-ground`, `text-ink-muted`, `border-rule`), never the CSS variables directly.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Themes Rule",
+        "body": "Every token has a dark value and a light value, and both themes meet WCAG 2.2 AA. A new token is not done until it has both.",
+        "section": "colors"
+      },
+      {
+        "name": "The Weight Carries State Rule",
+        "body": "State is shown by weight, not by boxes or badges. A Project title sits at 400 at rest and moves to 800 with the accent ink when selected, through the shared ease-out.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Numerals are tabular everywhere (set on `html`), so years, times and readouts never jitter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hairline Rule",
+        "body": "Structure is drawn with 1px rules in the rule colour, never with containers, cards or shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** use only theme utilities generated from the tokens; add a token, for both themes, when one is missing.",
+      "**Do** keep the accent for the live or selected thing.",
+      "**Do** show state with weight: Project titles at 400 at rest, 800 with the accent ink when selected.",
+      "**Do** separate with hairline rules in the rule colour.",
+      "**Do** keep numerals tabular.",
+      "**Do** use logical properties and utilities only.",
+      "**Do** run every transition on the shared ease-out and let reduced motion still it.",
+      "**Do** meet WCAG 2.2 AA in both themes."
+    ],
+    "donts": [
+      "**Don't** use cards or boxed containers to group content.",
+      "**Don't** use badges or pills for Status, Topics or counts; set them as muted text.",
+      "**Don't** put kickers or eyebrows above headings.",
+      "**Don't** add shadows.",
+      "**Don't** use arbitrary Tailwind values or raw palette colours.",
+      "**Don't** replace the ultramarine ground with near-black.",
+      "**Don't** use the accent as decoration, emphasis or a default button fill."
+    ]
+  }
+}
