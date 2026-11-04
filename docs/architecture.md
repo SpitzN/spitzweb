@@ -32,7 +32,7 @@ apps/
   site/            the site at spitzweb.dev (Next.js)
     content/       MDX: Articles and Project write-ups
     src/           code, laid out below
-    e2e/           Playwright specs, one list of public routes
+    e2e/           Playwright specs, one list of public routes, and fixture content/ in every publication state
 packages/          created when a second app needs shared code
 docs/              ADRs, conventions, tooling, setup, this file
 ```
@@ -51,6 +51,8 @@ apps/site/src/
 ├── hooks/                 shared hooks with no domain meaning
 └── lib/                   shared plumbing: db client, env, auth, MDX loading
 ```
+
+MDX reaches the code in one place: `lib/content-glob.ts` lets the bundler find every file in `content/` at build time, and `lib/mdx-files.ts` hands an Entry type its collection unparsed. No page reads the filesystem at request time. `src/mdx-components.tsx` sits outside the layers because `@next/mdx` requires it there; it stays empty, and each Entry type styles its own MDX.
 
 Inside a slice, files sit in folders named for what they are (`components/`, `server/`), and the slice's tables are in its own `schema.ts`. Lint enforces who may import whom ([`docs/tooling.md`](tooling.md), Import direction):
 

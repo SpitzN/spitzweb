@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-04T00:00:00Z",
+  "generatedAt": "2026-11-04T12:00:00Z",
   "title": "Design System: spitzweb",
   "extensions": {
     "colorMeta": {
@@ -241,15 +241,31 @@
       },
       "title": {
         "displayName": "Project title",
-        "purpose": "A Project title in a list, at rest."
+        "purpose": "A Project or Article title in a list, at rest."
       },
       "title-selected": {
         "displayName": "Project title, selected",
-        "purpose": "The selected or hovered Project title; weight carries state."
+        "purpose": "The selected or hovered Project or Article title; weight carries state."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Everything else: nav, summaries, metadata. Tabular numerals document-wide."
+        "purpose": "Everything else: nav, summaries, metadata, ledger rows. Tabular numerals document-wide."
+      },
+      "prose": {
+        "displayName": "Prose",
+        "purpose": "Article body text in the Read register: 36rem measure, about 68 characters, proportional figures."
+      },
+      "prose-heading": {
+        "displayName": "Prose heading",
+        "purpose": "Second-level heading inside an Article; more space above than below."
+      },
+      "prose-subheading": {
+        "displayName": "Prose subheading",
+        "purpose": "Third-level heading inside an Article."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Code samples only, always on the lifted ground."
       }
     },
     "shadows": [],
@@ -294,7 +310,20 @@
         "name": "sm",
         "value": "40rem"
       }
-    ]
+    ],
+    "fonts": {
+      "loaded": [
+        "Funnel Display",
+        "Funnel Sans (roman and italic)"
+      ],
+      "rejectedForArticleBody": [
+        "Literata",
+        "Geist",
+        "Atkinson Hyperlegible Next",
+        "Source Serif 4",
+        "Spectral"
+      ]
+    }
   },
   "components": [
     {
@@ -312,6 +341,30 @@
       "description": "The page-opening heading in heavy Funnel Display.",
       "html": "<h1 class=\"ds-statement\">Nadav Spitzer is a full-stack product engineer.</h1>",
       "css": ".ds-statement { margin: 0; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: clamp(2.75rem, 1.4rem + 4.6vw, 6rem); line-height: 0.95; letter-spacing: -0.035em; font-weight: 800; color: var(--ink); text-wrap: balance; max-inline-size: 56rem; }"
+    },
+    {
+      "name": "Ledger",
+      "kind": "custom",
+      "refersTo": "ledger-row",
+      "description": "The Article page's signature: ruled rows of facts, contents and the way onward; link rows lift and turn 800 in the accent ink.",
+      "html": "<section class=\"ds-ledger\" aria-label=\"About this Article\"><dl><div class=\"ds-lrow\"><dt class=\"ds-llabel\">Published</dt><dd class=\"ds-lvalue\">2 Mar 2026</dd><dd class=\"ds-lend\">6 min read</dd></div><div class=\"ds-lrow\"><dt class=\"ds-llabel\">Topics</dt><dd class=\"ds-lvalue\">Developer tools, Frontend</dd></div></dl><nav aria-label=\"Next Article\"><ul><li class=\"ds-lrow ds-llink\"><span class=\"ds-llabel\" aria-hidden=\"true\">Next</span><a class=\"ds-lvalue\" href=\"#\">Example next Article</a><span class=\"ds-lend\">14 May 2026</span></li></ul></nav></section>",
+      "css": ".ds-ledger { margin-inline: -0.75rem; border-block-start: 1px solid var(--rule); color: var(--ink); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-ledger dl, .ds-ledger ul, .ds-ledger dd { margin: 0; padding: 0; list-style: none; } .ds-lrow { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; align-items: baseline; padding: 0.75rem; border-block-end: 1px solid var(--rule); position: relative; transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-llabel { grid-column: span 2; color: var(--ink-muted); } .ds-lvalue { grid-column: span 7; color: var(--ink); text-decoration: none; transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-lend { grid-column: span 3; text-align: end; color: var(--ink-muted); } .ds-llink a::after { content: \"\"; position: absolute; inset: 0; } .ds-llink:hover, .ds-llink:has(:focus-visible) { background: var(--ground-raised); } .ds-llink:hover .ds-lvalue, .ds-llink:has(:focus-visible) .ds-lvalue { font-weight: 800; color: var(--accent-ink); } .ds-llink a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Article List Row",
+      "kind": "custom",
+      "refersTo": "article-row",
+      "description": "The Projects list row grammar applied to Articles; Featured Articles lead with a semibold ink mark.",
+      "html": "<ol class=\"ds-alist\"><li class=\"ds-arow\"><h2 class=\"ds-atitle\"><a href=\"#\">Example Article</a></h2><p class=\"ds-ameta\">One-line summary of the Article.</p><p class=\"ds-ameta ds-aend\"><span class=\"ds-afeat\">Featured · </span><time>2 Mar 2026</time><br>Developer tools, Frontend</p></li></ol>",
+      "css": ".ds-alist { list-style: none; margin: 0 -0.75rem; padding: 0; border-block-start: 1px solid var(--rule); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-arow { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; row-gap: 0.25rem; align-items: baseline; padding: 1rem 0.75rem; border-block-end: 1px solid var(--rule); transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-atitle { grid-column: span 4; margin: 0; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em; font-weight: 400; color: var(--ink); transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-atitle a { color: inherit; text-decoration: none; } .ds-atitle a::after { content: \"\"; position: absolute; inset: 0; } .ds-ameta { grid-column: span 5; margin: 0; color: var(--ink-muted); } .ds-aend { grid-column: span 3; text-align: end; } .ds-afeat { font-weight: 600; color: var(--ink); } .ds-arow:hover, .ds-arow:has(:focus-visible) { background: var(--ground-raised); } .ds-arow:hover .ds-atitle, .ds-arow:has(:focus-visible) .ds-atitle { font-weight: 800; color: var(--accent-ink); } .ds-atitle a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Prose",
+      "kind": "custom",
+      "refersTo": "prose",
+      "description": "Article body text in the Read register: Funnel Sans on a 36rem measure, code on the lifted ground.",
+      "html": "<div class=\"ds-prose\"><h2>A second-level heading</h2><p>Running text with <em>emphasis</em>, <code>inline code</code> and <a href=\"#\">a link</a>.</p><blockquote><p>A quotation set apart from the Article's own voice.</p></blockquote><pre tabindex=\"0\" role=\"region\" aria-label=\"Code sample\"><code>export function example() {}</code></pre></div>",
+      "css": ".ds-prose { max-inline-size: 36rem; font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-size: 1.125rem; line-height: 1.75rem; font-variant-numeric: proportional-nums; color: var(--ink); } .ds-prose p { margin: 0; padding-block-end: 1.5rem; text-wrap: pretty; } .ds-prose h2 { margin: 0; padding-block: 2.5rem 0.75rem; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.875rem; line-height: 1.25; letter-spacing: -0.025em; font-weight: 700; text-wrap: balance; } .ds-prose a { color: inherit; text-decoration: underline; text-decoration-color: var(--ink-muted); text-underline-offset: 4px; transition: text-decoration-color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-prose a:hover { text-decoration-color: var(--ink); } .ds-prose a:focus-visible, .ds-prose pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; } .ds-prose blockquote { margin: 0 0 1.5rem; padding-inline-start: 1.5rem; border-inline-start: 1px solid var(--rule); color: var(--ink-muted); } .ds-prose blockquote p { padding-block-end: 0; } .ds-prose code { background: var(--ground-raised); padding-inline: 0.125rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 1rem; } .ds-prose pre { margin: 0 0 1.5rem; overflow-x: auto; background: var(--ground-raised); padding: 1.25rem; font-size: 0.875rem; line-height: 1.5rem; } .ds-prose pre code { background: transparent; padding: 0; font-size: 0.875rem; }"
     },
     {
       "name": "Project List Row (designed, not yet built)",
@@ -340,13 +393,13 @@
   ],
   "narrative": {
     "northStar": "The Precision Instrument",
-    "overview": "spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project titles, Funnel Sans for everything else, with weight rather than decoration carrying state.\n\nDark is the default theme and was chosen first; light is a full alternative, switched by `data-theme=\"light\"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals everywhere, hairlines instead of containers, one exponential ease-out for every change of state.\n\nThe system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.",
+    "overview": "spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included, with weight rather than decoration carrying state.\n\nDark is the default theme and was chosen first; light is a full alternative, switched by `data-theme=\"light\"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals outside running prose, hairlines instead of containers, one exponential ease-out for every change of state.\n\nThe system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.",
     "keyCharacteristics": [
       "Drenched ultramarine ground, warm off-white ink, periwinkle muted ink, ultramarine hairlines.",
       "One accent that marks only the live or selected thing.",
-      "Funnel Display for headings and Project titles, Funnel Sans for everything else.",
+      "Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included.",
       "Weight carries state: Project titles go from 400 at rest to 800 when selected.",
-      "Hairline rules, tabular numerals, no cards, no badges, no kickers or eyebrows.",
+      "Hairline rules, tabular numerals outside prose, no cards, no badges, no kickers or eyebrows.",
       "One exponential ease-out (450ms) for every change of state; all motion stills under reduced motion.",
       "Logical properties only, so RTL stays cheap."
     ],
@@ -373,7 +426,12 @@
       },
       {
         "name": "The Tabular Rule",
-        "body": "Numerals are tabular everywhere (set on `html`), so years, times and readouts never jitter.",
+        "body": "Numerals are tabular everywhere (set on `html`), so years, times and readouts never jitter. Running prose is the one exception: Article body text switches to proportional figures, because numbers there are read, not compared.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Funnel is the only family on the site, Article body text included. Literata, Geist, Atkinson Hyperlegible Next, Source Serif 4 and Spectral were proofed for Article body text and rejected. A monospace sets code and nothing else.",
         "section": "typography"
       },
       {
@@ -387,7 +445,9 @@
       "**Do** keep the accent for the live or selected thing.",
       "**Do** show state with weight: Project titles at 400 at rest, 800 with the accent ink when selected.",
       "**Do** separate with hairline rules in the rule colour.",
-      "**Do** keep numerals tabular.",
+      "**Do** keep numerals tabular, except in running prose, which takes proportional figures.",
+      "**Do** set Article body text in Funnel Sans at 1.125rem on a 36rem measure.",
+      "**Do** give rows that lift their ground the 0.75rem bleed and matching inline padding, so hairlines span the lift.",
       "**Do** use logical properties and utilities only.",
       "**Do** run every transition on the shared ease-out and let reduced motion still it.",
       "**Do** meet WCAG 2.2 AA in both themes."
@@ -396,6 +456,8 @@
       "**Don't** use cards or boxed containers to group content.",
       "**Don't** use badges or pills for Status, Topics or counts; set them as muted text.",
       "**Don't** put kickers or eyebrows above headings.",
+      "**Don't** number ledger rows or sections, or add arrows or glyphs to rows.",
+      "**Don't** bring in a second text family for long-form reading.",
       "**Don't** add shadows.",
       "**Don't** use arbitrary Tailwind values or raw palette colours.",
       "**Don't** replace the ultramarine ground with near-black.",

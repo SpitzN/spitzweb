@@ -20,6 +20,10 @@ The security invariants these rules serve are listed in `docs/conventions.md`.
 
 Env is read through one zod-validated accessor, called where the value is used and never at module top level. Builds and CI run on fake values, with no real secrets.
 
+## Rendering
+
+- A content route (an Entry's page, an Entry list) exports `ensureStatic = "navigation"`. It stays static, and a slug outside `generateStaticParams` waits for the full render, so `notFound()` returns a real 404 instead of a 200 App Shell (ADR 0011; `docs/tooling.md`, Traps).
+
 ## Data
 
 - A data-access function takes the database as its first parameter, so tests can pass PGlite.

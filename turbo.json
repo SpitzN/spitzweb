@@ -16,7 +16,7 @@
       "dependsOn": ["^build"]
     },
     "e2e": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
       "outputs": ["playwright-report/**", "test-results/**"]
     },
     "dev": {
