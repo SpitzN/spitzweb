@@ -84,7 +84,9 @@ spacing:
   page-block-end: "6rem"
   grid-gap: "1.25rem"
   row-bleed: "0.75rem"
+  row-bleed-narrow: "1rem"
   ledger-row-block: "0.75rem"
+  open-cell-block: "1.25rem"
   list-row-block: "1rem"
   prose-measure: "36rem"
 components:
@@ -112,6 +114,29 @@ components:
     typography: "{typography.title-selected}"
   project-row-selected:
     backgroundColor: "{colors.ground-raised}"
+  project-row:
+    textColor: "{colors.ink-muted}"
+    padding: "1rem 0.75rem"
+  project-row-hover:
+    backgroundColor: "{colors.ground-raised}"
+  title-block-open-cell:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.on-accent}"
+    padding: "1.25rem 0.75rem"
+  title-block-open-action:
+    textColor: "{colors.on-accent}"
+    typography: "{typography.title-selected}"
+  title-block-runs-at:
+    textColor: "{colors.on-accent-muted}"
+  title-block-fact:
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    padding: "0.75rem"
+  title-block-label:
+    textColor: "{colors.ink-muted}"
+  title-block-status:
+    textColor: "{colors.ink}"
+    typography: "{typography.title-selected}"
   ledger-row:
     textColor: "{colors.ink}"
     typography: "{typography.body}"
@@ -156,6 +181,9 @@ components:
   text-selection:
     backgroundColor: "{colors.accent}"
     textColor: "{colors.on-accent}"
+  text-selection-on-accent:
+    backgroundColor: "{colors.on-accent}"
+    textColor: "{colors.accent}"
 ---
 
 # Design System: spitzweb
@@ -186,10 +214,10 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 ### Primary
 
-- **Live Lime** (accent): the only accent. It fills the Featured panel, colours the selected Project title, draws the focus ring and backs text selection. The accent is the same in both themes.
+- **Live Lime** (accent): the only accent. It fills the Featured panel and the cell that opens a Project in its Title block, colours the selected Project title, draws the focus ring and backs text selection. The accent is the same in both themes.
 - **Lime Ink** (accent-ink, accent-ink-light): the accent when it colours text on the ground. In dark it is the accent itself; in light it deepens to a dark olive so selected text keeps AA contrast on paper.
-- **Accent Shadow Ink** (on-accent): text and marks set on an accent fill.
-- **Accent Shadow Muted** (on-accent-muted): secondary text and quiet fills inside an accent fill, such as the track of a live readout.
+- **Accent Shadow Ink** (on-accent): text and marks set on an accent fill, and the focus ring and selection ground inside one.
+- **Accent Shadow Muted** (on-accent-muted): secondary text, underlines and quiet fills inside an accent fill, such as where a Hosted project runs, an External project's link underlines, or the track of a live readout.
 
 ### Neutral
 
@@ -202,7 +230,7 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 ### Named Rules
 
-**The Live Thing Rule.** The accent marks only the live or selected thing: the running Featured Project, the selected row, focus, selection. It never decorates, never fills a primary button by default, and never colours a heading for emphasis.
+**The Live Thing Rule.** The accent marks only the live or selected thing: the running Featured Project, the cell that opens a Project, the selected row, focus, selection. It never decorates, never fills a primary button by default, and never colours a heading for emphasis.
 
 **The Token-Only Rule.** Every colour comes from a theme token defined for both themes. The Tailwind palette is reset (`--color-*: initial`) and lint rejects arbitrary values and raw palette colours (apps/site/eslint.config.js, docs/tooling.md). Components use the generated utilities (`bg-ground`, `text-ink-muted`, `border-rule`), never the CSS variables directly.
 
@@ -221,7 +249,7 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 - **Display** (800, fluid from 2.75rem to 6rem, line-height 0.95, tracking -0.035em): the statement on the home page and other page-opening headings. Balanced wrapping, capped at 56rem.
 - **Wordmark** (Funnel Display 700, 1.25rem, tracking -0.025em): the spitzweb wordmark in the header.
 - **Title** (Funnel Display 400, 1.5rem, line-height 1.15, tracking -0.015em): a Project title in a list, at rest.
-- **Title, selected** (Funnel Display 800, same size): the selected or hovered Project title, in the accent ink.
+- **Title, selected** (Funnel Display 800, same size): the selected or hovered Project or Article title, in the accent ink. The same cut, in the ink of its ground, sets a Project's Status and the action in its Title block's accent cell.
 - **Body** (Funnel Sans 400, 1rem, line-height 1.5): everything else, including nav, summaries, metadata and ledger rows. Tabular numerals are on for the whole document.
 - **Prose** (Funnel Sans 400, 1.125rem, line-height 1.75rem, proportional figures): Article body text in the Read register. Capped at 36rem, about 68 characters to the line, with pretty wrapping.
 - **Prose heading** (Funnel Display 700, 1.875rem, line-height 1.25, tracking -0.025em): a second-level heading inside an Article, balanced, with more space above (2.5rem) than below (0.75rem).
@@ -240,11 +268,13 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 The page has an inline padding of 1rem, widening to 2rem from the `sm` breakpoint (40rem). Spacing comes from Tailwind's 0.25rem scale; the steps in use are recorded in the frontmatter. The header wraps its wordmark and nav on a shared baseline, with 3rem between them inline and 0.75rem when they wrap, 1.5rem between nav links, and a hairline below. Page content opens with 4rem of block padding; Article pages close with 6rem.
 
-Built surfaces sit on a 12-column grid from the `sm` breakpoint, with a 1.25rem column gap, and collapse to one column below it. Rows that lift their ground on hover (ledger rows, list rows) bleed 0.75rem past the page column and pad inline by the same amount, so the hairlines span the lifted ground while the text stays on the page column. The Article body starts at column three and is capped at the 36rem measure.
+Built surfaces sit on a 12-column grid from the `sm` breakpoint, with a 1.25rem column gap, and collapse to one column below it. Rows that lift their ground (ledger rows, list rows, the Title block) bleed past the page column and pad inline by the same amount, so the hairlines span the lifted ground while the text stays on the page column: the full 1rem page padding below `sm`, so they run to the screen edges, and 0.75rem from `sm`. The Article body and a Project's write-up start at column three and are capped at the 36rem measure.
+
+A Project page sets the title (a Statement) with its summary in muted ink beneath over the start seven columns and the Title block over the end five; below `sm` they stack, 2.5rem apart. The write-up follows 4rem below, and the end ledger 2.5rem after it.
 
 All layout uses logical properties and utilities only (`pbs-*`, `pbe-*`, `border-be`, `max-inline-*`, `min-block-dvh`), so an RTL locale needs no layout rewrite. Lint enforces this.
 
-**Intended home composition (designed, not yet built).** The tracked mock (`.impeccable/mocks/typographic/e-funnel-accent.html`) sets the home page on a strict 12-column grid: the header rule spans all columns; the statement in heavy Funnel Display takes the start seven columns with the latest Update beneath it; the Featured panel takes the end five, filled with the accent and holding the Project's title, a live readout of the Hosted project and one line on what it is; the Projects list runs full width from just above the fold, each row on the same 12 columns (title in four, one-line summary in five, year and Status in three, aligned to the end), divided by hairlines. Below the small breakpoint everything collapses to one column and each row stacks its summary under the title. Selection moves by pointer or by J and K, and Enter opens. The Articles list and Article page now carry this grid as built (above).
+**Intended home composition (designed, not yet built).** The tracked mock (`.impeccable/mocks/typographic/e-funnel-accent.html`) sets the home page on a strict 12-column grid: the header rule spans all columns; the statement in heavy Funnel Display takes the start seven columns with the latest Update beneath it; the Featured panel takes the end five, filled with the accent and holding the Project's title, a live readout of the Hosted project and one line on what it is; the Projects list runs full width from just above the fold, each row on the same 12 columns (title in four, one-line summary in five, year and Status in three, aligned to the end), divided by hairlines. Below the small breakpoint everything collapses to one column and each row stacks its summary under the title. Selection moves by pointer or by J and K, and Enter opens. The Projects list, Articles list, Article page and Project page now carry this grid as built (above); J and K selection is part of the home composition and is not built on the Projects list.
 
 ## Elevation & Depth
 
@@ -264,7 +294,7 @@ Square by default. The only radius in the build is the 2px corner on the focus r
 
 The site header: quiet, exact, on a hairline.
 
-- **Structure:** the wordmark, then the sections Projects, Articles and Activity, on a shared baseline with a hairline below.
+- **Structure:** the wordmark, then the sections that ship (Projects, Articles), on a shared baseline with a hairline below. A section joins the nav with the ticket that builds its route; Activity arrives with its own.
 - **Default:** links in muted ink, body type.
 - **Hover:** links move to full ink through the shared ease-out.
 - **Focus:** the global ring (2px accent outline, 3px offset).
@@ -272,16 +302,17 @@ The site header: quiet, exact, on a hairline.
 
 ### Statement
 
-The page-opening heading: heavy Display type in full ink, balanced, capped at 56rem. On the home page its wording is a stand-in until Nadav writes it. The Articles list opens with it ("Articles"), followed by one line in muted ink at 1.125rem (capped at 42rem) and 3rem of space before the list. An Article's title is a Statement too, capped wider at 64rem, with 2.5rem before the ledger.
+The page-opening heading: heavy Display type in full ink, balanced, capped at 56rem. On the home page its wording is a stand-in until Nadav writes it. The Articles list opens with it ("Articles"), followed by one line in muted ink at 1.125rem (capped at 42rem) and 3rem of space before the list. The Projects list opens the same way ("Projects"). An Article's title is a Statement too, capped wider at 64rem, with 2.5rem before the ledger. A Project's title is a Statement over the start seven columns, followed 1.25rem below by its summary in muted ink at 1.125rem (capped at 42rem).
 
 ### Ledger
 
-The Article page's signature: a ruled ledger of facts, contents and the way onward, set before the first paragraph and repeated at the end.
+The Article page's signature: a ruled ledger of facts, contents and the way onward, set before the first paragraph and repeated at the end. A Project page carries only the end ledger.
 
 - **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first. Each row: a label in muted ink (two columns), the value in ink (seven), an optional end note in muted ink (three, end-aligned). Body type throughout; rank comes from weight and rule, not size.
-- **Bleed:** the ledger bleeds 0.75rem past the page column and each row pads 0.75rem inline and block, so hairlines span the lifted ground.
-- **Rows, in order (top):** Archived (Archived Articles only, first: "No longer maintained."; Status is a Project word); Published (the date, reading time as the end note); Topics; Contents (only when an Article has more than three headings; one row per heading, the label on the first row only, third-level headings indented 1.25rem); Next (the next Article's title, its date as the end note).
-- **Rows (end):** Next again, then Articles ("All Articles"), then Contact (Nadav on LinkedIn).
+- **Bleed:** the ledger bleeds past the page column by the row bleed (1rem below `sm`, 0.75rem from `sm`) and each row pads the same inline and 0.75rem block, so hairlines span the lifted ground.
+- **Rows, in order (top):** Archived (Archived Articles only, first: "No longer maintained."; Status is a Project word); Published (the date, reading time as the end note); Topics; Contents (only when an Article has more than three headings; one row per heading, the label on the first row only, third-level headings indented 1.25rem); Next (the next Article's title, its date as the end note); Related (one row per Related entry, the label on the first row only, the end note "<Entry type> · <date>", a Project's date shown as its year, and "Archived · " before it when the Entry is Archived).
+- **Rows (end):** Next again, Related again, then Articles ("All Articles"), then Contact (Nadav on LinkedIn).
+- **Rows (Project page, end only):** Related, then Projects ("All Projects"), then Contact.
 - **Link rows:** the whole row is the target and its name is the value alone. Under pointer or focus the row takes the lifted ground and the value turns 800 in the accent ink, through the shared ease-out.
 - **Never:** section numbers, arrows or glyphs.
 - **Narrow screens:** each row stacks label, value and end note in one column.
@@ -290,7 +321,7 @@ The Article page's signature: a ruled ledger of facts, contents and the way onwa
 
 The Projects list row grammar applied to Articles, built.
 
-- **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first: the title in Title type (four columns), the summary in muted ink (five), the date and Topics in muted ink on two lines (three, end-aligned). Rows pad 1rem block and 0.75rem inline and bleed the same 0.75rem.
+- **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first: the title in Title type (four columns), the summary in muted ink (five), the date and Topics in muted ink on two lines (three, end-aligned). Rows pad 1rem block and the row bleed inline (1rem below `sm`, 0.75rem from `sm`) and bleed by the same amount.
 - **Featured:** Featured Articles lead the list and carry "Featured ·" in semibold ink before the date. No badge, no accent.
 - **Hover / Focus:** the whole row is the link; the row takes the lifted ground and the title turns 800 in the accent ink, through the shared ease-out.
 - **Empty:** "No Articles yet." in muted ink, 1.5rem under the top hairline.
@@ -310,9 +341,29 @@ Article body text in the Read register: a calm column, not a blog template.
 - **Thematic break:** a hairline in the rule colour.
 - **Emphasis:** Funnel Sans true italic; strong is 700.
 
-### Project list row (designed, not yet built)
+### Project list row
 
-The signature component. A full-width row between hairlines; the title in Title type, the summary, year and Status in muted ink. Selected or hovered, the row takes the lifted ground and the title turns heavy in the accent ink. Long titles need a rule (wrap, or truncate with the full title reachable) before this ships.
+The signature list row, built on the Projects list.
+
+- **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first: the title in Title type (four columns), the summary in muted ink (five), then the year and Status in muted ink on two lines (three, end-aligned). Rows pad 1rem block and the row bleed inline, and bleed by the same amount.
+- **Long titles:** wrap with balanced lines; never truncate, so the whole title stays in the row.
+- **Featured:** Featured Projects lead the list and carry "Featured ·" in semibold ink before the year. No badge, no accent.
+- **Dates:** a Project is dated by its year, here and everywhere it appears.
+- **Hover / Focus:** the whole row is the link; the row takes the lifted ground and the title turns 800 in the accent ink, through the shared ease-out.
+- **Empty:** "No Projects yet." in muted ink, 1.5rem under the top hairline.
+- **Narrow screens:** one column; summary and meta stack under the title.
+
+### Title block
+
+The Project page's signature: the ledger grammar turned sideways into the end five columns, like the title block of an engineering drawing sheet. It holds the way to the thing and every fact.
+
+- **Structure:** no outer frame; open hairline rows, a hairline above the first, each on the block's own 12 columns: a label in muted ink (four), the value in ink (eight). Rows pad 0.75rem block and the row bleed inline, and the block bleeds by the same amount, so below `sm` the accent fill runs to the screen edges.
+- **Rows, in order:** Archived (Archived Projects only, first: "No longer maintained."); the accent cell; Status; Year; Made with; Topics.
+- **Accent cell:** the page's one accent fill, padded 1.25rem block, its label ("Hosted" or "External") in accent shadow muted. A Hosted project shows "Open <title>" in Title type at 800 in accent shadow ink with where it runs beneath in accent shadow muted; the whole cell is the target, and under pointer or focus the action takes a 2px underline (4px offset) while the cell keeps its fill. An External project lists its links in Title type at 800, underlined 2px in accent shadow muted, the underline turning accent shadow ink on hover.
+- **Focus inside the fill:** the ring switches to accent shadow ink. On a Hosted cell it is drawn on the cell's cover: 2px, inset 4px, 2px corners, so it rings the whole target. External links take the global ring in accent shadow ink.
+- **Selection inside the fill:** accent shadow ink ground with accent text.
+- **Status:** Funnel Display 800 at Title size in ink, never fine print.
+- **Year:** the year alone. **Made with** and **Topics:** comma-separated text, no pills.
 
 ### Featured panel (designed, not yet built)
 
@@ -320,8 +371,8 @@ The one accent fill on a page, marking the Featured Project that is running live
 
 ### Focus and selection
 
-- **Focus:** every focusable element shows a 2px accent outline at a 3px offset, with 2px corners.
-- **Text selection:** accent background with accent shadow ink.
+- **Focus:** every focusable element shows a 2px accent outline at a 3px offset, with 2px corners. Inside an accent fill the ring is accent shadow ink instead (see Title block).
+- **Text selection:** accent background with accent shadow ink; inside an accent fill, accent shadow ink background with accent text.
 
 ### Motion
 
@@ -340,8 +391,10 @@ Built from shadcn/ui on Base UI (ADR 0010). Each primitive's variants map onto t
 - **Do** show state with weight: Project titles at 400 at rest, 800 with the accent ink when selected.
 - **Do** separate with hairline rules in the rule colour.
 - **Do** keep numerals tabular, except in running prose, which takes proportional figures.
+- **Do** date a Project by its year everywhere it appears.
+- **Do** let long list titles wrap; never truncate them.
 - **Do** set Article body text in Funnel Sans at 1.125rem on a 36rem measure.
-- **Do** give rows that lift their ground the 0.75rem bleed and matching inline padding, so hairlines span the lift.
+- **Do** give rows that lift their ground the row bleed and matching inline padding (1rem below `sm`, 0.75rem from `sm`), so hairlines span the lift.
 - **Do** use logical properties and utilities only.
 - **Do** run every transition on the shared ease-out and let reduced motion still it.
 - **Do** meet WCAG 2.2 AA in both themes.
