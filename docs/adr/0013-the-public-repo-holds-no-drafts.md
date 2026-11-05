@@ -16,6 +16,6 @@ The repository is public, and Articles and Project write-ups are MDX files in it
 - Removing something from history means rewriting history and treating it as already leaked. Deleting the file is not enough.
 - The `pr-screenshots` branch is public as well, so no screenshot shows a Draft, an admin session or a secret.
 - The e2e fixtures in every publication state are committed on purpose. They are made-up content.
-- Follow-up work enforces this rather than leaving it to habit:
+- Follow-up work (#34) enforces this rather than leaving it to habit:
   - the build fails when a file in `content/` is in the Draft state;
   - `next dev` also renders `drafts/`, so Nadav can read a Draft on the local site.
