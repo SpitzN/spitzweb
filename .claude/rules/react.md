@@ -13,6 +13,11 @@ paths:
 - Wrap a section that waits on data in `<Suspense>`. Its fallback should match the final layout, so nothing shifts when the data arrives.
 - A form posts to a Server Action and shows the action's result, with field errors next to their fields.
 
+## Error boundaries
+
+- `app/error.tsx` catches a failed render below the root layout, so the header and theme stay; `app/global-error.tsx` covers a failure in the layout itself. Both report to Sentry and offer a retry and a link home, through `components/status-message.tsx`.
+- A route gets its own `error.tsx` only when it can recover in a way of its own, beyond a retry or going home.
+
 ## Composition
 
 - Build a screen by composing small parts. A compound component exposes its parts, and the caller arranges them.
