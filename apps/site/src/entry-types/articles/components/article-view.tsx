@@ -1,4 +1,4 @@
-import { ENTRY_TYPE_LABELS, type Entry, entryHref } from "@/domain/entry";
+import { ENTRY_TYPES, type Entry, entryHref } from "@/domain/entry";
 import { TOPIC_LABELS } from "@/domain/topic";
 import { Prose } from "@/components/prose";
 import { EntryDate, EntryYear } from "@/components/entry-date";
@@ -36,9 +36,10 @@ function RelatedEntries({ related }: { related: readonly Entry[] }) {
             label={index === 0 ? "Related" : undefined}
             end={
               <>
-                {ENTRY_TYPE_LABELS[entry.type]} ·{" "}
-                {/* A Project is dated by its year everywhere it appears. */}
-                {entry.type === "project" ? (
+                {/* An Archived Entry is labelled wherever it is linked from. */}
+                {entry.state === "archived" && "Archived · "}
+                {ENTRY_TYPES[entry.type].label} ·{" "}
+                {ENTRY_TYPES[entry.type].isDatedByYear ? (
                   <EntryYear date={entry.date} />
                 ) : (
                   <EntryDate date={entry.date} />

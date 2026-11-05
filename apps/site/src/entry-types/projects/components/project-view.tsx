@@ -1,7 +1,7 @@
 import { EntryDate, EntryYear } from "@/components/entry-date";
 import { Ledger, LedgerLink } from "@/components/ledger";
 import { Prose } from "@/components/prose";
-import { ENTRY_TYPE_LABELS, type Entry, entryHref } from "@/domain/entry";
+import { ENTRY_TYPES, type Entry, entryHref } from "@/domain/entry";
 import { TitleBlock } from "@/entry-types/projects/components/title-block";
 import type { Project } from "@/entry-types/projects/server/parse-projects";
 import { CONTACT } from "@/lib/contact";
@@ -51,9 +51,10 @@ export function ProjectView({
                     label={index === 0 ? "Related" : undefined}
                     end={
                       <>
-                        {ENTRY_TYPE_LABELS[entry.type]} ·{" "}
-                        {/* A Project is dated by its year everywhere it appears. */}
-                        {entry.type === "project" ? (
+                        {/* An Archived Entry is labelled wherever it is linked from. */}
+                        {entry.state === "archived" && "Archived · "}
+                        {ENTRY_TYPES[entry.type].label} ·{" "}
+                        {ENTRY_TYPES[entry.type].isDatedByYear ? (
                           <EntryYear date={entry.date} />
                         ) : (
                           <EntryDate date={entry.date} />

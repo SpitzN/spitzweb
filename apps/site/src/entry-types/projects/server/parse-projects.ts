@@ -3,6 +3,7 @@ import { z } from "zod";
 import { entryFactsSchema, entrySlugSchema } from "@/domain/entry";
 import type { MdxFile } from "@/lib/mdx-files";
 import { mdxContentSchema, parseMdxFile } from "@/lib/parse-mdx-file";
+import { SITE_HOST } from "@/lib/site";
 
 /** In progress or Complete, independent of the publication state (GLOSSARY.md, Status). */
 const projectStatusSchema = z.enum(["in-progress", "complete"]);
@@ -14,6 +15,11 @@ export const STATUS_LABELS = {
 
 const httpsUrlSchema = z.url({ protocol: /^https$/ });
 
+// The site's host or any subdomain of it.
+const SITE_HOSTNAME_PATTERN = new RegExp(
+  String.raw`^(?:[a-z0-9-]+\.)*${RegExp.escape(SITE_HOST)}$`,
+);
+
 /**
  * Where a Hosted project runs: a path on this site, or an https URL on spitzweb.dev or one of its
  * subdomains, where a Hosted project goes when it moves out (ADR 0002). Anything else is not run
@@ -22,7 +28,10 @@ const httpsUrlSchema = z.url({ protocol: /^https$/ });
 const runsAtSchema = z.union(
   [
     z.string().regex(/^\/(?:[^/\\\s]\S*)?$/),
-    z.url({ protocol: /^https$/, hostname: /^(?:[a-z0-9-]+\.)*spitzweb\.dev$/ }),
+    z.url({
+      protocol: /^https$/,
+      hostname: SITE_HOSTNAME_PATTERN,
+    }),
   ],
   { error: "must be a path on this site or an https URL on spitzweb.dev" },
 );

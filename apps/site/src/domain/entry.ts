@@ -2,16 +2,19 @@ import { z } from "zod";
 import { isListed, publicationStateSchema } from "@/domain/publication";
 import { topicSchema } from "@/domain/topic";
 
-/** The site section each Entry type is published under; an Entry's URL is its section and slug. */
-const ENTRY_TYPE_SECTIONS = { article: "articles", project: "projects" } as const;
+/**
+ * What every Entry type shares the rules for, in one place:
+ * - `pathSegment`: the first segment of its Entries' URLs, followed by the slug;
+ * - `label`: what visitors call it, in the singular (GLOSSARY.md, Entry types);
+ * - `isDatedByYear`: whether its Entries are shown by their year rather than their day, wherever
+ *   they appear (a Project is; an Article is not).
+ */
+export const ENTRY_TYPES = {
+  article: { pathSegment: "articles", label: "Article", isDatedByYear: false },
+  project: { pathSegment: "projects", label: "Project", isDatedByYear: true },
+} as const;
 
-type EntryType = keyof typeof ENTRY_TYPE_SECTIONS;
-
-/** What visitors call each Entry type, in the singular (GLOSSARY.md, Entry types). */
-export const ENTRY_TYPE_LABELS = {
-  article: "Article",
-  project: "Project",
-} satisfies Record<EntryType, string>;
+type EntryType = keyof typeof ENTRY_TYPES;
 
 // Lower-case words and digits joined by single hyphens.
 const SLUG_PATTERN = "[a-z0-9]+(?:-[a-z0-9]+)*";
@@ -19,12 +22,14 @@ const SLUG_PATTERN = "[a-z0-9]+(?:-[a-z0-9]+)*";
 /** An Entry's URL segment. */
 export const entrySlugSchema = z.string().regex(new RegExp(`^${SLUG_PATTERN}$`));
 
-const SECTION_PATTERN = Object.values(ENTRY_TYPE_SECTIONS).join("|");
+const PATH_SEGMENT_PATTERN = Object.values(ENTRY_TYPES)
+  .map(({ pathSegment }) => pathSegment)
+  .join("|");
 
 /** An Entry named by its path, such as `/projects/spitzweb`, as frontmatter refers to one. */
 export const entryHrefSchema = z
   .string()
-  .regex(new RegExp(`^/(?:${SECTION_PATTERN})/${SLUG_PATTERN}$`), {
+  .regex(new RegExp(`^/(?:${PATH_SEGMENT_PATTERN})/${SLUG_PATTERN}$`), {
     error: "must be an Entry's path, such as /projects/spitzweb",
   });
 
@@ -56,7 +61,7 @@ export type Entry = z.infer<typeof entryFactsSchema> & {
 
 /** The path a visitor opens the Entry at. */
 export function entryHref({ type, slug }: Pick<Entry, "type" | "slug">) {
-  return `/${ENTRY_TYPE_SECTIONS[type]}/${slug}`;
+  return `/${ENTRY_TYPES[type].pathSegment}/${slug}`;
 }
 
 /**

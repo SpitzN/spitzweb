@@ -71,6 +71,8 @@ test("Related entries link both ways between a Project and an Article", async ({
     "Fixture — a Featured Hosted project with a title long enough to wrap in the list",
     "Fixture — an Archived Project",
   ]);
+  // An Archived Entry is labelled wherever it is linked from, and a Project is dated by its year.
+  await expect(onArticle.getByRole("listitem").last()).toContainText("Archived · Project · 2024");
 });
 
 test("a Project's Related entries leave out Drafts and Unlisted Entries", async ({ page }) => {

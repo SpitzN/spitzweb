@@ -2,9 +2,7 @@ import type { ReactNode } from "react";
 import { EntryYear } from "@/components/entry-date";
 import { TOPIC_LABELS } from "@/domain/topic";
 import { STATUS_LABELS, type Project } from "@/entry-types/projects/server/parse-projects";
-
-// The site's own origin, for showing where a Hosted project that runs at a path on it lives.
-const SITE_HOST = "spitzweb.dev";
+import { SITE_HOST } from "@/lib/site";
 
 /** Where a Hosted project runs, written for reading: host and path, without the protocol. */
 function runsAtForReading(runsAt: string) {
@@ -24,44 +22,53 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
 
 /**
  * The accent cell that opens the Project: the page's one accent fill, because it is the live
- * thing (DESIGN.md, The Live Thing Rule). A Hosted project's cell is one target, "Open <title>";
- * an External project's cell lists its links out. Inside the fill, focus and selection switch to
- * the accent shadow ink, since the accent itself would vanish on it.
+ * thing (DESIGN.md, The Live Thing Rule). Inside the fill, focus and selection switch to the
+ * accent shadow ink, since the accent itself would vanish on it.
  */
-function OpenCell({ project }: { project: Project }) {
+function AccentCell({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="group relative grid grid-cols-1 gap-x-5 border-be border-rule bg-accent px-4 py-5 text-on-accent selection:bg-on-accent selection:text-accent sm:grid-cols-12 sm:items-baseline sm:px-3">
-      <p className="text-on-accent-muted sm:col-span-4">
-        {project.kind === "hosted" ? "Hosted" : "External"}
-      </p>
-      {project.kind === "hosted" ? (
-        <p className="sm:col-span-8">
-          {/* The link covers the whole cell, and its name stays the action. Its focus ring is drawn
-              on that cover, so it rings the whole target. */}
-          <a
-            href={project.runsAt}
-            className="font-display text-title font-extrabold decoration-2 underline-offset-4 group-hover:underline group-has-focus-visible:underline after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:rounded-xs focus-visible:after:outline-2 focus-visible:after:-outline-offset-4 focus-visible:after:outline-on-accent"
-          >
-            Open {project.title}
-          </a>
-          <br />
-          <span className="text-on-accent-muted">{runsAtForReading(project.runsAt)}</span>
-        </p>
-      ) : (
-        <ul className="flex flex-col gap-1 sm:col-span-8">
-          {project.links.map(({ label, href }) => (
-            <li key={href}>
-              <a
-                href={href}
-                className="font-display text-title font-extrabold underline decoration-on-accent-muted decoration-2 underline-offset-4 transition-colors hover:decoration-on-accent focus-visible:outline-on-accent"
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+      <p className="text-on-accent-muted sm:col-span-4">{label}</p>
+      <div className="sm:col-span-8">{children}</div>
     </div>
+  );
+}
+
+/** A Hosted project's cell: one target, "Open <title>", with where it runs beneath. */
+function HostedCell({ title, runsAt }: { title: string; runsAt: string }) {
+  return (
+    <AccentCell label="Hosted">
+      {/* The link covers the whole cell, and its name stays the action. Its focus ring is drawn on
+          that cover, so it rings the whole target. */}
+      <a
+        href={runsAt}
+        className="font-display text-title font-extrabold decoration-2 underline-offset-4 group-hover:underline group-has-focus-visible:underline after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:rounded-xs focus-visible:after:outline-2 focus-visible:after:-outline-offset-4 focus-visible:after:outline-on-accent"
+      >
+        Open {title}
+      </a>
+      {/* A long path breaks anywhere rather than overflowing the cell. */}
+      <p className="wrap-anywhere text-on-accent-muted">{runsAtForReading(runsAt)}</p>
+    </AccentCell>
+  );
+}
+
+/** An External project's cell: each place it lives, as its own link out. */
+function ExternalCell({ links }: { links: readonly { label: string; href: string }[] }) {
+  return (
+    <AccentCell label="External">
+      <ul className="flex flex-col gap-1">
+        {links.map(({ label, href }) => (
+          <li key={href}>
+            <a
+              href={href}
+              className="font-display text-title font-extrabold underline decoration-on-accent-muted decoration-2 underline-offset-4 transition-colors hover:decoration-on-accent focus-visible:outline-on-accent"
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </AccentCell>
   );
 }
 
@@ -79,7 +86,11 @@ export function TitleBlock({ project }: { project: Project }) {
           <Fact label="Archived">No longer maintained.</Fact>
         </dl>
       )}
-      <OpenCell project={project} />
+      {project.kind === "hosted" ? (
+        <HostedCell title={project.title} runsAt={project.runsAt} />
+      ) : (
+        <ExternalCell links={project.links} />
+      )}
       <dl>
         <Fact label="Status">
           <span className="font-display text-title font-extrabold">
