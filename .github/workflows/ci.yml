@@ -41,6 +41,13 @@ jobs:
       - run: pnpm sherif
       - run: pnpm --filter site exec playwright install --with-deps chromium
       - run: pnpm turbo run typecheck lint test build e2e --affected
+      # A PR's screenshots are committed, embedded by SHA, then deleted, so main never holds them.
+      - name: No PR screenshots left
+        run: |
+          if [ -e .pr-screenshots ]; then
+            echo "::error::Delete .pr-screenshots/ before merging. The PR body's links use the commit SHA, so they keep working (docs/conventions.md)."
+            exit 1
+          fi
       - if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
