@@ -14,3 +14,4 @@ Visitors never sign in, and Nadav is the only account. Sign-in is GitHub OAuth t
 - Every Server Action, Route Handler and Admin panel layout checks the admin session itself. `proxy.ts` (Next.js 16's middleware) may redirect early, but it never stands in for that check.
 - Email/password sign-in is disabled.
 - Sharing the login with subdomain apps is decided per app (ADR 0002).
+- Letting anyone besides Nadav sign in reopens this decision. A hosted service such as Clerk is the first candidate then: user management, MFA and shared login across subdomains are worth a vendor once there is more than one user.

@@ -5,5 +5,6 @@ packages:
 # pnpm runs a dependency's install script only when it is listed here.
 allowBuilds:
   lefthook: false # the prepare script installs the hooks
+  esbuild: false
   sharp: false
   unrs-resolver: false

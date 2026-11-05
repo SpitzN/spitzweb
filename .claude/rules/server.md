@@ -13,6 +13,8 @@ The security invariants these rules serve are listed in `docs/conventions.md`.
 
 - **Server Actions** handle mutations that come from the site's own UI. **Route Handlers** serve external callers: OAuth callbacks, webhooks, feeds and anything with a public URL contract.
 - Every Server Action, Route Handler and Admin panel layout checks the admin session itself. A proxy may redirect early, but it is never the only check (ADR 0005).
+  - A layout's check doesn't run again when the browser moves between its pages, so an Admin panel page that reads data checks the session too.
+  - Two entry points are exempt, because they run before a session exists: Better Auth's Route Handler (`app/api/auth/[...all]`), which makes the session and turns away every other account, and the Server Action that starts GitHub sign-in.
 - Every input is parsed with zod at the entry point, and an expected failure goes back to the caller as a result object.
 - A module that must never reach the browser starts with `import "server-only"`.
 

@@ -25,7 +25,8 @@ const reportOnlyCsp = [
   "font-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self'",
+  // Admin sign-in posts to the site, which redirects to GitHub; form-action covers that redirect.
+  "form-action 'self' https://github.com",
   ...(sentryDsn ? [`report-uri ${cspReportUriFromDsn(sentryDsn)}`] : []),
 ].join("; ");
 
