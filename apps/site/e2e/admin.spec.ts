@@ -11,6 +11,12 @@ test("the Admin panel sends a visitor without a session to sign-in", async ({ pa
   await expect(page.getByRole("heading", { level: 1, name: "Admin panel" })).toBeVisible();
 });
 
+test("an Update's edit page sends a visitor without a session to sign-in", async ({ page }) => {
+  await page.goto("/admin/updates/00000000-0000-4000-8000-000000000000");
+
+  await expect(page).toHaveURL("/admin/sign-in");
+});
+
 test("sign-in is a 44 by 44 px target and kept out of search results", async ({ page }) => {
   await page.goto("/admin/sign-in");
 

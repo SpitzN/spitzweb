@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { SubmitButton } from "@/admin/components/submit-button";
+import { SubmitButton } from "@/components/submit-button";
 import { signInWithGitHub } from "@/admin/server/sign-in-actions";
 import { NOT_ADMIN_REASON } from "@/lib/auth";
 

@@ -5,7 +5,7 @@ Nadav Spitzer's personal site: the things Nadav builds, writes and is doing, for
 ## Site structure
 
 **Entry**:
-A dated piece of content Nadav publishes over time. Every Entry has an Entry type, a publication state and Topics, and appears in Activity.
+A dated piece of content Nadav publishes over time. Every Entry has an Entry type and a publication state, and appears in Activity. Every Entry but an Update has Topics.
 _Avoid_: Post, Piece, Item, Document, Content (as a countable noun)
 
 **Entry type**:
@@ -47,7 +47,7 @@ A written Entry that stands on its own rather than telling the story of one Proj
 _Avoid_: Post, Blog post, Essay, Writing, Note
 
 **Update**:
-A one- or two-line Entry saying what Nadav is doing right now. An Update is Published the moment it is posted and is never a Draft, Unlisted or Archived; it can only be edited or deleted.
+A one- or two-line Entry saying what Nadav is doing right now. An Update is Published the moment it is posted and is never a Draft, Unlisted or Archived; it can only be edited or deleted. It has no Topics, so posting one takes a line of text and, optionally, a link.
 _Avoid_: Status, Note, Tweet, Log line
 
 **Related entries**:
