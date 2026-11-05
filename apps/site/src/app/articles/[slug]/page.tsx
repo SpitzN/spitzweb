@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { entrySlugSchema, listedEntries } from "@/domain/entry";
 import { isIndexable } from "@/domain/publication";
+import { relatedEntries } from "@/domain/related-entries";
 import { ArticleView } from "@/entry-types/articles/components/article-view";
 import {
   findReachableArticle,
@@ -9,6 +10,7 @@ import {
   reachableArticleSlugs,
 } from "@/entry-types/articles/server/articles";
 import { nextArticle } from "@/entry-types/articles/server/next-article";
+import { loadProjects } from "@/entry-types/projects/server/projects";
 
 // Articles are static content (docs/conventions.md). This also makes the first request for a slug
 // outside generateStaticParams wait for the full render, so a Draft or unknown slug gets a real 404
@@ -47,11 +49,15 @@ export default async function ArticlePage({ params }: PageProps<"/articles/[slug
   // An unknown slug renders on request, so the Draft rule is checked here, not only above.
   const article = await requestedArticle(params);
   if (!article) notFound();
+  const articles = loadArticles();
+  // Related entries cross Entry types, so the route, where slices meet, gathers every Entry.
+  const entries = [...articles, ...loadProjects()];
   return (
     <main className="pbs-16 pbe-24">
       <ArticleView
         article={article}
-        next={nextArticle(listedEntries(loadArticles()), article.slug)}
+        next={nextArticle(listedEntries(articles), article.slug)}
+        related={relatedEntries(entries, article)}
       />
     </main>
   );

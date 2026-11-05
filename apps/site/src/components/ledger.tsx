@@ -3,12 +3,13 @@ import type { ReactNode } from "react";
 
 // One row of the ledger on the 12-column grid: a muted label, the value, a muted end note. The
 // ledger bleeds past the page column by the amount each row pads, so every hairline, the first
-// included, spans the lifted ground while the text stays on the page column.
+// included, spans the lifted ground while the text stays on the page column. On a narrow screen the
+// bleed is the whole page padding, so rows run to the screen's edges.
 
 /** A ruled ledger: rows of facts and links set on hairlines, the first rule above them. */
 export function Ledger({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <section aria-label={label} className="-mx-3 border-bs border-rule">
+    <section aria-label={label} className="-mx-4 border-bs border-rule sm:-mx-3">
       {children}
     </section>
   );
@@ -25,7 +26,7 @@ export function LedgerFact({
   children: ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-1 gap-x-5 border-be border-rule px-3 py-3 sm:grid-cols-12 sm:items-baseline">
+    <div className="grid grid-cols-1 gap-x-5 border-be border-rule px-4 py-3 sm:grid-cols-12 sm:items-baseline sm:px-3">
       <dt className="text-ink-muted sm:col-span-2">{label}</dt>
       <dd className="sm:col-span-7">{children}</dd>
       {end !== undefined && <dd className="text-ink-muted sm:col-span-3 sm:text-end">{end}</dd>}
@@ -50,7 +51,7 @@ export function LedgerLink({
   children: ReactNode;
 }) {
   return (
-    <li className="group relative grid grid-cols-1 gap-x-5 border-be border-rule px-3 py-3 transition-all hover:bg-ground-raised has-focus-visible:bg-ground-raised sm:grid-cols-12 sm:items-baseline">
+    <li className="group relative grid grid-cols-1 gap-x-5 border-be border-rule px-4 py-3 transition-all hover:bg-ground-raised has-focus-visible:bg-ground-raised sm:grid-cols-12 sm:items-baseline sm:px-3">
       <span aria-hidden className="text-ink-muted sm:col-span-2">
         {label}
       </span>

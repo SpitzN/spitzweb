@@ -1,8 +1,8 @@
 import type { MDXComponents, MDXContent } from "mdx/types";
 import { Funnel_Sans } from "next/font/google";
 
-// Emphasis in an Article uses Funnel Sans's true italic rather than a synthesized slant. It is
-// declared here, so only pages that render an Article's body load it.
+// Emphasis in prose uses Funnel Sans's true italic rather than a synthesized slant. It is
+// declared here, so only pages that render prose load it.
 const funnelSansItalic = Funnel_Sans({ subsets: ["latin"], style: "italic", display: "swap" });
 
 // The Read register's prose (DESIGN.md): a calm column of Funnel Sans at a real measure, headings
@@ -54,8 +54,8 @@ const PROSE: MDXComponents = {
   em: (props) => <em className={funnelSansItalic.className} {...props} />,
 };
 
-/** An Article's MDX, set as Read-register prose. */
-export function ArticleBody({ Content }: { Content: MDXContent }) {
+/** An Entry's MDX body (an Article, a Project write-up), set as Read-register prose. */
+export function Prose({ Content }: { Content: MDXContent }) {
   return (
     // About 68 characters to the line at 18px. Prose takes proportional figures; tabular ones stay
     // with the ledger and lists.

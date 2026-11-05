@@ -53,7 +53,7 @@ apps/site/src/
 └── lib/                   shared plumbing: db client, env, auth, MDX loading
 ```
 
-MDX reaches the code in one place: `lib/content-glob.ts` lets the bundler find every file in `content/` at build time, and `lib/mdx-files.ts` hands an Entry type its collection unparsed. No page reads the filesystem at request time. `src/mdx-components.tsx` sits outside the layers because `@next/mdx` requires it there; it stays empty, and each Entry type styles its own MDX.
+MDX reaches the code in one place: `lib/content-glob.ts` lets the bundler find every file in `content/` at build time, and `lib/mdx-files.ts` hands an Entry type its collection unparsed. The Entry type parses each file with its own schema through `lib/parse-mdx-file.ts`, which names the file and every bad field when the build fails. No page reads the filesystem at request time. `src/mdx-components.tsx` sits outside the layers because `@next/mdx` requires it there; it stays empty, and each Entry type styles its own MDX.
 
 Inside a slice, files sit in folders named for what they are (`components/`, `server/`), and the slice's tables are in its own `schema.ts`. Lint enforces who may import whom ([`docs/tooling.md`](tooling.md), Import direction):
 
@@ -64,6 +64,7 @@ Inside a slice, files sit in folders named for what they are (`components/`, `se
 
 ### How the slices meet
 
+- **Related entries.** An Entry names others by path in its frontmatter (`related: [/articles/<slug>]`), and the link shows on both. An Entry's route loads every Entry type and passes them to `relatedEntries` in `domain/`, which resolves both directions, fails the build on a path that names nothing, and leaves out Drafts and Unlisted Entries.
 - **Lists that span Entry types** (the home page, Activity, the sitemap, feeds). Each Entry type slice exposes a loader that returns domain Entries from its own source. The route calls the loaders it needs and passes the merged, plain values to the slice that renders them. Ordering, Featured and visibility rules live in `domain/`, so every list applies them the same way.
 - **The Admin panel** owns its shell, the admin-session check and the Hosted project switches. A slice that Nadav edits from the Admin panel ships its own admin parts: the Updates slice owns the form and the Server Action that posts an Update. The admin route composes the shell with those parts.
 - **Activity** owns Events. Updates already are Entries, so Activity lists them through the Updates loader. An Event comes from GitHub or from a publish (an Entry published, a Project's Status changing) and is recorded by the Activity slice itself.

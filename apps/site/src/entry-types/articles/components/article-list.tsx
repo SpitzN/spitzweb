@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Entry } from "@/domain/entry";
 import { TOPIC_LABELS } from "@/domain/topic";
-import { EntryDate } from "@/entry-types/articles/components/entry-date";
+import { EntryDate } from "@/components/entry-date";
 
 /**
  * Articles in the order given, one row each, in the Projects list's grammar (DESIGN.md): hairline
@@ -16,12 +16,12 @@ export function ArticleList({ articles }: { articles: readonly Entry[] }) {
 
   return (
     // The list bleeds past the page column by the amount each row pads, so the hairlines span the
-    // lifted ground while the text stays on the page column.
-    <ol className="-mx-3 border-bs border-rule">
+    // lifted ground while the text stays on the page column; on a narrow screen, to its edges.
+    <ol className="-mx-4 border-bs border-rule sm:-mx-3">
       {articles.map(({ slug, title, summary, date, topics, featured }) => (
         <li
           key={slug}
-          className="group relative grid grid-cols-1 gap-x-5 gap-y-1 border-be border-rule px-3 py-4 transition-all hover:bg-ground-raised has-focus-visible:bg-ground-raised sm:grid-cols-12 sm:items-baseline"
+          className="group relative grid grid-cols-1 gap-x-5 gap-y-1 border-be border-rule px-4 py-4 transition-all hover:bg-ground-raised has-focus-visible:bg-ground-raised sm:grid-cols-12 sm:items-baseline sm:px-3"
         >
           <h2 className="font-display text-title transition-all group-hover:font-extrabold group-hover:text-accent-ink group-has-focus-visible:font-extrabold group-has-focus-visible:text-accent-ink sm:col-span-4">
             {/* The link covers the whole row, and its name stays the title. */}

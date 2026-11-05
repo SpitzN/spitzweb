@@ -2,8 +2,18 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 // Every public route is listed here, so each one gets the smoke and accessibility checks in both
-// themes. Article routes point at fixtures in e2e/content.
-const PUBLIC_ROUTES = ["/", "/articles", "/articles/published-featured", "/articles/archived"];
+// themes. Entry routes point at fixtures in e2e/content.
+const PUBLIC_ROUTES = [
+  "/",
+  "/projects",
+  "/projects/published-featured",
+  "/projects/published-external",
+  "/projects/archived",
+  "/articles",
+  "/articles/published-featured",
+  "/articles/published-recent",
+  "/articles/archived",
+];
 const THEMES = ["dark", "light"] as const;
 
 // ADR 0007: these are enforced on every response. The full CSP is report-only and is checked by

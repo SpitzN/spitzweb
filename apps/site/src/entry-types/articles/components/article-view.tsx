@@ -1,8 +1,8 @@
-import type { Entry } from "@/domain/entry";
+import { ENTRY_TYPE_LABELS, type Entry, entryHref } from "@/domain/entry";
 import { TOPIC_LABELS } from "@/domain/topic";
-import { ArticleBody } from "@/entry-types/articles/components/article-body";
-import { EntryDate } from "@/entry-types/articles/components/entry-date";
-import { Ledger, LedgerFact, LedgerLink } from "@/entry-types/articles/components/ledger";
+import { Prose } from "@/components/prose";
+import { EntryDate, EntryYear } from "@/components/entry-date";
+import { Ledger, LedgerFact, LedgerLink } from "@/components/ledger";
 import type { Article } from "@/entry-types/articles/server/parse-articles";
 import { CONTACT } from "@/lib/contact";
 
@@ -25,12 +25,50 @@ function NextArticle({ next }: { next: Entry }) {
   );
 }
 
+function RelatedEntries({ related }: { related: readonly Entry[] }) {
+  return (
+    <nav aria-label="Related entries">
+      <ul>
+        {related.map((entry, index) => (
+          <LedgerLink
+            key={entryHref(entry)}
+            href={entryHref(entry)}
+            label={index === 0 ? "Related" : undefined}
+            end={
+              <>
+                {ENTRY_TYPE_LABELS[entry.type]} ·{" "}
+                {/* A Project is dated by its year everywhere it appears. */}
+                {entry.type === "project" ? (
+                  <EntryYear date={entry.date} />
+                ) : (
+                  <EntryDate date={entry.date} />
+                )}
+              </>
+            }
+          >
+            {entry.title}
+          </LedgerLink>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 /**
  * One Article as a colophon ledger (the Article page's surface brief): the title, a ruled ledger
  * of its facts, contents and the way onward, then the body; the way onward again at the end.
- * `next` is the Article a reader goes to after this one, if any.
+ * `next` is the Article a reader goes to after this one, if any; `related` are its Related
+ * entries, in order, shown beside it.
  */
-export function ArticleView({ article, next }: { article: Article; next?: Entry | undefined }) {
+export function ArticleView({
+  article,
+  next,
+  related,
+}: {
+  article: Article;
+  next?: Entry | undefined;
+  related: readonly Entry[];
+}) {
   const { title, date, topics, state, readingMinutes, headings, Content } = article;
 
   return (
@@ -61,17 +99,19 @@ export function ArticleView({ article, next }: { article: Article; next?: Entry 
           </nav>
         )}
         {next !== undefined && <NextArticle next={next} />}
+        {related.length > 0 && <RelatedEntries related={related} />}
       </Ledger>
 
       <div className="grid grid-cols-1 gap-x-5 pbs-12 sm:grid-cols-12">
         <div className="sm:col-span-9 sm:col-start-3">
-          <ArticleBody Content={Content} />
+          <Prose Content={Content} />
         </div>
       </div>
 
       <footer className="pbs-10">
         <Ledger label="Where to go next">
           {next !== undefined && <NextArticle next={next} />}
+          {related.length > 0 && <RelatedEntries related={related} />}
           <ul>
             <LedgerLink href="/articles" label="Articles">
               All Articles

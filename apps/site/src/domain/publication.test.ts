@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { isIndexable, isListed, isReachable } from "@/domain/publication";
+import { isIndexable, isListed, isReachable, isShownAsRelated } from "@/domain/publication";
 
 describe("who can reach an Entry", () => {
   test("a Draft is reachable by no visitor", () => {
@@ -31,5 +31,15 @@ describe("which Entries search engines may index", () => {
 
   test.each(["draft", "unlisted"] as const)("%s is kept out of search", (state) => {
     expect(isIndexable(state)).toBe(false);
+  });
+});
+
+describe("which Entries other Entries may link to as Related entries", () => {
+  test.each(["published", "archived"] as const)("%s is shown as Related", (state) => {
+    expect(isShownAsRelated(state)).toBe(true);
+  });
+
+  test.each(["draft", "unlisted"] as const)("%s is never shown as Related", (state) => {
+    expect(isShownAsRelated(state)).toBe(false);
   });
 });
