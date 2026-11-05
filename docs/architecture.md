@@ -48,7 +48,7 @@ apps/site/src/
 ├── app/                   routes only: they read params and compose slices
 ├── entry-types/<name>/    one slice per Entry type: projects, articles, updates
 ├── features/<name>/       one slice per Feature: activity
-├── admin/                 the Admin panel slice: shell, session check, settings
+├── admin/                 the Admin panel slice: shell, settings
 ├── hosted-projects/<name>/ one slice per Hosted project
 ├── domain/                facts several slices read: Entry, Topic, publication rules
 ├── components/            shared UI with no domain meaning; ui/ holds shadcn primitives
@@ -71,7 +71,7 @@ Inside a slice, files sit in folders named for what they are (`components/`, `se
 
 - **Related entries.** An Entry names others by path in its frontmatter (`related: [/articles/<slug>]`), and the link shows on both. An Entry's route loads every Entry type and passes them to `relatedEntries` in `domain/`, which resolves both directions, fails the build on a path that names nothing, and leaves out Drafts and Unlisted Entries.
 - **Lists that span Entry types** (the home page, Activity, the sitemap, feeds). Each Entry type slice exposes a loader that returns domain Entries from its own source. The route calls the loaders it needs and passes the merged, plain values to the slice that renders them. Ordering, Featured and visibility rules live in `domain/`, so every list applies them the same way.
-- **The Admin panel** owns its shell, the admin-session check and the Hosted project switches. A slice that Nadav edits from the Admin panel ships its own admin parts: the Updates slice owns the form and the Server Action that posts an Update. The admin route composes the shell with those parts.
+- **The Admin panel** owns its shell and the Hosted project switches. The admin-session check, `requireAdminSession`, is shared plumbing in `lib/admin-session.ts`, because every slice with admin parts calls it in its own Server Actions and reads. A slice that Nadav edits from the Admin panel ships its own admin parts: the Updates slice owns the form, the list, the edit page's body and the Server Actions that post, edit and delete an Update. The admin routes compose the shell with those parts.
 - **Activity** owns Events. Updates already are Entries, so Activity lists them through the Updates loader. An Event comes from GitHub or from a publish (an Entry published, a Project's Status changing) and is recorded by the Activity slice itself.
 
 ## Where state lives
@@ -90,6 +90,8 @@ Inside a slice, files sit in folders named for what they are (`components/`, `se
 | List filters (Topic, Entry type)                                                                | URL search params                                              | The route            | Shareable and linkable                                                         |
 | The light or dark theme                                                                         | `localStorage`, applied by an inline script before first paint | `components/`        | Reading a cookie would make every page dynamic (ADR 0011); dark is the default |
 | Selection in a list (J/K)                                                                       | Client component state                                         | The component        | Ephemeral; nothing to share                                                    |
+
+Data that lives in Postgres reaches a public page at request time, because the build has no database. The home page's latest Update is a dynamic hole that reads a `"use cache: remote"` loader tagged `updates`: the remote cache is shared by every serverless instance (the default in-memory one isn't), so Neon is queried once after each change rather than on every visit, and posting, editing or deleting an Update calls `updateTag("updates")`. A failed read throws inside the cache and is caught outside it, so a failure is never cached.
 
 Undecided until their tickets: where a Hosted project's per-visitor rate limits are counted, and how GitHub activity becomes Events (webhook or polling).
 

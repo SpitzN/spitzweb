@@ -1,20 +1,8 @@
 import "server-only";
-import { redirect, unstable_rethrow } from "next/navigation";
+import { unstable_rethrow } from "next/navigation";
+import { requireAdminSession } from "@/lib/admin-session";
 import type { Auth } from "@/lib/auth";
-import { getAuth, SIGN_IN_PATH } from "@/lib/auth";
-
-/**
- * The admin session behind this request, or a redirect to sign-in when there is none. Every Admin
- * panel layout, page that reads data, and Server Action calls it itself; a proxy redirect never
- * stands in for it (ADR 0005). A layout's check doesn't run again when the browser moves between
- * that layout's pages, so it never covers a page on its own. Any session is Nadav's: no other
- * account can get a user row (lib/auth.ts).
- */
-export async function requireAdminSession(auth: Auth, headers: Headers) {
-  const adminSession = await auth.api.getSession({ headers });
-  if (!adminSession) redirect(SIGN_IN_PATH);
-  return adminSession;
-}
+import { getAuth } from "@/lib/auth";
 
 /** Ends the admin session behind this request, or redirects to sign-in when there is none. */
 export async function endAdminSession(auth: Auth, headers: Headers) {

@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { connection } from "next/server";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
-import { SubmitButton } from "@/admin/components/submit-button";
+import { SubmitButton } from "@/components/submit-button";
 import { checkAdminSession } from "@/admin/server/admin-session";
 import { signOut } from "@/admin/server/sign-in-actions";
 
