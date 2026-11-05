@@ -36,6 +36,24 @@ for (const route of PUBLIC_ROUTES) {
   });
 }
 
+// Every same-origin link on a public route leads somewhere: a link to a section that isn't built
+// yet fails here (.claude/rules/server.md, Status codes).
+for (const route of PUBLIC_ROUTES) {
+  test(`${route} links only to pages that exist`, async ({ page }) => {
+    await page.goto(route);
+    const hrefs = await page
+      .locator("a[href^='/']")
+      .evaluateAll((links) => links.map((link) => link.getAttribute("href") ?? ""));
+
+    const uniqueHrefs = new Set(hrefs);
+
+    for (const href of uniqueHrefs) {
+      const response = await page.request.get(href);
+      expect(response.status(), href).toBe(200);
+    }
+  });
+}
+
 // ADR 0008 and ADR 0012: the root layout loads Analytics and Speed Insights on every page, and
 // neither sets a cookie. Off Vercel their scripts 404, so this checks they are requested, not
 // what they send; the deployed site is checked by hand (docs/setup.md, First-deploy check).
