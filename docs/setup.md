@@ -13,7 +13,7 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
    - the integration saves Production's `DATABASE_URL` and `DATABASE_URL_UNPOOLED` as readable Config. Replace each with a Secret, which nobody can read back, so no agent can pull the production URL (ADR 0009). Copy the `production` branch's string from Neon, using the pooled one for `DATABASE_URL` and the direct one for `DATABASE_URL_UNPOOLED`, then run `vercel env rm <NAME> --environment production -y && pbpaste | vercel env add <NAME> --environment production --sensitive --yes` from `apps/site`. Piping from the clipboard keeps the value out of chat and shell history;
    - set the production environment variables;
    - once the app has a migrate script, set the build command to migrate before building (ADR 0009). The ignored build step is `turbo-ignore`, set in `apps/site/vercel.json`;
-   - turn on Vercel Analytics.
+   - turn on Vercel Analytics and Speed Insights.
 4. **Turborepo remote cache**: run `pnpm exec turbo login` and `pnpm exec turbo link`. Then in GitHub, add `TURBO_TOKEN` as an Actions secret and `TURBO_TEAM` as an Actions variable.
 5. **Renovate**: install the Renovate GitHub app on `SpitzN/spitzweb`. It reads `renovate.json`.
 6. **Sentry**: create a Next.js project for `apps/site`. Add its DSN to Vercel as `NEXT_PUBLIC_SENTRY_DSN` (Config; it is public by design) and an organization auth token as `SENTRY_AUTH_TOKEN` (Secret), both for Production and Preview. In the organization's **Security & Privacy** settings, turn on **Prevent Storing of IP Addresses** (ADR 0007).
@@ -31,6 +31,6 @@ Steps only Nadav can do: creating accounts, handling secrets and choosing settin
 - `robots.txt`, `sitemap.xml` and the feeds are correct and leave out Draft and Unlisted Entries.
 - Admin panel sign-in works on a phone, and a different GitHub account is rejected.
 - An Update posted from the Admin panel appears in Activity.
-- Analytics shows the visit, Sentry receives a test error, and the uptime monitor reports the site as up.
+- Analytics shows the visit and sets no cookie, Speed Insights shows Core Web Vitals, Sentry receives a test error, and the uptime monitor reports the site as up.
 - `vercel env ls --environment production` lists `DATABASE_URL` and `DATABASE_URL_UNPOOLED` as Secret.
 - The `check` and `pr-title` CI checks are required in the `protect-main` ruleset.

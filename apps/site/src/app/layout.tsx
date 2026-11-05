@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Funnel_Display, Funnel_Sans } from "next/font/google";
+import { SiteAnalytics } from "@/components/site-analytics";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="px-4 min-block-dvh sm:px-8">
         <SiteHeader />
         {children}
+        <SiteAnalytics />
       </body>
     </html>
   );

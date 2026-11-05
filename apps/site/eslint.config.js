@@ -35,6 +35,18 @@ const ALL_LAYERS = [
 const NO_CLASS_CONSTANTS =
   "No class strings in variables: write the classes inline, or add an @utility in globals.css.";
 
+const PARENT_RELATIVE_IMPORT = {
+  regex: String.raw`^\.\./`,
+  message: "Use the @/ alias instead of parent-relative imports.",
+};
+
+// Vercel-only APIs stay in one component, so leaving Vercel replaces one file (ADR 0006).
+const VERCEL_ONLY_IMPORT = {
+  regex: "^@vercel/(analytics|speed-insights)(/|$)",
+  message:
+    "Vercel Analytics and Speed Insights are imported only by components/site-analytics.tsx.",
+};
+
 const NO_REEXPORT = "No re-exports: import from the file that declares the symbol.";
 
 // Files whose default export Next.js requires.
@@ -261,14 +273,7 @@ export default defineConfig(
       ],
       "no-restricted-imports": [
         "error",
-        {
-          patterns: [
-            {
-              regex: String.raw`^\.\./`,
-              message: "Use the @/ alias instead of parent-relative imports.",
-            },
-          ],
-        },
+        { patterns: [PARENT_RELATIVE_IMPORT, VERCEL_ONLY_IMPORT] },
       ],
 
       // --- Env is read through one validated accessor (.claude/rules/server.md, Env).
@@ -485,6 +490,10 @@ export default defineConfig(
     // out of the client bundle (next.config.ts parses the same value at build time).
     files: ["src/lib/env.ts", "src/instrumentation-client.ts"],
     rules: { "no-restricted-properties": "off" },
+  },
+  {
+    files: ["src/components/site-analytics.tsx"],
+    rules: { "no-restricted-imports": ["error", { patterns: [PARENT_RELATIVE_IMPORT] }] },
   },
   {
     files: ["*.config.{js,ts}"],
