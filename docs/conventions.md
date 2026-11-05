@@ -54,6 +54,7 @@ lefthook runs the commit and push hooks. CI also checks the PR title. Unchanged 
 Each invariant is covered by a test once the code it governs exists.
 
 - **Draft** Entries are reachable only by Nadav. **Unlisted** Entries are reachable at their URL but appear in no list, Activity, search, sitemap or feed.
+- The repo is public, so everything committed is public. A Draft of an MDX Entry stays in the git-ignored `apps/site/drafts/` and is never committed. Unlisted means not promoted, not secret (ADR 0013).
 - Any GitHub account other than Nadav's is rejected before a user record is created (ADR 0005).
 - Text entered through the Admin panel or by visitors renders as text, never as HTML. A user-supplied link is accepted only with the `https:` protocol.
 - A Hosted project that calls a paid API has three guards:
