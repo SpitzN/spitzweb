@@ -13,6 +13,7 @@ How spitzweb is built: the stack, the workspace, the code layout and where state
 | Framework         | Next.js (App Router), React 19 with the React Compiler                                   | [0003](adr/0003-nextjs-over-astro.md)                          |
 | Rendering         | Cache Components: a static shell with dynamic holes in `<Suspense>`                      | [0011](adr/0011-cache-components-for-rendering.md)             |
 | Long-form content | MDX in the repo                                                                          | [0004](adr/0004-neon-postgres-with-drizzle.md)                 |
+| Drafts            | MDX Drafts stay in a git-ignored folder; the public repo holds none                      | [0013](adr/0013-the-public-repo-holds-no-drafts.md)            |
 | Data              | Postgres on Neon via Drizzle; PGlite in tests                                            | [0004](adr/0004-neon-postgres-with-drizzle.md)                 |
 | Migrations        | Applied in the Vercel build; expand/contract                                             | [0009](adr/0009-migrations-run-in-the-vercel-build.md)         |
 | Auth              | Better Auth, GitHub, admin-only                                                          | [0005](adr/0005-admin-only-github-sign-in-with-better-auth.md) |
@@ -31,7 +32,8 @@ How spitzweb is built: the stack, the workspace, the code layout and where state
 ```
 apps/
   site/            the site at spitzweb.dev (Next.js)
-    content/       MDX: Articles and Project write-ups
+    content/       MDX: Articles and Project write-ups, public once committed
+    drafts/        git-ignored: MDX Drafts, which the public repo never holds (ADR 0013)
     src/           code, laid out below
     e2e/           Playwright specs, one list of public routes, and fixture content/ in every publication state
 packages/          created when a second app needs shared code

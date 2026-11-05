@@ -22,6 +22,9 @@ blob-report/
 .env*
 !.env.example
 
+# Drafts of MDX Entries: the repo is public, so they are never committed (ADR 0013)
+apps/site/drafts/
+
 # agents' checkouts of this repo
 .claude/worktrees/
 
