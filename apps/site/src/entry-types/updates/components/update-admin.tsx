@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { EntryDate } from "@/components/entry-date";
-import { SubmitButton } from "@/components/submit-button";
+import { SubmitButton } from "@spitzweb/design-system/molecules/submit-button";
 import { UpdateForm } from "@/entry-types/updates/components/update-form";
 import { readAsAdmin } from "@/entry-types/updates/server/read-as-admin";
 import {

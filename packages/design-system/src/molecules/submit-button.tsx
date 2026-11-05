@@ -2,7 +2,7 @@
 
 import type { ComponentProps, ReactNode } from "react";
 import { useFormStatus } from "react-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "@spitzweb/design-system/atoms/button";
 
 /**
  * A form's submit button that says what is happening while its Server Action runs, and can't be

@@ -48,6 +48,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  // The design system ships TSX source with no build step (ADR 0014). Turbopack compiles workspace
+  // packages anyway; naming it keeps that true under any bundler, React Compiler included.
+  transpilePackages: ["@spitzweb/design-system"],
   ...(isE2eBuild && { distDir: ".next-e2e" }),
   turbopack: {
     rules: {

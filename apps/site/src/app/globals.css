@@ -1,73 +1,12 @@
-@import "tailwindcss";
+@import "@spitzweb/design-system/styles/tokens.css";
 
 /*
- * spitzweb's visual system. DESIGN.md at the repo root describes it; this file is its source.
- * Dark is the default theme. `data-theme="light"` on <html> switches to the light theme.
- * Components use the Tailwind utilities generated from @theme below, never these variables directly.
+ * The site's stylesheet: the design system's tokens (which bring Tailwind with them), the site's
+ * own utilities and its base styles. DESIGN.md at the repo root describes the visual system.
  */
 
-:root {
-  color-scheme: dark;
-
-  --ground: #141a52;
-  --ground-raised: #1b226a;
-  --ink: #f4f1ea;
-  --ink-muted: #aeb2d6;
-  --rule: #2c3482;
-  /* The accent (lime) marks only the live or selected thing. */
-  --accent: #c8f25a;
-  --on-accent: #18210a;
-  --on-accent-muted: #2f4114;
-  /* The accent when it colours text on the ground. */
-  --accent-ink: #c8f25a;
-}
-
-:root[data-theme="light"] {
-  color-scheme: light;
-
-  --ground: #f4f1ea;
-  --ground-raised: #e8e6f2;
-  --ink: #141a52;
-  --ink-muted: #4a4f86;
-  --rule: #cfcde3;
-  --accent: #c8f25a;
-  --on-accent: #18210a;
-  --on-accent-muted: #2f4114;
-  --accent-ink: #3b5c00;
-}
-
-@theme inline {
-  --color-*: initial;
-  --color-ground: var(--ground);
-  --color-ground-raised: var(--ground-raised);
-  --color-ink: var(--ink);
-  --color-ink-muted: var(--ink-muted);
-  --color-rule: var(--rule);
-  --color-accent: var(--accent);
-  --color-on-accent: var(--on-accent);
-  --color-on-accent-muted: var(--on-accent-muted);
-  --color-accent-ink: var(--accent-ink);
-  --color-transparent: transparent;
-  --color-current: currentcolor;
-
-  /* Funnel Display sets headings and Project titles; Funnel Sans sets everything else. */
-  --font-display: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif;
-
-  /* The statement on the home page and other page-opening headings. */
-  --text-statement: clamp(2.75rem, 1.4rem + 4.6vw, 6rem);
-  --text-statement--line-height: 0.95;
-  --text-statement--letter-spacing: -0.035em;
-  /* A Project title in a list. */
-  --text-title: 1.5rem;
-  --text-title--line-height: 1.15;
-  --text-title--letter-spacing: -0.015em;
-
-  /* One easing for every change of state: an exponential ease-out. */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --default-transition-duration: 450ms;
-  --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
+/* Tailwind scans the design system's source for the classes its components use. */
+@source "../../../../packages/design-system/src";
 
 /* A text link: ink text underlined in muted ink; the underline turns ink on hover (DESIGN.md, Prose). */
 @utility text-link {

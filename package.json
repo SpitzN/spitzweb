@@ -31,9 +31,6 @@
     "turbo": "^2.11.10"
   },
   "sherif": {
-    "failOnWarnings": true,
-    "ignoreRule": [
-      "non-existant-packages"
-    ]
+    "failOnWarnings": true
   }
 }
