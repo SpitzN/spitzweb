@@ -1,5 +1,6 @@
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import { cn } from "@spitzweb/design-system/lib/cn";
+import type { LayoutClassNameProps } from "@spitzweb/design-system/lib/layout-class-name";
 
 /**
  * shadcn/ui's Input on Base UI, mapped onto the DESIGN.md tokens (ADR 0010). Inside a `Field` it
@@ -7,10 +8,7 @@ import { cn } from "@spitzweb/design-system/lib/cn";
  * that firms to muted ink under pointer and to ink when the field is invalid; 44 px tall, the
  * Admin panel's target (.claude/rules/ui.md). `className` places it and sets its width.
  */
-export function Input({
-  className,
-  ...props
-}: Omit<InputPrimitive.Props, "className"> & { className?: string }) {
+export function Input({ className, ...props }: LayoutClassNameProps<InputPrimitive.Props>) {
   return (
     <InputPrimitive
       data-slot="input"

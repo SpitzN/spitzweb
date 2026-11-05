@@ -1,6 +1,7 @@
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import type { ComponentProps } from "react";
 import { cn } from "@spitzweb/design-system/lib/cn";
+import type { LayoutClassNameProps } from "@spitzweb/design-system/lib/layout-class-name";
 
 /**
  * shadcn/ui's Textarea, on Base UI's Input so a `Field` wires it up like any control, with the
@@ -11,8 +12,8 @@ export function Textarea({
   className,
   rows,
   ...props
-}: Omit<InputPrimitive.Props, "className" | "render"> &
-  Pick<ComponentProps<"textarea">, "rows"> & { className?: string }) {
+}: LayoutClassNameProps<Omit<InputPrimitive.Props, "render">> &
+  Pick<ComponentProps<"textarea">, "rows">) {
   return (
     <InputPrimitive
       data-slot="textarea"

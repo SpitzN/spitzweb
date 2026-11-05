@@ -16,7 +16,7 @@ A **slice** is one vertical area of code: an Entry type, a Feature, the Admin pa
 2. **Something only one slice uses** goes in that slice, in the folder named for what the file is.
 3. **A fact several slices read** goes in the shared domain folder, one file per concept. Examples: a domain schema, the publication-state rules, a ranking.
 4. **Code with no domain meaning that a second caller already needs** goes in the shared components, hooks or lib folders.
-5. **Code a second app needs** moves to `packages/<name>` (ADR 0001). The one exception is the design system, which is already a package (`packages/design-system`, ADR 0014): a UI primitive goes there, at the atomic level it belongs to, never in an app.
+5. **Code a second app needs** moves to `packages/<name>` (ADR 0001). Two packages exist before a second app (ADR 0014): the design system (`packages/design-system`), where a UI primitive goes at the atomic level it belongs to, never in an app; and the shared lint config (`packages/lint-config`).
 
 Create a folder together with its first file: no empty folders, no placeholder files. A test sits beside the file it tests.
 

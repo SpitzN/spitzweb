@@ -1,9 +1,10 @@
 import {
+  BASE_UI_IMPORT,
   PARENT_RELATIVE_IMPORT,
-  VERCEL_ONLY_IMPORT,
   asErrors,
   formatting,
   strictLayers,
+  uiLayers,
 } from "@spitzweb/lint-config/eslint";
 import { DESIGN_SYSTEM_SETTINGS, RESTYLE_POLICY } from "@spitzweb/design-system/lint-policy";
 import boundaries from "eslint-plugin-boundaries";
@@ -11,7 +12,7 @@ import playwright from "eslint-plugin-playwright";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 // The site lints with the repo's strict layers (@spitzweb/lint-config). Its own parts are below:
-// import direction, the design-system boundary, end-to-end tests and its folder exceptions. The
+// import direction, end-to-end tests and its folder exceptions. The
 // rules and the reason for each are listed in docs/tooling.md at the repo root.
 
 // The layers of src/ (docs/architecture.md, Code layout). Shared code has no domain meaning.
@@ -25,13 +26,6 @@ const ALL_LAYERS = [
   "domain",
   ...SHARED_CODE,
 ];
-
-// Base UI is wrapped by the design system, so a slice composes only from its atoms (ADR 0014).
-const BASE_UI_IMPORT = {
-  regex: "^@base-ui/",
-  message:
-    "Base UI is wrapped by @spitzweb/design-system: import its atoms (e.g. @spitzweb/design-system/atoms/field), not Base UI.",
-};
 
 // Files whose default export Next.js requires.
 const NEXT_DEFAULT_EXPORTS = [
@@ -50,21 +44,11 @@ export default defineConfig(
     "next-env.d.ts",
   ]),
 
-  ...strictLayers({
-    tsconfigRootDir: import.meta.dirname,
+  ...strictLayers({ tsconfigRootDir: import.meta.dirname }),
+  ...uiLayers({
     tailwindStylesheet: "src/app/globals.css",
     designSystem: { restylePolicy: RESTYLE_POLICY, settings: DESIGN_SYSTEM_SETTINGS },
   }),
-
-  {
-    files: ["src/**/*.{ts,tsx}"],
-    rules: {
-      "no-restricted-imports": [
-        "error",
-        { patterns: [PARENT_RELATIVE_IMPORT, VERCEL_ONLY_IMPORT, BASE_UI_IMPORT] },
-      ],
-    },
-  },
 
   // --- Architecture (docs/architecture.md). An import between project files is an error unless
   // a policy allows it, and a file outside every known folder is an error. The layers grow with

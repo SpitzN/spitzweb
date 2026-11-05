@@ -17,7 +17,7 @@ Lint enforces the mechanical conventions (`docs/tooling.md`). These are the rule
 
 ## Scope
 
-- **Build for a caller that exists.** Add a prop, option, parameter or abstraction only when this version uses it.
+- **Build for a caller that exists.** Add a prop, option, parameter or abstraction only when this version uses it. `className` is the exception: a component takes it whether or not a caller passes one yet, so a caller can place it (`.claude/rules/ui.md`, Design system).
 - **One source for each fact.** Option lists, states and types are derived from their schema. A rule lives in one place, and everything else reads it.
 - **Extract on the third use.** Two similar pieces of code stay separate until a third shows what they share.
 - **The library's feature first.** Check a library's own API and examples before writing project code that does the same job.

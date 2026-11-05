@@ -2,6 +2,7 @@ import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { cn } from "@spitzweb/design-system/lib/cn";
+import type { LayoutClassNameProps } from "@spitzweb/design-system/lib/layout-class-name";
 
 // shadcn/ui's Button on Base UI, with its variants mapped onto the DESIGN.md tokens (ADR 0010).
 // The accent never fills a button: it marks only the live or selected thing. Every size meets
@@ -34,8 +35,7 @@ export function Button({
   className,
   variant,
   ...props
-}: Omit<ButtonPrimitive.Props, "className"> &
-  VariantProps<typeof buttonVariants> & { className?: string }) {
+}: LayoutClassNameProps<ButtonPrimitive.Props> & VariantProps<typeof buttonVariants>) {
   return (
     <ButtonPrimitive
       data-slot="button"

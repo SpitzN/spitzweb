@@ -3,6 +3,7 @@ import {
   VERCEL_ONLY_IMPORT,
   formatting,
   strictLayers,
+  uiLayers,
 } from "@spitzweb/lint-config/eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 import { DESIGN_SYSTEM_SETTINGS, RESTYLE_POLICY } from "./lint-policy.js";
@@ -21,13 +22,14 @@ const APP_IMPORT = {
 export default defineConfig(
   globalIgnores(["coverage"]),
 
-  ...strictLayers({
-    tsconfigRootDir: import.meta.dirname,
+  ...strictLayers({ tsconfigRootDir: import.meta.dirname }),
+  ...uiLayers({
     tailwindStylesheet: "src/styles/tokens.css",
     designSystem: { restylePolicy: RESTYLE_POLICY, settings: DESIGN_SYSTEM_SETTINGS },
   }),
 
   {
+    // The design system is where Base UI is wrapped, so the shared Base UI ban is lifted here.
     files: ["src/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [

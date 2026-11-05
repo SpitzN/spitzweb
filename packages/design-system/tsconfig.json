@@ -19,7 +19,11 @@
     "noImplicitOverride": true,
     "erasableSyntaxOnly": true,
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@spitzweb/design-system": ["./src"],
+      "@spitzweb/design-system/*": ["./src/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

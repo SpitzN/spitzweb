@@ -29,6 +29,16 @@ export const VERCEL_ONLY_IMPORT = {
     "Vercel Analytics and Speed Insights are imported only by components/site-analytics.tsx.",
 };
 
+/**
+ * Base UI is wrapped by the design system, so a workspace composes only from its atoms (ADR 0014).
+ * Every workspace bans it; the design system's own config lifts the ban.
+ */
+export const BASE_UI_IMPORT = {
+  regex: "^@base-ui/",
+  message:
+    "Base UI is wrapped by @spitzweb/design-system: import its atoms (e.g. @spitzweb/design-system/atoms/field), not Base UI.",
+};
+
 const NO_CLASS_CONSTANTS =
   "No class strings in variables: write the classes inline, or add an @utility to the stylesheet.";
 
@@ -197,7 +207,7 @@ function typescriptLayer(tsconfigRootDir) {
       ],
       "no-restricted-imports": [
         "error",
-        { patterns: [PARENT_RELATIVE_IMPORT, VERCEL_ONLY_IMPORT] },
+        { patterns: [PARENT_RELATIVE_IMPORT, VERCEL_ONLY_IMPORT, BASE_UI_IMPORT] },
       ],
 
       // --- Env is read through one validated accessor (.claude/rules/server.md, Env).
@@ -237,15 +247,11 @@ export function designSystemLayer({ restylePolicy, settings }) {
 }
 
 /**
- * The strict layers for one workspace, in order, ending with the exceptions every workspace
- * shares. The caller adds its own layers after these and `formatting` last.
- *
- * - `tsconfigRootDir`: the workspace folder, for type-aware rules.
- * - `tailwindStylesheet`: the stylesheet that defines the theme, relative to the workspace.
- * - `designSystem`: `restylePolicy` (the `no-restyle` options, from `@spitzweb/design-system`)
- *   and `settings` (`settings.shadcn`: which imports are design-system components).
+ * The strict layers for one workspace's code, in order, ending with the exceptions every workspace
+ * shares. `tsconfigRootDir` is the workspace folder, for type-aware rules. A workspace with UI adds
+ * `uiLayers` after these, then its own layers, and `formatting` last.
  */
-export function strictLayers({ tsconfigRootDir, tailwindStylesheet, designSystem }) {
+export function strictLayers({ tsconfigRootDir }) {
   return [
     ...nextVitals,
     ...nextTypescript,
@@ -323,23 +329,6 @@ export function strictLayers({ tsconfigRootDir, tailwindStylesheet, designSystem
       },
     },
 
-    // --- Tailwind v4: logical properties only, and classes that are valid, unique and current.
-    // Tokens only, no arbitrary values and no unknown classes are the design system's lint below
-    // (docs/conventions.md, "Strict by default, loosened by folder"). Per-folder exceptions go at
-    // the end of each workspace's config.
-    {
-      files: [SOURCE],
-      plugins: { "better-tailwindcss": tailwind },
-      settings: { "better-tailwindcss": { entryPoint: tailwindStylesheet } },
-      rules: {
-        "better-tailwindcss/enforce-logical-properties": "error",
-        "better-tailwindcss/no-conflicting-classes": "error",
-        "better-tailwindcss/no-duplicate-classes": "error",
-        "better-tailwindcss/no-deprecated-classes": "error",
-      },
-    },
-    designSystemLayer(designSystem),
-
     // --- No index barrels (.claude/rules/structure.md): a file is named for what it holds.
     {
       files: ["src/**/index.{ts,tsx}"],
@@ -378,6 +367,34 @@ export function strictLayers({ tsconfigRootDir, tailwindStylesheet, designSystem
       files: ["e2e/**/*.ts", "**/*.test.{ts,tsx}"],
       rules: { "max-nested-callbacks": "off" },
     },
+  ];
+}
+
+/**
+ * The class layers for a workspace with UI: Tailwind's own checks, and the design system's lint.
+ *
+ * - `tailwindStylesheet`: the stylesheet that defines the theme, relative to the workspace.
+ * - `designSystem`: `restylePolicy` (the `no-restyle` options) and `settings` (`settings.shadcn`:
+ *   which imports are design-system components), both from `@spitzweb/design-system`.
+ */
+export function uiLayers({ tailwindStylesheet, designSystem }) {
+  return [
+    // --- Tailwind v4: logical properties only, and classes that are valid, unique and current.
+    // Tokens only, no arbitrary values and no unknown classes are the design system's lint below
+    // (docs/conventions.md, "Strict by default, loosened by folder"). Per-folder exceptions go at
+    // the end of each workspace's config.
+    {
+      files: [SOURCE],
+      plugins: { "better-tailwindcss": tailwind },
+      settings: { "better-tailwindcss": { entryPoint: tailwindStylesheet } },
+      rules: {
+        "better-tailwindcss/enforce-logical-properties": "error",
+        "better-tailwindcss/no-conflicting-classes": "error",
+        "better-tailwindcss/no-duplicate-classes": "error",
+        "better-tailwindcss/no-deprecated-classes": "error",
+      },
+    },
+    designSystemLayer(designSystem),
   ];
 }
 

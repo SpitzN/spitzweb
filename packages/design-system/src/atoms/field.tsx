@@ -1,5 +1,6 @@
 import { Field as FieldPrimitive } from "@base-ui/react/field";
 import { cn } from "@spitzweb/design-system/lib/cn";
+import type { LayoutClassNameProps } from "@spitzweb/design-system/lib/layout-class-name";
 
 // Base UI's Field, not shadcn's: shadcn's Field is plain divs whose label, description and error
 // are wired to the control by hand. Base UI wires them itself, and takes a field's error from
@@ -7,10 +8,7 @@ import { cn } from "@spitzweb/design-system/lib/cn";
 // panel's forms already had; `className` only places it.
 
 /** One form field: label, control, description and error, stacked. `name` matches the form's. */
-export function Field({
-  className,
-  ...props
-}: Omit<FieldPrimitive.Root.Props, "className"> & { className?: string }) {
+export function Field({ className, ...props }: LayoutClassNameProps<FieldPrimitive.Root.Props>) {
   return (
     <FieldPrimitive.Root data-slot="field" className={cn("grid gap-2", className)} {...props} />
   );
@@ -20,7 +18,7 @@ export function Field({
 export function FieldLabel({
   className,
   ...props
-}: Omit<FieldPrimitive.Label.Props, "className"> & { className?: string }) {
+}: LayoutClassNameProps<FieldPrimitive.Label.Props>) {
   return (
     <FieldPrimitive.Label
       data-slot="field-label"
@@ -34,7 +32,7 @@ export function FieldLabel({
 export function FieldDescription({
   className,
   ...props
-}: Omit<FieldPrimitive.Description.Props, "className"> & { className?: string }) {
+}: LayoutClassNameProps<FieldPrimitive.Description.Props>) {
   return (
     <FieldPrimitive.Description
       data-slot="field-description"
@@ -48,7 +46,7 @@ export function FieldDescription({
 export function FieldError({
   className,
   ...props
-}: Omit<FieldPrimitive.Error.Props, "className"> & { className?: string }) {
+}: LayoutClassNameProps<FieldPrimitive.Error.Props>) {
   return (
     <FieldPrimitive.Error
       data-slot="field-error"
