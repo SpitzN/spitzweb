@@ -380,7 +380,13 @@ One exponential ease-out, `cubic-bezier(0.16, 1, 0.3, 1)`, at 450ms is the defau
 
 ### Admin panel primitives
 
-Built from shadcn/ui on Base UI (ADR 0010). Each primitive's variants map onto these tokens: ground and ground-raised for surfaces, ink and ink-muted for text, rule for borders and dividers, the shared focus ring and ease-out. Targets are at least 44 by 44 px there. None are built yet.
+Built from shadcn/ui on Base UI (ADR 0010). Each primitive's variants map onto these tokens: ground and ground-raised for surfaces, ink and ink-muted for text, rule for borders and dividers, the shared focus ring and ease-out. Targets are at least 44 by 44 px there.
+
+- **Button** (`components/ui/button.tsx`): square, Funnel Sans semibold, at least 44 px each way. `default` is an ink fill with ground text that eases to muted ink under pointer, for the one action a screen exists for; `outline` is a hairline frame in the rule colour that takes the lifted ground under pointer. Neither uses the accent. Its busy state is below.
+- **Page heading (Operate):** Funnel Display 800 at Title size, not a Statement: a working screen opens with its name, not a display line. Weight here marks the heading, not a selection.
+- **Busy state:** a submit button stays focusable while its Server Action runs (`aria-disabled`): the ink fill holds at muted ink, the outline's label turns muted, the cursor shows progress, and the label says what is happening.
+- **Sign-in:** the site header, then the page heading "Admin panel", one line in muted ink, and the GitHub button. A failed sign-in's reason sits under the button in semibold ink ("This account can’t sign in.", or "Sign-in failed. Try again."), so it streams in without moving the button.
+- **Admin bar:** under the site header on every signed-in page, a labelled region ("Admin session") on a hairline, with "Signed in as <name>" (the name in ink) at the start and Sign out (`outline`) at the end; it wraps on narrow screens. While the session is checked it shows "Checking your session…" at the same height, so the hairline doesn't move. When the session can't be checked at all, the bar says "The Admin panel is unavailable right now." at the same height and nothing renders below it.
 
 ## Do's and Don'ts
 

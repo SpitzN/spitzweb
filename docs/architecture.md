@@ -34,6 +34,7 @@ apps/
   site/            the site at spitzweb.dev (Next.js)
     content/       MDX: Articles and Project write-ups, public once committed
     drafts/        git-ignored: MDX Drafts, which the public repo never holds (ADR 0013)
+    drizzle/       generated migrations, applied by the Vercel build (ADR 0009)
     src/           code, laid out below
     e2e/           Playwright specs, one list of public routes, and fixture content/ in every publication state
 packages/          created when a second app needs shared code
@@ -56,6 +57,8 @@ apps/site/src/
 ```
 
 MDX reaches the code in one place: `lib/content-glob.ts` lets the bundler find every file in `content/` at build time, and `lib/mdx-files.ts` hands an Entry type its collection unparsed. The Entry type parses each file with its own schema through `lib/parse-mdx-file.ts`, which names the file and every bad field when the build fails. No page reads the filesystem at request time. `src/mdx-components.tsx` sits outside the layers because `@next/mdx` requires it there; it stays empty, and each Entry type styles its own MDX.
+
+The database reaches the code in one place too. `lib/db.ts` builds the Drizzle client on Neon's HTTP driver: each query is one request, so there is no pool to keep alive between serverless invocations. `lib/auth.ts` builds Better Auth on that client, and its tables live in `lib/auth-schema.ts`. Both are built per call from the env accessor, never at module top level, so the build needs no database. drizzle-kit finds every slice's `schema.ts` and generates migrations into `drizzle/`; tests apply the same migrations to PGlite (`lib/test-auth.ts`).
 
 Inside a slice, files sit in folders named for what they are (`components/`, `server/`), and the slice's tables are in its own `schema.ts`. Lint enforces who may import whom ([`docs/tooling.md`](tooling.md), Import direction):
 

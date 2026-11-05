@@ -44,6 +44,10 @@ apps/site/drafts/
 .impeccable/screenshots/
 # impeccable-ignore-end
 
+# Impeccable's captures for apps/site, which has its own .impeccable/ (the block above covers the
+# root's only). Screenshots are never committed: they go in the PR body (docs/conventions.md).
+apps/site/.impeccable/review/
+
 # Spent design explorations stay local; only the chosen reference mock is committed (DESIGN.md).
 .impeccable/mocks/decision/
 .impeccable/mocks/typographic/*
