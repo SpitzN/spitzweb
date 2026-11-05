@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-04T12:00:00Z",
+  "generatedAt": "2026-11-05T12:00:00Z",
   "title": "Design System: spitzweb",
   "extensions": {
     "colorMeta": {
@@ -245,7 +245,7 @@
       },
       "title-selected": {
         "displayName": "Project title, selected",
-        "purpose": "The selected or hovered Project or Article title; weight carries state."
+        "purpose": "The selected or hovered Project or Article title in the accent ink; in the ink of its ground, a Project's Status and the Title block's accent-cell action."
       },
       "body": {
         "displayName": "Body",
@@ -288,7 +288,11 @@
     ],
     "focus": {
       "value": "outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px",
-      "purpose": "Global :focus-visible ring."
+      "purpose": "Global :focus-visible ring.",
+      "onAccent": {
+        "value": "outline: 2px solid var(--on-accent); outline-offset: -4px; border-radius: 2px",
+        "purpose": "Inside an accent fill; on a Hosted Title block cell it is drawn on the cell's cover so it rings the whole target."
+      }
     },
     "themes": {
       "default": "dark",
@@ -323,6 +327,16 @@
         "Source Serif 4",
         "Spectral"
       ]
+    },
+    "rowBleed": {
+      "narrow": "1rem (below sm, to the screen edges)",
+      "wide": "0.75rem (from sm)",
+      "appliesTo": [
+        "Ledger",
+        "Article list row",
+        "Project list row",
+        "Title block"
+      ]
     }
   },
   "components": [
@@ -330,8 +344,8 @@
       "name": "Site Header",
       "kind": "nav",
       "refersTo": "site-header",
-      "description": "Wordmark and section nav on a shared baseline over a hairline.",
-      "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#\">spitzweb</a><nav aria-label=\"Sections\"><ul class=\"ds-nav\"><li><a class=\"ds-nav-link\" href=\"#\">Projects</a></li><li><a class=\"ds-nav-link\" href=\"#\">Articles</a></li><li><a class=\"ds-nav-link\" href=\"#\">Activity</a></li></ul></nav></header>",
+      "description": "Wordmark and the sections that ship (Projects, Articles) on a shared baseline over a hairline.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#\">spitzweb</a><nav aria-label=\"Sections\"><ul class=\"ds-nav\"><li><a class=\"ds-nav-link\" href=\"#\">Projects</a></li><li><a class=\"ds-nav-link\" href=\"#\">Articles</a></li></ul></nav></header>",
       "css": ".ds-header { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 3rem; row-gap: 0.75rem; padding-block: 1.5rem 1.25rem; padding-inline: 2rem; border-block-end: 1px solid var(--rule); background: var(--ground); color: var(--ink); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; } .ds-wordmark { font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; letter-spacing: -0.025em; color: var(--ink); text-decoration: none; } .ds-nav { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; } .ds-nav-link { color: var(--ink-muted); text-decoration: none; transition: color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav-link:hover { color: var(--ink); } .ds-wordmark:focus-visible, .ds-nav-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
     },
     {
@@ -346,9 +360,9 @@
       "name": "Ledger",
       "kind": "custom",
       "refersTo": "ledger-row",
-      "description": "The Article page's signature: ruled rows of facts, contents and the way onward; link rows lift and turn 800 in the accent ink.",
-      "html": "<section class=\"ds-ledger\" aria-label=\"About this Article\"><dl><div class=\"ds-lrow\"><dt class=\"ds-llabel\">Published</dt><dd class=\"ds-lvalue\">2 Mar 2026</dd><dd class=\"ds-lend\">6 min read</dd></div><div class=\"ds-lrow\"><dt class=\"ds-llabel\">Topics</dt><dd class=\"ds-lvalue\">Developer tools, Frontend</dd></div></dl><nav aria-label=\"Next Article\"><ul><li class=\"ds-lrow ds-llink\"><span class=\"ds-llabel\" aria-hidden=\"true\">Next</span><a class=\"ds-lvalue\" href=\"#\">Example next Article</a><span class=\"ds-lend\">14 May 2026</span></li></ul></nav></section>",
-      "css": ".ds-ledger { margin-inline: -0.75rem; border-block-start: 1px solid var(--rule); color: var(--ink); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-ledger dl, .ds-ledger ul, .ds-ledger dd { margin: 0; padding: 0; list-style: none; } .ds-lrow { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; align-items: baseline; padding: 0.75rem; border-block-end: 1px solid var(--rule); position: relative; transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-llabel { grid-column: span 2; color: var(--ink-muted); } .ds-lvalue { grid-column: span 7; color: var(--ink); text-decoration: none; transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-lend { grid-column: span 3; text-align: end; color: var(--ink-muted); } .ds-llink a::after { content: \"\"; position: absolute; inset: 0; } .ds-llink:hover, .ds-llink:has(:focus-visible) { background: var(--ground-raised); } .ds-llink:hover .ds-lvalue, .ds-llink:has(:focus-visible) .ds-lvalue { font-weight: 800; color: var(--accent-ink); } .ds-llink a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+      "description": "Ruled rows of facts, contents and the way onward (Next, Related, the list, Contact); link rows lift and turn 800 in the accent ink. Below sm the bleed is the full 1rem page padding.",
+      "html": "<section class=\"ds-ledger\" aria-label=\"About this Article\"><dl><div class=\"ds-lrow\"><dt class=\"ds-llabel\">Published</dt><dd class=\"ds-lvalue\">2 Mar 2026</dd><dd class=\"ds-lend\">6 min read</dd></div><div class=\"ds-lrow\"><dt class=\"ds-llabel\">Topics</dt><dd class=\"ds-lvalue\">Developer tools, Frontend</dd></div></dl><nav aria-label=\"Next Article\"><ul><li class=\"ds-lrow ds-llink\"><span class=\"ds-llabel\" aria-hidden=\"true\">Next</span><a class=\"ds-lvalue\" href=\"#\">Example next Article</a><span class=\"ds-lend\">14 May 2026</span></li></ul></nav><nav aria-label=\"Related entries\"><ul><li class=\"ds-lrow ds-llink\"><span class=\"ds-llabel\" aria-hidden=\"true\">Related</span><a class=\"ds-lvalue\" href=\"#\">Example Project</a><span class=\"ds-lend\">Project · 2026</span></li></ul></nav></section>",
+      "css": ".ds-ledger { margin-inline: -0.75rem; border-block-start: 1px solid var(--rule); color: var(--ink); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-ledger dl, .ds-ledger ul, .ds-ledger dd { margin: 0; padding: 0; list-style: none; } .ds-lrow { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; align-items: baseline; padding: 0.75rem; border-block-end: 1px solid var(--rule); position: relative; transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-llabel { grid-column: span 2; color: var(--ink-muted); } .ds-lvalue { grid-column: span 7; color: var(--ink); text-decoration: none; transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-lend { grid-column: span 3; text-align: end; color: var(--ink-muted); } .ds-llink a::after { content: \"\"; position: absolute; inset: 0; } .ds-llink:hover, .ds-llink:has(:focus-visible) { background: var(--ground-raised); } .ds-llink:hover .ds-lvalue, .ds-llink:has(:focus-visible) .ds-lvalue { font-weight: 800; color: var(--accent-ink); } .ds-llink a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; } @media (max-width: 39.999rem) { .ds-ledger { margin-inline: -1rem; } .ds-lrow { padding-inline: 1rem; } }"
     },
     {
       "name": "Article List Row",
@@ -356,7 +370,7 @@
       "refersTo": "article-row",
       "description": "The Projects list row grammar applied to Articles; Featured Articles lead with a semibold ink mark.",
       "html": "<ol class=\"ds-alist\"><li class=\"ds-arow\"><h2 class=\"ds-atitle\"><a href=\"#\">Example Article</a></h2><p class=\"ds-ameta\">One-line summary of the Article.</p><p class=\"ds-ameta ds-aend\"><span class=\"ds-afeat\">Featured · </span><time>2 Mar 2026</time><br>Developer tools, Frontend</p></li></ol>",
-      "css": ".ds-alist { list-style: none; margin: 0 -0.75rem; padding: 0; border-block-start: 1px solid var(--rule); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-arow { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; row-gap: 0.25rem; align-items: baseline; padding: 1rem 0.75rem; border-block-end: 1px solid var(--rule); transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-atitle { grid-column: span 4; margin: 0; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em; font-weight: 400; color: var(--ink); transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-atitle a { color: inherit; text-decoration: none; } .ds-atitle a::after { content: \"\"; position: absolute; inset: 0; } .ds-ameta { grid-column: span 5; margin: 0; color: var(--ink-muted); } .ds-aend { grid-column: span 3; text-align: end; } .ds-afeat { font-weight: 600; color: var(--ink); } .ds-arow:hover, .ds-arow:has(:focus-visible) { background: var(--ground-raised); } .ds-arow:hover .ds-atitle, .ds-arow:has(:focus-visible) .ds-atitle { font-weight: 800; color: var(--accent-ink); } .ds-atitle a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+      "css": ".ds-alist { list-style: none; margin: 0 -0.75rem; padding: 0; border-block-start: 1px solid var(--rule); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-arow { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; row-gap: 0.25rem; align-items: baseline; padding: 1rem 0.75rem; border-block-end: 1px solid var(--rule); transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-atitle { grid-column: span 4; margin: 0; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em; font-weight: 400; color: var(--ink); transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-atitle a { color: inherit; text-decoration: none; } .ds-atitle a::after { content: \"\"; position: absolute; inset: 0; } .ds-ameta { grid-column: span 5; margin: 0; color: var(--ink-muted); } .ds-aend { grid-column: span 3; text-align: end; } .ds-afeat { font-weight: 600; color: var(--ink); } .ds-arow:hover, .ds-arow:has(:focus-visible) { background: var(--ground-raised); } .ds-arow:hover .ds-atitle, .ds-arow:has(:focus-visible) .ds-atitle { font-weight: 800; color: var(--accent-ink); } .ds-atitle a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; } @media (max-width: 39.999rem) { .ds-alist { margin-inline: -1rem; } .ds-arow { padding-inline: 1rem; } }"
     },
     {
       "name": "Prose",
@@ -367,12 +381,20 @@
       "css": ".ds-prose { max-inline-size: 36rem; font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-size: 1.125rem; line-height: 1.75rem; font-variant-numeric: proportional-nums; color: var(--ink); } .ds-prose p { margin: 0; padding-block-end: 1.5rem; text-wrap: pretty; } .ds-prose h2 { margin: 0; padding-block: 2.5rem 0.75rem; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.875rem; line-height: 1.25; letter-spacing: -0.025em; font-weight: 700; text-wrap: balance; } .ds-prose a { color: inherit; text-decoration: underline; text-decoration-color: var(--ink-muted); text-underline-offset: 4px; transition: text-decoration-color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-prose a:hover { text-decoration-color: var(--ink); } .ds-prose a:focus-visible, .ds-prose pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; } .ds-prose blockquote { margin: 0 0 1.5rem; padding-inline-start: 1.5rem; border-inline-start: 1px solid var(--rule); color: var(--ink-muted); } .ds-prose blockquote p { padding-block-end: 0; } .ds-prose code { background: var(--ground-raised); padding-inline: 0.125rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 1rem; } .ds-prose pre { margin: 0 0 1.5rem; overflow-x: auto; background: var(--ground-raised); padding: 1.25rem; font-size: 0.875rem; line-height: 1.5rem; } .ds-prose pre code { background: transparent; padding: 0; font-size: 0.875rem; }"
     },
     {
-      "name": "Project List Row (designed, not yet built)",
+      "name": "Project List Row",
       "kind": "custom",
-      "refersTo": "project-title-selected",
-      "description": "Full-width row between hairlines; weight carries state.",
-      "html": "<ul class=\"ds-list\" role=\"listbox\" aria-label=\"Projects\"><li role=\"option\" aria-selected=\"true\"><a class=\"ds-row\" href=\"#\"><span class=\"ds-row-title\">Example Project</span><span class=\"ds-row-meta\">Placeholder summary</span><span class=\"ds-row-meta\">2026 · Complete</span></a></li><li role=\"option\" aria-selected=\"false\"><a class=\"ds-row\" href=\"#\"><span class=\"ds-row-title\">Another Project</span><span class=\"ds-row-meta\">Placeholder summary</span><span class=\"ds-row-meta\">2026 · In progress</span></a></li></ul>",
-      "css": ".ds-list { list-style: none; margin: 0; padding: 0; border-block-start: 1px solid var(--rule); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-row { display: grid; grid-template-columns: 4fr 5fr 3fr; align-items: baseline; padding-block: 0.875rem; border-block-end: 1px solid var(--rule); color: var(--ink); text-decoration: none; transition: background-color 450ms cubic-bezier(0.16, 1, 0.3, 1), padding 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-row-title { font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em; font-weight: 400; transition: font-weight 450ms cubic-bezier(0.16, 1, 0.3, 1), color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-row-meta { color: var(--ink-muted); } .ds-row-meta:last-child { justify-self: end; } [aria-selected=\"true\"] > .ds-row, .ds-row:hover { background: var(--ground-raised); padding-inline: 0.75rem; } [aria-selected=\"true\"] .ds-row-title, .ds-row:hover .ds-row-title { font-weight: 800; color: var(--accent-ink); } .ds-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+      "refersTo": "project-row",
+      "description": "The signature list row, built: long titles wrap balanced, never truncate; Featured Projects lead with a semibold ink mark; year then Status in muted ink.",
+      "html": "<ol class=\"ds-plist\"><li class=\"ds-prow\"><h2 class=\"ds-ptitle\"><a href=\"#\">Example Project with a title long enough to wrap</a></h2><p class=\"ds-pmeta\">One-line summary of the Project.</p><p class=\"ds-pmeta ds-pend\"><span class=\"ds-pfeat\">Featured · </span><time>2026</time><br>In progress</p></li><li class=\"ds-prow\"><h2 class=\"ds-ptitle\"><a href=\"#\">Another Project</a></h2><p class=\"ds-pmeta\">One-line summary.</p><p class=\"ds-pmeta ds-pend\"><time>2025</time><br>Complete</p></li></ol>",
+      "css": ".ds-plist { list-style: none; margin: 0 -0.75rem; padding: 0; border-block-start: 1px solid var(--rule); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-prow { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; row-gap: 0.25rem; align-items: baseline; padding: 1rem 0.75rem; border-block-end: 1px solid var(--rule); transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-ptitle { grid-column: span 4; margin: 0; font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em; font-weight: 400; color: var(--ink); text-wrap: balance; transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-ptitle a { color: inherit; text-decoration: none; } .ds-ptitle a::after { content: \"\"; position: absolute; inset: 0; } .ds-pmeta { grid-column: span 5; margin: 0; color: var(--ink-muted); } .ds-pend { grid-column: span 3; text-align: end; } .ds-pfeat { font-weight: 600; color: var(--ink); } .ds-prow:hover, .ds-prow:has(:focus-visible) { background: var(--ground-raised); } .ds-prow:hover .ds-ptitle, .ds-prow:has(:focus-visible) .ds-ptitle { font-weight: 800; color: var(--accent-ink); } .ds-ptitle a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; } @media (max-width: 39.999rem) { .ds-plist { margin-inline: -1rem; } .ds-prow { padding-inline: 1rem; } }"
+    },
+    {
+      "name": "Title Block",
+      "kind": "custom",
+      "refersTo": "title-block-open-cell",
+      "description": "The Project page's signature: end five columns, no outer frame, hairline rows (label 4, value 8): the accent cell that opens the Project, then Status in heavy Title type, Year, Made with, Topics.",
+      "html": "<section class=\"ds-tb\" aria-label=\"About this Project\"><div class=\"ds-tb-open\"><p class=\"ds-tb-kind\">Hosted</p><p class=\"ds-tb-val\"><a class=\"ds-tb-action\" href=\"#\">Open Example Project</a><br><span class=\"ds-tb-kind\">example.spitzweb.dev</span></p></div><dl><div class=\"ds-tb-row\"><dt class=\"ds-tb-label\">Status</dt><dd class=\"ds-tb-val ds-tb-status\">In progress</dd></div><div class=\"ds-tb-row\"><dt class=\"ds-tb-label\">Year</dt><dd class=\"ds-tb-val\"><time>2026</time></dd></div><div class=\"ds-tb-row\"><dt class=\"ds-tb-label\">Made with</dt><dd class=\"ds-tb-val\">Next.js, Postgres</dd></div><div class=\"ds-tb-row\"><dt class=\"ds-tb-label\">Topics</dt><dd class=\"ds-tb-val\">Frontend</dd></div></dl></section>",
+      "css": ".ds-tb { margin-inline: -0.75rem; border-block-start: 1px solid var(--rule); color: var(--ink); font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-tb dl, .ds-tb dd, .ds-tb p { margin: 0; } .ds-tb-row, .ds-tb-open { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; align-items: baseline; padding: 0.75rem; border-block-end: 1px solid var(--rule); } .ds-tb-label, .ds-tb-kind { grid-column: span 4; } .ds-tb-label { color: var(--ink-muted); } .ds-tb-val { grid-column: span 8; } .ds-tb-open { position: relative; padding-block: 1.25rem; background: var(--accent); color: var(--on-accent); } .ds-tb-open ::selection { background: var(--on-accent); color: var(--accent); } .ds-tb-kind { color: var(--on-accent-muted); } .ds-tb-action, .ds-tb-status { font-family: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em; font-weight: 800; } .ds-tb-action { color: inherit; text-decoration: none; text-decoration-thickness: 2px; text-underline-offset: 4px; } .ds-tb-action::after { content: \"\"; position: absolute; inset: 0; border-radius: 2px; } .ds-tb-open:hover .ds-tb-action, .ds-tb-open:has(:focus-visible) .ds-tb-action { text-decoration-line: underline; } .ds-tb-action:focus-visible { outline: none; } .ds-tb-action:focus-visible::after { outline: 2px solid var(--on-accent); outline-offset: -4px; } @media (max-width: 39.999rem) { .ds-tb { margin-inline: -1rem; } .ds-tb-row, .ds-tb-open { padding-inline: 1rem; } .ds-tb-label, .ds-tb-kind, .ds-tb-val { grid-column: 1 / -1; } }"
     },
     {
       "name": "Featured Panel (designed, not yet built)",
@@ -406,7 +428,7 @@
     "rules": [
       {
         "name": "The Live Thing Rule",
-        "body": "The accent marks only the live or selected thing: the running Featured Project, the selected row, focus, selection. It never decorates, never fills a primary button by default, and never colours a heading for emphasis.",
+        "body": "The accent marks only the live or selected thing: the running Featured Project, the cell that opens a Project, the selected row, focus, selection. It never decorates, never fills a primary button by default, and never colours a heading for emphasis.",
         "section": "colors"
       },
       {
@@ -446,8 +468,10 @@
       "**Do** show state with weight: Project titles at 400 at rest, 800 with the accent ink when selected.",
       "**Do** separate with hairline rules in the rule colour.",
       "**Do** keep numerals tabular, except in running prose, which takes proportional figures.",
+      "**Do** date a Project by its year everywhere it appears.",
+      "**Do** let long list titles wrap; never truncate them.",
       "**Do** set Article body text in Funnel Sans at 1.125rem on a 36rem measure.",
-      "**Do** give rows that lift their ground the 0.75rem bleed and matching inline padding, so hairlines span the lift.",
+      "**Do** give rows that lift their ground the row bleed and matching inline padding (1rem below `sm`, 0.75rem from `sm`), so hairlines span the lift.",
       "**Do** use logical properties and utilities only.",
       "**Do** run every transition on the shared ease-out and let reduced motion still it.",
       "**Do** meet WCAG 2.2 AA in both themes."

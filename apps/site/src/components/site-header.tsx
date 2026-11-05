@@ -2,7 +2,10 @@ import Link from "next/link";
 
 // Only sections whose route exists: a section's link is added in the ticket that builds it, and
 // the e2e link check fails on a link to a 404.
-const SECTIONS = [{ href: "/articles", label: "Articles" }];
+const SECTIONS = [
+  { href: "/projects", label: "Projects" },
+  { href: "/articles", label: "Articles" },
+];
 
 export function SiteHeader() {
   return (

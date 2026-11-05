@@ -34,6 +34,7 @@ describe("parseArticles", () => {
     const [article] = parseArticles([file("test-at-seams", validFrontmatter)]);
 
     expect(article).toStrictEqual({
+      type: "article",
       slug: "test-at-seams",
       title: "Why I test at seams",
       summary: "Tests that survive a refactor.",
@@ -41,6 +42,7 @@ describe("parseArticles", () => {
       state: "published",
       topics: ["developer-tools"],
       featured: false,
+      related: [],
       readingMinutes: 2,
       headings: [
         { text: "Seams", id: "seams", level: 2 },

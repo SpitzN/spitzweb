@@ -28,3 +28,11 @@ export function isIndexable(state: PublicationState) {
 export function isListed(state: PublicationState) {
   return state === "published";
 }
+
+/**
+ * Whether another Entry's page may link to it as a Related entry. A Draft is for Nadav only, and
+ * a link from a public page would hand an Unlisted Entry's URL to everyone.
+ */
+export function isShownAsRelated(state: PublicationState) {
+  return state === "published" || state === "archived";
+}

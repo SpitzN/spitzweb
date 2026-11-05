@@ -1,8 +1,15 @@
 import { describe, expect, test } from "vitest";
-import { type Entry, entrySlugSchema, listedEntries } from "@/domain/entry";
+import {
+  type Entry,
+  entryHref,
+  entryHrefSchema,
+  entrySlugSchema,
+  listedEntries,
+} from "@/domain/entry";
 
 function entry(slug: string, overrides: Partial<Entry> = {}): Entry {
   return {
+    type: "article",
     slug,
     title: slug,
     summary: `${slug} summary`,
@@ -10,6 +17,7 @@ function entry(slug: string, overrides: Partial<Entry> = {}): Entry {
     state: "published",
     topics: [],
     featured: false,
+    related: [],
     ...overrides,
   };
 }
@@ -76,4 +84,29 @@ describe("an Entry's slug", () => {
       expect(entrySlugSchema.safeParse(slug).success).toBe(false);
     },
   );
+});
+
+describe("an Entry's URL", () => {
+  test("is its Entry type's section followed by its slug", () => {
+    expect(entryHref({ type: "article", slug: "test-at-seams" })).toBe("/articles/test-at-seams");
+    expect(entryHref({ type: "project", slug: "spitzweb" })).toBe("/projects/spitzweb");
+  });
+
+  test.each(["/articles/test-at-seams", "/projects/spitzweb"])(
+    "%s names an Entry in frontmatter",
+    (href) => {
+      expect(entryHrefSchema.safeParse(href).success).toBe(true);
+    },
+  );
+
+  test.each([
+    "articles/test-at-seams",
+    "/updates/today",
+    "/projects/Not-A-Slug",
+    "/projects/spitzweb/",
+    "/projects",
+    "https://spitzweb.dev/projects/spitzweb",
+  ])("%j does not name an Entry", (href) => {
+    expect(entryHrefSchema.safeParse(href).success).toBe(false);
+  });
 });

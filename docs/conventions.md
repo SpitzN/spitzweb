@@ -32,6 +32,7 @@ lefthook runs the commit and push hooks. CI also checks the PR title. Unchanged 
 - Commit messages follow Conventional Commits. The subject is a lower-case imperative and says what changed, for example `fix(site): keep long names inside their boxes`. The scope is optional and names the app or package. commitlint enforces the format.
 - Every PR is squash-merged. Its title becomes the commit on `main`, so the title follows the same format.
 - The PR body is written with `pr`. It covers what changed, the evidence (what was run and what it showed), what could go wrong, and `Closes #<issue>`.
+- A PR that changes UI shows it in screenshots: before and after for a changed surface or a visual bug fix, after alone for a new component or page. They are captured from the running app (Playwright or Claude in Chrome), at desktop and phone width and in both themes where the change differs between them. The images live on the `pr-screenshots` branch, one folder per PR, so `main` carries no binaries, and the PR body embeds them.
 
 ## Dependencies
 
