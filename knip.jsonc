@@ -2,6 +2,10 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "workspaces": {
     "apps/site": {
+      // No file imports it since globals.css takes Tailwind from the design system's tokens.css,
+      // but eslint-plugin-better-tailwindcss and prettier-plugin-tailwindcss load it from here.
+      // Without it both stop checking and sorting classes, and neither says so.
+      "ignoreDependencies": ["tailwindcss"],
       // Files only the build reaches, which Knip cannot trace (docs/tooling.md, Decisions).
       "entry": [
         // @next/mdx loads this remark plugin by path from next.config.ts.
@@ -12,6 +16,11 @@
         "content/**/*.mdx",
         "e2e/content/**/*.mdx",
       ],
+    },
+    "packages/lint-config": {
+      // The shared Stylelint config is stylelint.js, not stylelint.config.js, so Knip is told
+      // where it is and reads the extends and plugins it names.
+      "stylelint": { "config": ["stylelint.js"] },
     },
   },
 }

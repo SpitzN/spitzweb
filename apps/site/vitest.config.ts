@@ -12,5 +12,9 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.{ts,tsx}"],
+    // A database test starts PGlite (Postgres in WASM) and applies every migration, which takes
+    // under a second alone but past Vitest's 5 s default while `pnpm check` runs every
+    // workspace's lint, typecheck and tests at once (docs/tooling.md, Decisions).
+    testTimeout: 20_000,
   },
 });

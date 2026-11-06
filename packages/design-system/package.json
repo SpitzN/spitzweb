@@ -1,0 +1,43 @@
+{
+  "name": "@spitzweb/design-system",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "26.x"
+  },
+  "exports": {
+    "./lint-policy": "./lint-policy.js",
+    "./lib/*": "./src/lib/*.ts",
+    "./*.css": "./src/*.css",
+    "./*": "./src/*.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0 && stylelint \"src/**/*.css\" --max-warnings 0",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.9.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "peerDependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@spitzweb/lint-config": "workspace:*",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^10.14.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "stylelint": "^18.0.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.1.0"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-05T12:00:00Z",
+  "generatedAt": "2026-11-05T19:19:51Z",
   "title": "Design System: spitzweb",
   "extensions": {
     "colorMeta": {
@@ -411,6 +411,46 @@
       "description": "Muted ink at rest, full ink on hover, global focus ring.",
       "html": "<a class=\"ds-link\" href=\"#\">Articles</a>",
       "css": ".ds-link { color: var(--ink-muted); text-decoration: none; font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; transition: color 450ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link:hover { color: var(--ink); } .ds-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Button (default)",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "The one action a screen exists for: a square ink fill with ground text that eases to muted ink under pointer and holds there while its Server Action runs. Never the accent.",
+      "html": "<div class=\"ds-btn-row\"><button class=\"ds-btn-default\" type=\"button\">Post Update</button><button class=\"ds-btn-default\" type=\"button\" aria-disabled=\"true\">Posting…</button></div>",
+      "css": ".ds-btn-row { display: flex; flex-wrap: wrap; gap: 1.5rem; } .ds-btn-default { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; gap: 0.5rem; min-block-size: 2.75rem; min-inline-size: 2.75rem; padding-inline: 1rem; border: 0; border-radius: 0; font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; transition: background-color 450ms cubic-bezier(0.16, 1, 0.3, 1), color 450ms cubic-bezier(0.16, 1, 0.3, 1), border-color 450ms cubic-bezier(0.16, 1, 0.3, 1); background: var(--ink); color: var(--ground); } .ds-btn-default:hover:not([aria-disabled=\"true\"]) { background: var(--ink-muted); } .ds-btn-default[aria-disabled=\"true\"] { background: var(--ink-muted); cursor: progress; } .ds-btn-default:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Button (outline)",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "A secondary action, such as Sign out or Delete Update: a hairline frame in the rule colour that takes the lifted ground under pointer; its label turns muted while busy.",
+      "html": "<div class=\"ds-btn-row\"><button class=\"ds-btn-outline\" type=\"button\">Sign out</button><button class=\"ds-btn-outline\" type=\"button\" aria-disabled=\"true\">Signing out…</button></div>",
+      "css": ".ds-btn-row { display: flex; flex-wrap: wrap; gap: 1.5rem; } .ds-btn-outline { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; gap: 0.5rem; min-block-size: 2.75rem; min-inline-size: 2.75rem; padding-inline: 1rem; border: 0; border-radius: 0; font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; transition: background-color 450ms cubic-bezier(0.16, 1, 0.3, 1), color 450ms cubic-bezier(0.16, 1, 0.3, 1), border-color 450ms cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid var(--rule); background: transparent; color: var(--ink); } .ds-btn-outline:hover:not([aria-disabled=\"true\"]) { background: var(--ground-raised); } .ds-btn-outline[aria-disabled=\"true\"] { color: var(--ink-muted); cursor: progress; } .ds-btn-outline:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A text field: a square hairline frame on the ground, 44 px tall, that firms to muted ink under pointer and to ink when the field is invalid. The caller sets its width; Admin forms make it full width.",
+      "html": "<div class=\"ds-input-stack\"><input class=\"ds-input\" type=\"text\" value=\"https://example.com\" aria-label=\"Link\"><input class=\"ds-input\" type=\"text\" value=\"example.com\" aria-label=\"Invalid link\" aria-invalid=\"true\" data-invalid=\"\"></div>",
+      "css": ".ds-input-stack { display: grid; gap: 1rem; max-inline-size: 28rem; } .ds-input { box-sizing: border-box; inline-size: 100%; border: 1px solid var(--rule); border-radius: 0; background: var(--ground); color: var(--ink); font: inherit; padding-inline: 0.75rem; transition: border-color 450ms cubic-bezier(0.16, 1, 0.3, 1); min-block-size: 2.75rem; } .ds-input:hover { border-color: var(--ink-muted); } .ds-input[data-invalid] { border-color: var(--ink); } .ds-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Textarea",
+      "kind": "input",
+      "refersTo": "textarea",
+      "description": "The Input's frame and states for a few lines of text, such as an Update; it grows in the block direction only.",
+      "html": "<textarea class=\"ds-textarea\" rows=\"3\" aria-label=\"Update\">Writing the design-system package for the Admin panel.</textarea>",
+      "css": ".ds-textarea { box-sizing: border-box; inline-size: 100%; border: 1px solid var(--rule); border-radius: 0; background: var(--ground); color: var(--ink); font: inherit; padding-inline: 0.75rem; transition: border-color 450ms cubic-bezier(0.16, 1, 0.3, 1); display: block; max-inline-size: 28rem; padding-block: 0.625rem; resize: vertical; } .ds-textarea:hover { border-color: var(--ink-muted); } .ds-textarea[data-invalid] { border-color: var(--ink); } .ds-textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Field",
+      "kind": "custom",
+      "refersTo": "field",
+      "description": "One form field, stacked with an 8 px gap: a semibold label, the control, a description in muted ink, and the Server Action's error in semibold ink when there is one. Fields in a form stack 24 px apart.",
+      "html": "<form class=\"ds-form\" onsubmit=\"return false\"><div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-field-text\">Update</label><textarea class=\"ds-field-control\" id=\"ds-field-text\" rows=\"3\" aria-describedby=\"ds-field-text-description\"></textarea><p class=\"ds-field-description\" id=\"ds-field-text-description\">One or two lines on what you’re doing now, up to 280 characters.</p></div><div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-field-link\">Link (optional)</label><input class=\"ds-field-control ds-field-control-input\" id=\"ds-field-link\" type=\"text\" value=\"example.com\" data-invalid=\"\" aria-invalid=\"true\" aria-describedby=\"ds-field-link-error\"><p class=\"ds-field-description\">A web address that starts with https://</p><p class=\"ds-field-error\" id=\"ds-field-link-error\">Use a link that starts with https://</p></div></form>",
+      "css": ".ds-form { display: grid; gap: 1.5rem; max-inline-size: 28rem; font-family: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif; color: var(--ink); } .ds-field { display: grid; gap: 0.5rem; } .ds-field-label { font-weight: 600; } .ds-field-description { margin: 0; color: var(--ink-muted); } .ds-field-error { margin: 0; font-weight: 600; color: var(--ink); } .ds-field-control { box-sizing: border-box; inline-size: 100%; border: 1px solid var(--rule); border-radius: 0; background: var(--ground); color: var(--ink); font: inherit; padding-inline: 0.75rem; transition: border-color 450ms cubic-bezier(0.16, 1, 0.3, 1); padding-block: 0.625rem; resize: vertical; } .ds-field-control-input { min-block-size: 2.75rem; padding-block: 0; } .ds-field-control:hover { border-color: var(--ink-muted); } .ds-field-control[data-invalid] { border-color: var(--ink); } .ds-field-control:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }"
     }
   ],
   "narrative": {
