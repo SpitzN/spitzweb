@@ -15,7 +15,7 @@ Impeccable owns design, so run `impeccable` for every UI change. `DESIGN.md` is 
 
 ## Design system
 
-- Every design-system component, at every level, takes `className` and applies it to its root element, merged through `cn` with the caller's last, whether or not a caller passes one yet. A Base UI wrapper types it with `LayoutClassNameProps`. `src/components.test.tsx` fails for a component that drops it.
+- Every design-system component, at every level, takes `className` and applies it to its root element, merged through `cn` with the caller's last, whether or not a caller passes one yet; `src/components.test.tsx` fails for a component that drops it. An atom takes the props of what it wraps, the way shadcn types it: `ComponentProps<"input">` for a native element, Base UI's own `.Props` (`ButtonPrimitive.Props`) for a Base UI part. A plain element that must sit in a `Field` renders through a Base UI control (`Textarea`: `render={<textarea />}`), because Base UI's `Field` wires only its own controls (ADR 0015).
 - The Admin panel builds from `@spitzweb/design-system` (ADR 0014). A caller's `className` on a design-system component sets layout only: margin, width, flex and grid placement. `@shadcn/lint` reports the rest (ADR 0016).
 - A look finding is fixed in the package, not at the call site: use an existing variant, add a variant the design calls for, or, when DESIGN.md calls for a caller to set more than layout on one component, add a contract in `packages/design-system/lint-policy.js` with its reason. A wrapper element that restyles the component is the same finding in another place.
 - A new primitive starts from `shadcn add` in `packages/design-system` and is rewritten onto the tokens (`docs/tooling.md`, Decisions).

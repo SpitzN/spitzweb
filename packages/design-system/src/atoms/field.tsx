@@ -1,6 +1,5 @@
 import { Field as FieldPrimitive } from "@base-ui/react/field";
 import { cn } from "@spitzweb/design-system/lib/cn";
-import type { LayoutClassNameProps } from "@spitzweb/design-system/lib/layout-class-name";
 
 // Base UI's Field, not shadcn's: shadcn's Field is plain divs whose label, description and error
 // are wired to the control by hand. Base UI wires them itself, and takes a field's error from
@@ -8,17 +7,14 @@ import type { LayoutClassNameProps } from "@spitzweb/design-system/lib/layout-cl
 // panel's forms already had; `className` only places it.
 
 /** One form field: label, control, description and error, stacked. `name` matches the form's. */
-export function Field({ className, ...props }: LayoutClassNameProps<FieldPrimitive.Root.Props>) {
+export function Field({ className, ...props }: FieldPrimitive.Root.Props) {
   return (
     <FieldPrimitive.Root data-slot="field" className={cn("grid gap-2", className)} {...props} />
   );
 }
 
 /** The field's label, tied to its control. */
-export function FieldLabel({
-  className,
-  ...props
-}: LayoutClassNameProps<FieldPrimitive.Label.Props>) {
+export function FieldLabel({ className, ...props }: FieldPrimitive.Label.Props) {
   return (
     <FieldPrimitive.Label
       data-slot="field-label"
@@ -29,10 +25,7 @@ export function FieldLabel({
 }
 
 /** What the field expects, in muted ink; the control is described by it. */
-export function FieldDescription({
-  className,
-  ...props
-}: LayoutClassNameProps<FieldPrimitive.Description.Props>) {
+export function FieldDescription({ className, ...props }: FieldPrimitive.Description.Props) {
   return (
     <FieldPrimitive.Description
       data-slot="field-description"
@@ -43,10 +36,7 @@ export function FieldDescription({
 }
 
 /** The field's error, shown only while there is one: from the form's `errors`, or validation. */
-export function FieldError({
-  className,
-  ...props
-}: LayoutClassNameProps<FieldPrimitive.Error.Props>) {
+export function FieldError({ className, ...props }: FieldPrimitive.Error.Props) {
   return (
     <FieldPrimitive.Error
       data-slot="field-error"
