@@ -194,7 +194,7 @@ These stay as review rules in `.claude/rules/`.
   - `no-misused-promises` (`checksVoidReturn.attributes: false`)
   - `restrict-template-expressions` (`allowNumber`)
   - `no-confusing-void-expression` (`ignoreArrowShorthand`)
-- **`pnpm-lock.yaml` and `.impeccable/` are in `.prettierignore`.** Without that, the format check flags the lockfile and Impeccable's generated files.
+- **`pnpm-lock.yaml`, `.impeccable/` and `.claude/skills/` are in `.prettierignore`.** Without that, the format check flags the lockfile, Impeccable's generated files and the Neon skills `neon skills` installs. Reformatting the skills would also break the hashes in `skills-lock.json` that `neon skills status` checks.
 - **`next dev` rewrites `apps/site/AGENTS.md`** when it detects a coding agent. The block is committed as written. `apps/site/CLAUDE.md` imports it, so Claude Code loads Next.js's pointer to the docs bundled in `node_modules/next/dist/docs/`.
 - **Next.js adds `.next-e2e/types` to `tsconfig.json`** the first time the e2e build runs, beside `.next/types`. The entries are committed in the shape Next.js writes.
 - **Under Cache Components a dynamic route serves its App Shell with a 200 before the page runs**, so `notFound()` for a slug outside `generateStaticParams` came back as a 200. `ensureStatic = "navigation"` makes that first request wait for the full render; the rule is in `.claude/rules/server.md`, Rendering.
