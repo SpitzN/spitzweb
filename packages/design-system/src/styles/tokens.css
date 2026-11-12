@@ -38,6 +38,12 @@
   --accent-ink: #3b5c00;
 }
 
+/*
+ * `light:` styles an element differently in the light theme. Most things never need it, because
+ * the tokens already swap; it is for a mark of which theme is in use, such as the theme switch.
+ */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
 @theme inline {
   --color-*: initial;
   --color-ground: var(--ground);
