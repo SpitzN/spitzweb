@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import { switchTheme, THEMES, wcagViolations } from "./accessibility";
+import { reloadInTheme, THEMES, wcagViolations } from "./accessibility";
 
 const UNKNOWN_URL = "/no-such-page";
 
@@ -29,7 +29,7 @@ for (const theme of THEMES) {
     await expect(page.getByRole("heading", { level: 1, name: "Page not found." })).toBeVisible();
     await expect(page).toHaveTitle("Page not found · spitzweb");
 
-    await switchTheme(page, theme);
+    await reloadInTheme(page, theme);
 
     expect(await wcagViolations(page)).toEqual([]);
   });

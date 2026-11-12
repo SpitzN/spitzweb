@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { switchTheme, THEMES, wcagViolations } from "./accessibility";
+import { reloadInTheme, THEMES, wcagViolations } from "./accessibility";
 
 // The suite has no GitHub and no real database, so it checks everything up to the sign-in itself;
 // the sign-in flow is covered against PGlite in src/lib/auth.test.ts.
@@ -60,7 +60,7 @@ for (const theme of THEMES) {
     await page.emulateMedia({ reducedMotion: "reduce" });
     const response = await page.goto("/admin/sign-in?error=not_admin");
     expect(response?.status()).toBe(200);
-    await switchTheme(page, theme);
+    await reloadInTheme(page, theme);
 
     expect(await wcagViolations(page)).toEqual([]);
   });

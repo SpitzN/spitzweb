@@ -1,0 +1,147 @@
+/*
+ * The theme change (DESIGN.md, Motion), the site's one authored sequence. What is up in the
+ * theme switch's picture sets behind the header's hairline, the new theme spreads from the
+ * hairline over the page, and the other rises with the stars after it. lib/theme-change.ts plays
+ * it and marks its phase on <html> as `data-theme-change`: "setting", "turning" for the one step
+ * in which the page turns, then "rising".
+ *
+ * This file holds the phases' variants, the motion each part of the picture plays in them
+ * (components/theme-switch.tsx, components/header-stars.tsx), and how the page's old and new
+ * snapshots are drawn while the new theme spreads. Its motion tokens live here, with the picture
+ * they move, and not in the design system's tokens.css.
+ */
+
+@custom-variant theme-setting (&:where([data-theme-change="setting"] *));
+@custom-variant theme-rising (&:where([data-theme-change="rising"] *));
+
+/* No change is playing. The switch's name shows only then, so it is out of the way of one. */
+@custom-variant theme-idle (&:where(:root:not([data-theme-change]) *));
+
+/* A part's turn in a staggered sequence, counted from 0: the stars come out one after another. */
+@utility stagger-* {
+  --stagger: --value(integer);
+}
+
+/* A star: ink that goes out when what is up sets, and comes out in its turn when the moon rises. */
+@utility star {
+  @apply fill-ink theme-setting:animate-star-out theme-rising:animate-star-in;
+}
+
+@theme {
+  /* Setting is an exit: quick, and gathering speed. */
+  --ease-set: cubic-bezier(0.55, 0, 0.85, 0.35);
+}
+
+/*
+ * Inline, so each utility carries the whole animation and `--stagger` is read on the part it
+ * moves. As a variable on <html>, the animation would read `--stagger` there, and find none.
+ */
+@theme inline {
+  /* Setting. */
+  --animate-rays-draw-in: rays-draw-in 160ms var(--ease-set) forwards;
+  --animate-sun-set: sun-set 280ms var(--ease-set) 70ms forwards;
+  --animate-moon-set: moon-set 300ms var(--ease-set) 70ms forwards;
+  --animate-star-out: star-out 150ms var(--ease-set) forwards;
+
+  /* Rising is an entrance, on the shared ease-out. The middle ray and the nearest star go first. */
+  --animate-sun-rise: sun-rise 650ms var(--ease-out) 120ms both;
+  --animate-ray-out: ray-out 480ms var(--ease-out) calc(360ms + var(--stagger, 0) * 60ms) both;
+  --animate-moon-rise: moon-rise 800ms var(--ease-out) 120ms both;
+  --animate-star-in: star-in 400ms var(--ease-out) calc(320ms + var(--stagger, 0) * 50ms) both;
+
+  /* The sun's centre is on the hairline, so its own radius and outline take it out of sight. */
+  @keyframes sun-set {
+    to {
+      translate: 0 13px;
+    }
+  }
+
+  @keyframes sun-rise {
+    from {
+      translate: 0 13px;
+    }
+  }
+
+  @keyframes rays-draw-in {
+    to {
+      scale: 0.45;
+      opacity: 0;
+    }
+  }
+
+  /* A ray grows out from behind the disc. */
+  @keyframes ray-out {
+    from {
+      scale: 0.45;
+      opacity: 0;
+    }
+  }
+
+  /* The moon is above the hairline, so it has further to go, and it tips as it sinks. */
+  @keyframes moon-set {
+    to {
+      translate: 0 38px;
+      rotate: 30deg;
+    }
+  }
+
+  @keyframes moon-rise {
+    from {
+      translate: 0 38px;
+      rotate: 30deg;
+    }
+  }
+
+  @keyframes star-out {
+    to {
+      scale: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes star-in {
+    from {
+      scale: 0;
+      rotate: -45deg;
+      opacity: 0;
+    }
+  }
+}
+
+@layer base {
+  /*
+   * The spread of the new theme over the page. lib/theme-change.ts reads these, and script needs
+   * each as a plain number, so the time is a count of milliseconds.
+   */
+  :root {
+    /* How long the spread takes, and how wide the lime line on its moving edges is. */
+    --theme-spread-ms: 850;
+    --theme-spread-edge: 1.5px;
+    /* The share of that time in which the new theme climbs the header, above the hairline. */
+    --theme-spread-climb: 0.3;
+    /* How hard each edge slows as it lands: 1 would be a steady pace. */
+    --theme-spread-slowing: 2.4;
+  }
+
+  /*
+   * In the step that turns the page, nothing eases to its new colour. A link easing to its new
+   * ink would show the old theme's ink on the new ground for as long as it took.
+   */
+  :root[data-theme-change="turning"] *,
+  :root[data-theme-change="turning"] *::before,
+  :root[data-theme-change="turning"] *::after {
+    transition: none !important;
+  }
+
+  /* While a change plays, script draws the page's old and new snapshots; nothing crossfades. */
+  :root[data-theme-change]::view-transition-old(root),
+  :root[data-theme-change]::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* The snapshots stop short of each other along the moving edges, and the lime shows between. */
+  :root[data-theme-change]::view-transition-image-pair(root) {
+    background-color: var(--color-accent);
+  }
+}

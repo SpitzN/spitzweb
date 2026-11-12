@@ -102,11 +102,17 @@ components:
     typography: "{typography.body}"
   nav-link-hover:
     textColor: "{colors.ink}"
-  theme-switch-option:
+  theme-switch-disc:
+    backgroundColor: "{colors.accent}"
+  theme-switch-line:
+    textColor: "{colors.ink}"
+  theme-switch-name:
     textColor: "{colors.ink-muted}"
     typography: "{typography.body}"
-  theme-switch-option-current:
+  header-star:
     textColor: "{colors.ink}"
+  theme-change-line:
+    backgroundColor: "{colors.accent}"
   statement:
     textColor: "{colors.ink}"
     typography: "{typography.display}"
@@ -197,9 +203,9 @@ components:
 
 **Creative North Star: "The Precision Instrument"**
 
-spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included, with weight rather than decoration carrying state.
+spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking, with one exception, the theme switch in the header (The One Picture Rule). A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included, with weight rather than decoration carrying state.
 
-Dark is the default theme and was chosen first; light is a full alternative, chosen in the header's theme switch and set as `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals outside running prose, hairlines instead of containers, one exponential ease-out for every change of state.
+Dark is the default theme and was chosen first; light is a full alternative, chosen in the header's theme switch and set as `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals outside running prose, hairlines instead of containers, one exponential ease-out for every change of state, and one authored sequence, the theme change.
 
 The system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.
 
@@ -210,7 +216,8 @@ The system serves both UI registers from ADR 0010 on one set of tokens. Read and
 - Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included.
 - Weight carries state: Project titles go from 400 at rest to 800 when selected.
 - Hairline rules, tabular numerals outside prose, no cards, no badges, no kickers or eyebrows.
-- One exponential ease-out (450ms) for every change of state; all motion stills under reduced motion.
+- One picture: the theme switch's sun and moon on the header's hairline, with the night's stars along the header.
+- One exponential ease-out (450ms) for every change of state, and one authored sequence, the theme change; all motion stills under reduced motion.
 - Logical properties only, so RTL stays cheap.
 
 ## Colors
@@ -219,7 +226,7 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 ### Primary
 
-- **Live Lime** (accent): the only accent. It fills the Featured panel and the cell that opens a Project in its Title block, colours the selected Project title and backs text selection. The accent is the same in both themes.
+- **Live Lime** (accent): the only accent. It fills the Featured panel and the cell that opens a Project in its Title block, colours the selected Project title and backs text selection. It is the disc of the theme switch, the sun by day and the moon by night, and the line that crosses the page when the theme changes. The accent is the same in both themes.
 - **Lime Ink** (accent-ink, accent-ink-light): the accent when it colours text or draws the focus ring on the ground. In dark it is the accent itself; in light it deepens to a dark olive, so selected text keeps AA contrast on paper and the ring stays well clear of 3:1 (6.9:1 on the paper ground, 6.3:1 on the lavender lift).
 - **Accent Shadow Ink** (on-accent): text and marks set on an accent fill, and the focus ring and selection ground inside one.
 - **Accent Shadow Muted** (on-accent-muted): secondary text, underlines and quiet fills inside an accent fill, such as where a Hosted project runs, an External project's link underlines, or the track of a live readout.
@@ -235,7 +242,7 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 ### Named Rules
 
-**The Live Thing Rule.** The accent marks only the live or selected thing: the running Featured Project, the cell that opens a Project, the selected row, focus, selection. It never decorates, never fills a primary button by default, and never colours a heading for emphasis.
+**The Live Thing Rule.** The accent marks only the live or selected thing: the running Featured Project, the cell that opens a Project, the selected row, focus, selection, the theme in use (the theme switch's disc), and a theme change as it crosses the page (its line). It never decorates, never fills a primary button by default, and never colours a heading for emphasis.
 
 **The Token-Only Rule.** Every colour comes from a theme token defined for both themes. The Tailwind palette is reset (`--color-*: initial`) and lint rejects arbitrary values and raw palette colours (apps/site/eslint.config.js, docs/tooling.md). Components use the generated utilities (`bg-ground`, `text-ink-muted`, `border-rule`), never the CSS variables directly.
 
@@ -271,7 +278,7 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 ## Layout
 
-The page has an inline padding of 1rem, widening to 2rem from the `sm` breakpoint (40rem). Spacing comes from Tailwind's 0.25rem scale; the steps in use are recorded in the frontmatter. The header wraps its wordmark and nav on a shared baseline, with 3rem between them inline and 0.75rem when they wrap, 1.5rem between nav links, and a hairline below. Page content opens with 4rem of block padding; Article pages close with 6rem.
+The page has an inline padding of 1rem, widening to 2rem from the `sm` breakpoint (40rem). Spacing comes from Tailwind's 0.25rem scale; the steps in use are recorded in the frontmatter. The header wraps its wordmark and nav on a shared baseline, with 3rem between them inline and 0.75rem when they wrap, 1.5rem between nav links, and a hairline below. The theme switch stands on that hairline at the row's end. Page content opens with 4rem of block padding; Article pages close with 6rem.
 
 Built surfaces sit on a 12-column grid from the `sm` breakpoint, with a 1.25rem column gap, and collapse to one column below it. Rows that lift their ground (ledger rows, list rows, the Title block) bleed past the page column and pad inline by the same amount, so the hairlines span the lifted ground while the text stays on the page column: the full 1rem page padding below `sm`, so they run to the screen edges, and 0.75rem from `sm`. The Article body and a Project's write-up start at column three and are capped at the 36rem measure.
 
@@ -291,7 +298,11 @@ The system is flat. There are no shadows. Depth is one tonal step: the lifted gr
 
 ## Shapes
 
-Square by default. The only radius in the build is the 2px corner on the focus ring of text that paints no box (a text link, or a button set as text, such as the theme switch's options) and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
+Square by default. The only radius in the build is the 2px corner on the focus ring of text that paints no box (a text link, or a button set as text) and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The only curves are in the theme switch's picture. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
+
+### Named Rules
+
+**The One Picture Rule.** The theme switch's picture is the only picture on the site: a sun, a moon and the night's stars, on the header's hairline. It is drawn in the system's own inks (the accent for the disc, ink for its outline, rays and stars) and adds no colour. Nothing else is illustrated: no icons, no glyphs, no ornament.
 
 ## Components
 
@@ -299,12 +310,19 @@ Square by default. The only radius in the build is the 2px corner on the focus r
 
 The site header: quiet, exact, on a hairline.
 
-- **Structure:** the wordmark, then the sections that ship (Projects, Articles), then the theme switch at the row's end, on a shared baseline with a hairline below. A section joins the nav with the ticket that builds its route; Activity arrives with its own.
+- **Structure:** the wordmark, then the sections that ship (Projects, Articles), on a shared baseline with a hairline below, then the theme switch at the row's end, standing on the hairline. A section joins the nav with the ticket that builds its route; Activity arrives with its own.
 - **Default:** links in muted ink, body type.
 - **Hover:** links move to full ink through the shared ease-out.
 - **Focus:** the global ring (2px Lime Ink outline, 3px offset).
-- **Narrow screens:** the row wraps; no menu toggle. The theme switch takes the second line, at the start.
-- **Theme switch:** two words, "Dark" and "Light", 1rem apart, as a labelled group of toggle buttons. The theme in use is semibold ink; the other is muted ink and moves to full ink on hover, like a nav link. No icon, no accent: weight carries which theme is on. Each word keeps its semibold width at rest, so the pair never shifts, and each is a target of at least 24 px. Its look follows `<html>` through the `light:` variant, so it is right from the first paint. Choosing a theme crossfades the whole page into it (Motion).
+- **Narrow screens:** the row wraps; no menu toggle. Below about 620px the theme switch, with the room its name takes, has the second line, at its end.
+- **Theme switch:** one button, 3rem wide and 2.75rem tall, that reaches down through the header's bottom padding so its picture stands on the hairline: the hairline is the horizon.
+  - **Light theme:** a lime disc half-risen on the hairline, outlined in ink because lime alone is 1.1:1 on paper, with five ink rays.
+  - **Dark theme:** the same disc as a crescent moon above the hairline, with three stars beside it.
+  - **Drawing:** SVG, 1.5px strokes with round caps. It follows `<html>` through the `light:` variant, so it is right from the first paint.
+  - **Name:** its action, "Switch to the light theme" or "Switch to the dark theme". It is body type in muted ink, level with the nav, and it shows beside the picture, on its start side, on hover and on keyboard focus. It stays while the pointer rests on it, and stays out while a theme change plays. It keeps its room in the header's row whether it shows or not, so it never lies over a nav link.
+  - **Hover and focus:** the sun's rays reach out, or the moon tips and its stars swell, through the shared ease-out. Focus adds the global ring.
+  - **Choosing a theme** plays the theme change (Motion).
+- **Stars:** in the dark theme, eleven stars sit along the header: four-pointed sparkles and points in ink, at 45% to 100% opacity. Each is placed as a share of the header's width, in the header's top or bottom padding only, so none meets the wordmark, a nav link or the theme switch at any width. They are part of the theme switch's picture, and hidden from assistive technology.
 
 ### Statement
 
@@ -378,16 +396,26 @@ The one accent fill on a page, marking the Featured Project that is running live
 ### Focus and selection
 
 - **Focus:** every focusable element shows a 2px outline at a 3px offset in Lime Ink: the lime itself in dark, the dark olive in light, where the lime would be 1.1:1 on paper. Inside an accent fill the ring is accent shadow ink instead (see Title block).
-- **The ring's corners:** an outline takes its corners from the element it rings. A text link paints no box, whether it is a link or a button set as one, so it carries the 2px corner and its ring is soft. A button, a field or a code block has a fill or a frame, so its ring is square like it, and taking focus never reshapes it. `e2e/focus-ring.spec.ts` tabs through every public route and the Admin panel's sign-in: it checks each ring's contrast in both themes, and that no fill or frame changes shape.
+- **The ring's corners:** an outline takes its corners from the element it rings. A text link paints no box, whether it is a link or a button set as one, so it carries the 2px corner and its ring is soft. A button, a field or a code block has a fill or a frame, so its ring is square like it, and taking focus never reshapes it. The theme switch is a picture, not text, so its ring is square around its whole target. `e2e/focus-ring.spec.ts` tabs through every public route and the Admin panel's sign-in: it checks each ring's contrast in both themes, and that no fill or frame changes shape.
 - **Text selection:** accent background with accent shadow ink; inside an accent fill, accent shadow ink background with accent text.
 
 ### Motion
 
-One exponential ease-out, `cubic-bezier(0.16, 1, 0.3, 1)`, at 450ms is the default for every transition, so weight and colour changes share one grammar. Choosing a theme is a view transition: the whole page crossfades from the old theme to the new on the same ease and duration, so the ground, ink and rules change together rather than each at its own pace. Under `prefers-reduced-motion` every transition and animation, the crossfade included, drops to zero duration.
+One exponential ease-out, `cubic-bezier(0.16, 1, 0.3, 1)`, at 450ms is the default for every transition, so weight and colour changes share one grammar.
+
+The theme change is the one authored sequence, and the one exception to that duration and, in its first step, to that easing. Its motion is in `apps/site/src/app/theme-change.css`, and `lib/theme-change.ts` plays it in three steps:
+
+1. **Setting** (about 0.35s). What is up goes down behind the hairline on a quick ease-in, `cubic-bezier(0.55, 0, 0.85, 0.35)`: the sun's rays draw in and the disc sinks, or the stars go out and the moon sinks and tips.
+2. **The page turns** (0.85s). A band of the new theme opens on the hairline, climbs the header in the first 0.25s and falls to the foot of the page, with a 1.5px lime line on each moving edge. It is a view transition whose snapshots script draws, and the page takes no input while it runs. Every colour changes in the one step in which the page turns; nothing eases to its new colour behind the line.
+3. **Rising**, alongside the turn. The other comes up from behind the hairline on the shared ease-out: the sun in 0.65s, then its rays, the middle one first; or the moon in 0.8s, then the stars one by one from the moon outward.
+
+The page has turned about 1.3s after the click, and the last star is out about 0.4s later. A second click while it plays does nothing. With `prefers-reduced-motion`, or in a browser without view transitions, the theme and the picture change at once.
+
+Under `prefers-reduced-motion` every transition and animation drops to zero duration.
 
 ### Admin panel primitives
 
-Built from shadcn/ui on Base UI (ADR 0010), in the design-system package `@spitzweb/design-system` (`packages/design-system`, ADR 0014). It is laid out in atomic levels: `atoms/` holds every primitive, `molecules/` and `organisms/` compose them, and `styles/tokens.css` holds the tokens this document specifies. Each primitive's variants map onto these tokens: ground and ground-raised for surfaces, ink and ink-muted for text, rule for borders and dividers, the shared focus ring and ease-out. Targets are at least 44 by 44 px there. A caller places a primitive (margin, width, flex and grid placement) but never restyles it: a new look is a new variant in the package (ADR 0016).
+Built from shadcn/ui on Base UI (ADR 0010), in the design-system package `@spitzweb/design-system` (`packages/design-system`, ADR 0014). It is laid out in atomic levels: `atoms/` holds every primitive, `molecules/` and `organisms/` compose them, and `styles/tokens.css` holds the tokens this document specifies, except the theme change's motion, which lives with the picture it moves (`apps/site/src/app/theme-change.css`). Each primitive's variants map onto these tokens: ground and ground-raised for surfaces, ink and ink-muted for text, rule for borders and dividers, the shared focus ring and ease-out. Targets are at least 44 by 44 px there. A caller places a primitive (margin, width, flex and grid placement) but never restyles it: a new look is a new variant in the package (ADR 0016).
 
 - **Button** (`atoms/button.tsx`): square, Funnel Sans semibold, at least 44 px each way. `default` is an ink fill with ground text that eases to muted ink under pointer, for the one action a screen exists for; `outline` is a hairline frame in the rule colour that takes the lifted ground under pointer. Neither uses the accent. Its busy state is below.
 - **Input and Textarea** (`atoms/input.tsx`, `atoms/textarea.tsx`): a hairline frame in the rule colour on the ground, ink text, 44 px tall (the Textarea grows in the block direction only). The frame firms to muted ink under pointer and to ink when the field is invalid. The caller sets the width; the Admin panel's forms make them full width.
@@ -412,8 +440,9 @@ Built from shadcn/ui on Base UI (ADR 0010), in the design-system package `@spitz
 - **Do** set Article body text in Funnel Sans at 1.125rem on a 36rem measure.
 - **Do** give rows that lift their ground the row bleed and matching inline padding (1rem below `sm`, 0.75rem from `sm`), so hairlines span the lift.
 - **Do** use logical properties and utilities only.
-- **Do** run every transition on the shared ease-out and let reduced motion still it.
+- **Do** run every transition on the shared ease-out and let reduced motion still it; the theme change's first step is the one exception (Motion).
 - **Do** meet WCAG 2.2 AA in both themes.
+- **Do** keep the theme switch as the site's one picture, drawn in ground, ink and the accent.
 
 ### Don't:
 
@@ -426,3 +455,4 @@ Built from shadcn/ui on Base UI (ADR 0010), in the design-system package `@spitz
 - **Don't** use arbitrary Tailwind values or raw palette colours.
 - **Don't** replace the ultramarine ground with near-black.
 - **Don't** use the accent as decoration, emphasis or a default button fill.
+- **Don't** add a second picture, an icon set or decorative imagery.
