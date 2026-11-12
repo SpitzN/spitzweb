@@ -27,9 +27,18 @@
     color: var(--color-on-accent);
   }
 
+  /* The ring is the accent as it reads on the ground: lime in dark, its deep olive on paper. */
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-accent-ink);
     outline-offset: 3px;
+  }
+
+  /*
+   * An outline takes its corners from the element's own radius. A text link paints no box, so
+   * the radius softens its ring and nothing else; a button, a field or a code block would change
+   * shape, so their rings stay square like them (e2e/focus-ring.spec.ts).
+   */
+  a:focus-visible {
     border-radius: 2px;
   }
 
