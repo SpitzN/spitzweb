@@ -1,0 +1,118 @@
+/*
+ * The theme change (DESIGN.md, Motion), the site's one authored sequence. What is up in the
+ * header's sky sets behind the hairline, the new theme spreads from the hairline over the page,
+ * and the other rises with the stars after it. lib/theme-change.ts plays it and marks its phase on
+ * <html> as `data-theme-change`: "setting", then "rising".
+ *
+ * This file holds the phases' variants, the motion each part of the picture plays in them
+ * (components/theme-switch.tsx, components/night-sky.tsx), and how the page's old and new
+ * snapshots are drawn while the new theme spreads.
+ */
+
+@custom-variant theme-setting (&:where([data-theme-change="setting"] *));
+@custom-variant theme-rising (&:where([data-theme-change="rising"] *));
+
+/* No change is playing. The switch's name shows only then, so it is out of the way of one. */
+@custom-variant theme-idle (&:where(:root:not([data-theme-change]) *));
+
+/* A part's turn in a staggered sequence, counted from 0: the stars come out one after another. */
+@utility stagger-* {
+  --stagger: --value(integer);
+}
+
+@theme {
+  /* Setting is an exit: quick, and gathering speed. The furthest star goes out first. */
+  --ease-set: cubic-bezier(0.55, 0, 0.85, 0.35);
+  --animate-rays-draw-in: rays-draw-in 160ms var(--ease-set) forwards;
+  --animate-sun-set: sun-set 280ms var(--ease-set) 70ms forwards;
+  --animate-moon-set: moon-set 300ms var(--ease-set) 70ms forwards;
+  --animate-star-out: star-out 150ms var(--ease-set) calc((10 - var(--stagger, 0)) * 10ms) forwards;
+
+  /* Rising is an entrance, on the shared ease-out. The nearest star comes out first. */
+  --animate-sun-rise: sun-rise 650ms var(--ease-out) 120ms both;
+  --animate-ray-out: ray-out 480ms var(--ease-out) calc(360ms + var(--stagger, 0) * 60ms) both;
+  --animate-moon-rise: moon-rise 800ms var(--ease-out) 120ms both;
+  --animate-star-in: star-in 400ms var(--ease-out) calc(320ms + var(--stagger, 0) * 50ms) both;
+
+  /* The sun's centre is on the hairline, so its own radius and outline take it out of sight. */
+  @keyframes sun-set {
+    to {
+      translate: 0 13px;
+    }
+  }
+
+  @keyframes sun-rise {
+    from {
+      translate: 0 13px;
+    }
+  }
+
+  @keyframes rays-draw-in {
+    to {
+      scale: 0.45;
+      opacity: 0;
+    }
+  }
+
+  /* A ray grows out from behind the disc. */
+  @keyframes ray-out {
+    from {
+      scale: 0.45;
+      opacity: 0;
+    }
+  }
+
+  /* The moon floats above the hairline, so it has further to go, and it tips as it sinks. */
+  @keyframes moon-set {
+    to {
+      translate: 0 38px;
+      rotate: 30deg;
+    }
+  }
+
+  @keyframes moon-rise {
+    from {
+      translate: 0 38px;
+      rotate: 30deg;
+    }
+  }
+
+  @keyframes star-out {
+    to {
+      scale: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes star-in {
+    from {
+      scale: 0;
+      rotate: -45deg;
+      opacity: 0;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    /*
+     * How long the new theme takes to spread from the hairline, in milliseconds, and how wide the
+     * lime line on its moving edge is. lib/theme-change.ts reads both; script needs the time as
+     * a plain number.
+     */
+    --theme-spread-ms: 850;
+    --theme-spread-edge: 1.5px;
+  }
+
+  /* While a change plays, script draws the page's old and new snapshots; nothing crossfades. */
+  :root[data-theme-change]::view-transition-old(root),
+  :root[data-theme-change]::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* The snapshots stop short of each other along the moving edge, and the lime shows between. */
+  :root[data-theme-change]::view-transition-image-pair(root) {
+    background-color: var(--color-accent);
+  }
+}

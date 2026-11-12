@@ -5,9 +5,12 @@
  * visit is dark.
  */
 
-type Theme = "dark" | "light";
+export type Theme = "dark" | "light";
 
 const STORAGE_KEY = "theme";
+
+/** The theme of a first visit, and the one the server renders: it can't read a visitor's storage. */
+const DEFAULT_THEME = "dark";
 
 /**
  * The script that applies the stored theme. The root layout inlines it in <head>, so it runs
@@ -16,14 +19,9 @@ const STORAGE_KEY = "theme";
  */
 export const APPLY_STORED_THEME_SCRIPT = `try{if(localStorage.getItem("${STORAGE_KEY}")==="light")document.documentElement.dataset.theme="light"}catch(e){}`;
 
-/** The default theme, and the one the server renders, since it can't read a visitor's storage. */
-export function defaultTheme() {
-  return "dark" as const;
-}
-
 /** Reads a stored or applied value as a theme: anything but "light" is the default. */
 function asTheme(value: string | null | undefined): Theme {
-  return value === "light" ? "light" : defaultTheme();
+  return value === "light" ? "light" : DEFAULT_THEME;
 }
 
 /** The theme the page shows now. */
@@ -36,7 +34,7 @@ export function storedTheme() {
   try {
     return asTheme(localStorage.getItem(STORAGE_KEY));
   } catch {
-    return defaultTheme();
+    return DEFAULT_THEME;
   }
 }
 
@@ -47,30 +45,11 @@ export function applyTheme(theme: Theme) {
   else delete root.dataset.theme;
 }
 
-/**
- * Switches the page to a theme and keeps it for the next visit, when storage allows. Where the
- * browser has view transitions, the old theme crossfades into the new one (globals.css).
- */
-export function chooseTheme(theme: Theme) {
+/** Keeps a theme for the next visit, when storage allows. */
+export function storeTheme(theme: Theme) {
   try {
     localStorage.setItem(STORAGE_KEY, theme);
   } catch {
     // Storage is unavailable: the choice lasts for this visit.
   }
-  if (!("startViewTransition" in document)) {
-    applyTheme(theme);
-    return;
-  }
-  document.startViewTransition(() => {
-    applyTheme(theme);
-  });
-}
-
-/** Calls `onChange` whenever the page's theme changes; returns the function that stops it. */
-export function subscribeToTheme(onChange: () => void) {
-  const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, { attributeFilter: ["data-theme"] });
-  return () => {
-    observer.disconnect();
-  };
 }

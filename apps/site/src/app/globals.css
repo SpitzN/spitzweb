@@ -1,4 +1,5 @@
 @import "@spitzweb/design-system/styles/tokens.css";
+@import "./theme-change.css";
 
 /*
  * The site's stylesheet: the design system's tokens (which bring Tailwind with them), the site's
@@ -46,25 +47,15 @@
     border-radius: 2px;
   }
 
-  /*
-   * Choosing a theme crossfades the whole page from one theme to the other (lib/theme.ts), so
-   * the ground, ink and rules change together on the shared ease-out.
-   */
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: var(--default-transition-duration);
-    animation-timing-function: var(--ease-out);
-  }
-
+  /* Reduced motion: every change lands at once, a staggered one included. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
-    *::after,
-    ::view-transition-group(*),
-    ::view-transition-old(*),
-    ::view-transition-new(*) {
+    *::after {
       transition-duration: 0s !important;
+      transition-delay: 0s !important;
       animation-duration: 0s !important;
+      animation-delay: 0s !important;
     }
   }
 }
