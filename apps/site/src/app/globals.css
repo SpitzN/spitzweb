@@ -46,10 +46,23 @@
     border-radius: 2px;
   }
 
+  /*
+   * Choosing a theme crossfades the whole page from one theme to the other (lib/theme.ts), so
+   * the ground, ink and rules change together on the shared ease-out.
+   */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--default-transition-duration);
+    animation-timing-function: var(--ease-out);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
-    *::after {
+    *::after,
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
       transition-duration: 0s !important;
       animation-duration: 0s !important;
     }

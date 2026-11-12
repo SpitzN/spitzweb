@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeSwitch } from "@/components/theme-switch";
 
 // Only sections whose route exists: a section's link is added in the ticket that builds it, and
 // the e2e link check fails on a link to a 404.
@@ -13,7 +14,8 @@ export function SiteHeader() {
       <Link href="/" className="font-display text-xl font-bold tracking-tight">
         spitzweb
       </Link>
-      <nav aria-label="Sections">
+      {/* The nav takes the row's spare space, so the theme switch sits at its end. */}
+      <nav aria-label="Sections" className="me-auto">
         <ul className="flex gap-6">
           {SECTIONS.map((section) => (
             <li key={section.href}>
@@ -24,6 +26,7 @@ export function SiteHeader() {
           ))}
         </ul>
       </nav>
+      <ThemeSwitch />
     </header>
   );
 }

@@ -102,6 +102,11 @@ components:
     typography: "{typography.body}"
   nav-link-hover:
     textColor: "{colors.ink}"
+  theme-switch-option:
+    textColor: "{colors.ink-muted}"
+    typography: "{typography.body}"
+  theme-switch-option-current:
+    textColor: "{colors.ink}"
   statement:
     textColor: "{colors.ink}"
     typography: "{typography.display}"
@@ -194,7 +199,7 @@ components:
 
 spitzweb is a precise instrument for showing work. The world is typographic: no governing object or metaphor, no imagery doing the talking. A drenched ultramarine ground (not near-black) carries warm off-white ink, periwinkle secondary ink and hairline rules, and the work itself is the interface. Type does almost everything: Funnel Display for headings and Project and Article titles, Funnel Sans for everything else, Article body text included, with weight rather than decoration carrying state.
 
-Dark is the default theme and was chosen first; light is a full alternative, switched by `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals outside running prose, hairlines instead of containers, one exponential ease-out for every change of state.
+Dark is the default theme and was chosen first; light is a full alternative, chosen in the header's theme switch and set as `data-theme="light"` on `<html>`, and swaps the ground and ink while keeping the same structure. One accent, lime, marks only the live or selected thing; everything else stays in ground, ink and rule. Density is calm and exact: tabular numerals outside running prose, hairlines instead of containers, one exponential ease-out for every change of state.
 
 The system serves both UI registers from ADR 0010 on one set of tokens. Read and Experience surfaces (home, Projects, Articles, Activity) are custom-built on these tokens; the Admin panel in Operate mode is built from shadcn/ui on Base UI, with each primitive's variants mapped onto the same colour, type and motion tokens rather than shadcn's default palette. The accent keeps its meaning in both: in the Admin panel it marks the selected or live item, not every primary action.
 
@@ -286,7 +291,7 @@ The system is flat. There are no shadows. Depth is one tonal step: the lifted gr
 
 ## Shapes
 
-Square by default. The only radius in the build is the 2px corner on a text link's focus ring and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
+Square by default. The only radius in the build is the 2px corner on the focus ring of text that paints no box (a text link, or a button set as text, such as the theme switch's options) and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
 
 ## Components
 
@@ -294,11 +299,12 @@ Square by default. The only radius in the build is the 2px corner on a text link
 
 The site header: quiet, exact, on a hairline.
 
-- **Structure:** the wordmark, then the sections that ship (Projects, Articles), on a shared baseline with a hairline below. A section joins the nav with the ticket that builds its route; Activity arrives with its own.
+- **Structure:** the wordmark, then the sections that ship (Projects, Articles), then the theme switch at the row's end, on a shared baseline with a hairline below. A section joins the nav with the ticket that builds its route; Activity arrives with its own.
 - **Default:** links in muted ink, body type.
 - **Hover:** links move to full ink through the shared ease-out.
 - **Focus:** the global ring (2px Lime Ink outline, 3px offset).
-- **Narrow screens:** the row wraps; no menu toggle.
+- **Narrow screens:** the row wraps; no menu toggle. The theme switch takes the second line, at the start.
+- **Theme switch:** two words, "Dark" and "Light", 1rem apart, as a labelled group of toggle buttons. The theme in use is semibold ink; the other is muted ink and moves to full ink on hover, like a nav link. No icon, no accent: weight carries which theme is on. Each word keeps its semibold width at rest, so the pair never shifts, and each is a target of at least 24 px. Its look follows `<html>` through the `light:` variant, so it is right from the first paint. Choosing a theme crossfades the whole page into it (Motion).
 
 ### Statement
 
@@ -377,7 +383,7 @@ The one accent fill on a page, marking the Featured Project that is running live
 
 ### Motion
 
-One exponential ease-out, `cubic-bezier(0.16, 1, 0.3, 1)`, at 450ms is the default for every transition, so weight and colour changes share one grammar. Under `prefers-reduced-motion` every transition and animation drops to zero duration.
+One exponential ease-out, `cubic-bezier(0.16, 1, 0.3, 1)`, at 450ms is the default for every transition, so weight and colour changes share one grammar. Choosing a theme is a view transition: the whole page crossfades from the old theme to the new on the same ease and duration, so the ground, ink and rules change together rather than each at its own pace. Under `prefers-reduced-motion` every transition and animation, the crossfade included, drops to zero duration.
 
 ### Admin panel primitives
 
