@@ -22,11 +22,11 @@ function switchName(page: Page) {
 }
 
 /** Opens a page as a returning visitor who chose a theme. */
-async function visit(page: Page, theme: Theme) {
+async function visit(page: Page, theme: Theme, path = "/") {
   await page.addInitScript((stored) => {
     localStorage.setItem("theme", stored);
   }, theme);
-  await page.goto("/");
+  await page.goto(path);
 }
 
 async function groundOf(page: Page) {
@@ -462,7 +462,9 @@ for (const theme of THEMES) {
   test(`from the ${theme} theme, the other spreads from the header's hairline behind a lime line`, async ({
     page,
   }) => {
-    await visit(page, theme);
+    // The page's edge is read for the change's colours, so the page has no accent fill there: on a
+    // phone the home page's Featured panel runs to the screen's edge.
+    await visit(page, theme, "/articles");
     const [header] = await boxesOf(page.getByRole("banner"));
     const hairline = header?.bottom ?? 0;
     await themeSwitch(page).click();

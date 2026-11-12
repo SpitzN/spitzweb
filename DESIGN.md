@@ -286,7 +286,7 @@ A Project page sets the title (a Statement) with its summary in muted ink beneat
 
 All layout uses logical properties and utilities only (`pbs-*`, `pbe-*`, `border-be`, `max-inline-*`, `min-block-dvh`), so an RTL locale needs no layout rewrite. Lint enforces this.
 
-**Intended home composition (designed, not yet built).** The tracked mock (`.impeccable/mocks/typographic/e-funnel-accent.html`) sets the home page on a strict 12-column grid: the header rule spans all columns; the statement in heavy Funnel Display takes the start seven columns with the latest Update beneath it; the Featured panel takes the end five, filled with the accent and holding the Project's title, a live readout of the Hosted project and one line on what it is; the Projects list runs full width from just above the fold, each row on the same 12 columns (title in four, one-line summary in five, year and Status in three, aligned to the end), divided by hairlines. Below the small breakpoint everything collapses to one column and each row stacks its summary under the title. Selection moves by pointer or by J and K, and Enter opens. The Projects list, Articles list, Article page and Project page now carry this grid as built (above); J and K selection is part of the home composition and is not built on the Projects list.
+The home page sets the statement and the latest Update over the start seven columns and the Featured panel over the end five, vertically centred, from the `lg` breakpoint (64rem). The statement is a labelled stand-in: the muted note "A stand-in line until Nadav writes the real one." sits 1.5rem below it, at text-sm. Below `lg` they stack, 3rem apart. The Projects list starts 4rem below, full width, holding every listed Project except the one in the panel. If the Featured Project is the only one, the list doesn't render; with no Featured Project there is no panel and every Project is listed; with no Projects, the list says "No Projects yet." J and K selection is built on the home list (Project list row), not on the Projects list.
 
 ## Elevation & Depth
 
@@ -298,7 +298,7 @@ The system is flat. There are no shadows. Depth is one tonal step: the lifted gr
 
 ## Shapes
 
-Square by default. The only radius in the build is the 2px corner on the focus ring of text that paints no box (a text link, or a button set as text) and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The only curves are in the theme switch's picture. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
+Square by default. The only radius in the build is the 2px corner on the focus ring of text that paints no box (a text link, or a button set as text) and on the ring drawn on the cover of a Hosted cell or the Featured panel; taking focus never changes the shape of a fill or a frame. The only curves are in the theme switch's picture. The Featured panel shipped square, like the Title block's accent cell, so the build adds no radius.
 
 ### Named Rules
 
@@ -367,13 +367,17 @@ Article body text in the Read register: a calm column, not a blog template.
 
 ### Project list row
 
-The signature list row, built on the Projects list.
+The signature list row, built on the Projects list and the home page.
 
 - **Structure:** full-width rows on the 12-column grid between hairlines, a hairline above the first: the title in Title type (four columns), the summary in muted ink (five), then the year and Status in muted ink on two lines (three, end-aligned). Rows pad 1rem block and the row bleed inline, and bleed by the same amount.
 - **Long titles:** wrap with balanced lines; never truncate, so the whole title stays in the row.
 - **Featured:** Featured Projects lead the list and carry "Featured ·" in semibold ink before the year. No badge, no accent.
 - **Dates:** a Project is dated by its year, here and everywhere it appears.
-- **Hover / Focus:** the whole row is the link; the row takes the lifted ground and the title turns 800 in the accent ink, through the shared ease-out.
+- **Hover / Focus:** the whole row is the link. On the Projects page, hover and focus give the row the selected look.
+- **Selected:** the row lifts its ground and its title turns 800 in the accent ink, through the shared ease-out.
+- **Selection (home page):** one row is always selected, the first at rest. The pointer selects the row it moves over, and keyboard focus selects the row it lands on. J and K move the selection, clamped at the ends rather than wrapping, and take focus with it. Enter opens the selected row while focus is in the list or nowhere at all, even when the pointer has moved the selection off the focused row; anything else that has focus handles Enter itself. The keys do nothing while a text field has focus or with Control, Alt or Meta held. They work with Shift or Caps Lock on and, on a non-Latin layout, by the keys' place.
+- **Keys line (home page):** below the list, for fine pointers only, "J and K move through the Projects, and Enter opens one." in muted ink at text-sm.
+- **Headings (home page):** the list is labelled "Projects" by a visually hidden heading, and row titles are level-3 headings.
 - **Empty:** "No Projects yet." in muted ink, 1.5rem under the top hairline.
 - **Narrow screens:** one column; summary and meta stack under the title.
 
@@ -389,9 +393,20 @@ The Project page's signature: the ledger grammar turned sideways into the end fi
 - **Status:** Funnel Display 800 at Title size in ink, never fine print.
 - **Year:** the year alone. **Made with** and **Topics:** comma-separated text, no pills.
 
-### Featured panel (designed, not yet built)
+### Featured panel
 
-The one accent fill on a page, marking the Featured Project that is running live. Accent ground, accent shadow ink; the live readout sits in the muted accent tones and is the only thing on the page that moves on its own.
+The home page's one accent fill, marking the Featured Project.
+
+- **Shape:** square, no radius, like the Title block's accent cell.
+- **Padding:** 1.5rem from `sm`; below it, 1.5rem block and 1rem inline, and the fill bleeds to the screen edges.
+- **Content, in order:** the title, the summary, then the facts, 1rem apart.
+- **Title:** Funnel Display 800 at 1.875rem (2.25rem from `lg`), line-height 1, tight tracking, balanced, in accent shadow ink.
+- **Summary:** 1.125rem in accent shadow ink.
+- **Facts:** "Featured · Hosted · Status · year" (or "External" for an External project) in accent shadow muted. They follow the title rather than sit above it: no kicker.
+- **Target:** the whole panel opens the Project's page, and its name is the title. Under pointer or focus the title takes a 2px underline (4px offset) while the panel keeps its fill.
+- **Focus inside the fill:** drawn on the panel's cover in accent shadow ink: 2px, inset 4px, 2px corners, as on the Title block's Hosted cell.
+- **Selection inside the fill:** accent shadow ink ground with accent text, inverted like the Title block's.
+- **Live readout:** none yet. A Hosted project supplies one once one exists, so nothing in the panel moves on its own until then.
 
 ### Focus and selection
 
