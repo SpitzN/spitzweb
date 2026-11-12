@@ -8,9 +8,12 @@
 /* Tailwind scans the design system's source for the classes its components use. */
 @source "../../../../packages/design-system/src";
 
-/* A text link: ink text underlined in muted ink; the underline turns ink on hover (DESIGN.md, Prose). */
+/*
+ * A text link: ink text underlined in muted ink; the underline turns ink on hover (DESIGN.md,
+ * Prose). A button set as one takes the same soft ring as a link (Focus and selection).
+ */
 @utility text-link {
-  @apply underline decoration-ink-muted underline-offset-4 transition-colors hover:decoration-ink;
+  @apply underline decoration-ink-muted underline-offset-4 transition-colors hover:decoration-ink focus-visible:rounded-xs;
 }
 
 @layer base {
@@ -35,8 +38,9 @@
 
   /*
    * An outline takes its corners from the element's own radius. A text link paints no box, so
-   * the radius softens its ring and nothing else; a button, a field or a code block would change
-   * shape, so their rings stay square like them (e2e/focus-ring.spec.ts).
+   * the radius softens its ring and nothing else (a button set as a text link gets it from the
+   * text-link utility). A button, a field or a code block would change shape, so their rings
+   * stay square like them (e2e/focus-ring.spec.ts).
    */
   a:focus-visible {
     border-radius: 2px;

@@ -1,18 +1,15 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { switchTheme, THEMES } from "./accessibility";
+import { PUBLIC_ROUTES } from "./routes";
 
-// Between them these routes hold every kind of thing that takes focus: nav and prose links, list
-// rows on the lifted ground, a scrolling code block, both accent cells and the Admin panel's
-// button.
-const ROUTES = [
-  "/",
-  "/projects",
-  "/projects/published-featured",
-  "/projects/published-external",
-  "/articles/published-featured",
-  "/admin/sign-in",
-];
+// Every page a visitor can reach, and the Admin panel's sign-in for its button. The Admin
+// panel's fields and outline buttons sit behind a session, so this suite can't reach them; they
+// take the same global ring.
+const ROUTES = [...PUBLIC_ROUTES, "/admin/sign-in"];
+// The routes known to hold something with a fill or a frame that takes focus: a code block, and
+// the sign-in button.
+const ROUTES_WITH_A_BOX = ["/articles/published-featured", "/admin/sign-in"];
 const TAB_STOPS = "a[href], button, input, textarea, select, [tabindex='0']";
 // WCAG 2.2, 1.4.11 Non-text Contrast: a focus indicator against the colours next to it.
 const MINIMUM_CONTRAST = 3;
@@ -20,6 +17,7 @@ const MINIMUM_CONTRAST = 3;
 interface FocusStop {
   name: string;
   outlineStyle: string;
+  outlineWidth: string;
   ringColor: string;
   ringGround: string;
   hasOwnBox: boolean;
@@ -29,8 +27,8 @@ interface FocusStop {
 
 /** Runs in the page, before anything has focus: notes each tab stop's corners on the element. */
 function noteCornersAtRest(tabStops: string) {
-  for (const stop of document.querySelectorAll<HTMLElement>(tabStops)) {
-    stop.dataset.cornersAtRest = getComputedStyle(stop).borderRadius;
+  for (const element of document.querySelectorAll<HTMLElement>(tabStops)) {
+    element.dataset.cornersAtRest = getComputedStyle(element).borderRadius;
   }
 }
 
@@ -58,6 +56,7 @@ function readFocusStop(): FocusStop | null {
   return {
     name: element.textContent.trim().slice(0, 40) || element.tagName,
     outlineStyle: ring.outlineStyle,
+    outlineWidth: ring.outlineWidth,
     ringColor: ring.outlineColor,
     ringGround: getComputedStyle(behind).backgroundColor,
     hasOwnBox: own.backgroundColor !== "rgba(0, 0, 0, 0)" || /[1-9]/.test(own.borderWidth),
@@ -67,11 +66,11 @@ function readFocusStop(): FocusStop | null {
 }
 
 /** Tabs through the whole page, as a keyboard user does, and reads each element that takes focus. */
-async function focusStops(page: Page) {
+async function tabThrough(page: Page) {
   await page.evaluate(noteCornersAtRest, TAB_STOPS);
   const focusStops: FocusStop[] = [];
-  const stops = await page.locator(TAB_STOPS).count();
-  for (let stop = 0; stop < stops; stop++) {
+  const tabStopCount = await page.locator(TAB_STOPS).count();
+  for (let press = 0; press < tabStopCount; press++) {
     await page.keyboard.press("Tab");
     const focusStop = await page.evaluate(readFocusStop);
     if (focusStop) focusStops.push(focusStop);
@@ -94,17 +93,27 @@ function contrast(one: string, other: string) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-/** The rings a keyboard user would struggle to see: missing, or too close to their ground. */
+/**
+ * The rings a keyboard user would struggle to see: not drawn, drawn in anything but a solid
+ * colour (a transparent ring computes to `rgba()`), or too close to their ground.
+ */
 function faintRings(focusStops: FocusStop[]) {
   return focusStops
-    .map(({ name, outlineStyle, ringColor, ringGround }) => ({
+    .map(({ name, outlineStyle, outlineWidth, ringColor, ringGround }) => ({
       name,
       outlineStyle,
+      outlineWidth,
       ringColor,
       ringGround,
       contrast: contrast(ringColor, ringGround),
     }))
-    .filter((ring) => ring.outlineStyle === "none" || ring.contrast < MINIMUM_CONTRAST);
+    .filter(
+      (ring) =>
+        ring.outlineStyle === "none" ||
+        ring.outlineWidth === "0px" ||
+        !ring.ringColor.startsWith("rgb(") ||
+        ring.contrast < MINIMUM_CONTRAST,
+    );
 }
 
 /** The elements with a box of their own whose corners change when they take focus. */
@@ -124,18 +133,30 @@ for (const route of ROUTES) {
       await page.goto(route);
       await switchTheme(page, theme);
 
-      const stops = await focusStops(page);
+      const focusStops = await tabThrough(page);
 
-      expect(stops.length).toBeGreaterThan(0);
-      expect(faintRings(stops)).toEqual([]);
+      expect(focusStops.length).toBeGreaterThan(0);
+      expect(faintRings(focusStops)).toEqual([]);
     });
   }
 
+  // Shape doesn't depend on the theme, so this runs once.
   test(`taking focus on ${route} leaves a fill or a frame in its own shape`, async ({ page }) => {
     await page.goto(route);
 
-    const stops = await focusStops(page);
+    const focusStops = await tabThrough(page);
 
-    expect(reshapedBoxes(stops)).toEqual([]);
+    expect(reshapedBoxes(focusStops)).toEqual([]);
+  });
+}
+
+// Without a box to look at, the shape check above would pass by having nothing to check.
+for (const route of ROUTES_WITH_A_BOX) {
+  test(`${route} has a fill or a frame that takes focus`, async ({ page }) => {
+    await page.goto(route);
+
+    const focusStops = await tabThrough(page);
+
+    expect(focusStops.filter((stop) => stop.hasOwnBox).length).toBeGreaterThan(0);
   });
 }

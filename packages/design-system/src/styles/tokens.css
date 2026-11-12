@@ -20,7 +20,7 @@
   --accent: #c8f25a;
   --on-accent: #18210a;
   --on-accent-muted: #2f4114;
-  /* The accent when it colours text on the ground. */
+  /* The accent when it colours text, or draws the focus ring, on the ground. */
   --accent-ink: #c8f25a;
 }
 

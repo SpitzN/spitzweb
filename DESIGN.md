@@ -372,7 +372,7 @@ The one accent fill on a page, marking the Featured Project that is running live
 ### Focus and selection
 
 - **Focus:** every focusable element shows a 2px outline at a 3px offset in Lime Ink: the lime itself in dark, the dark olive in light, where the lime would be 1.1:1 on paper. Inside an accent fill the ring is accent shadow ink instead (see Title block).
-- **The ring's corners:** an outline takes its corners from the element it rings. A text link paints no box, so it carries the 2px corner and its ring is soft. A button, a field or a code block has a fill or a frame, so its ring is square like it, and taking focus never reshapes it. `e2e/focus-ring.spec.ts` checks both the contrast and the shape, in both themes.
+- **The ring's corners:** an outline takes its corners from the element it rings. A text link paints no box, whether it is a link or a button set as one, so it carries the 2px corner and its ring is soft. A button, a field or a code block has a fill or a frame, so its ring is square like it, and taking focus never reshapes it. `e2e/focus-ring.spec.ts` tabs through every public route and the Admin panel's sign-in: it checks each ring's contrast in both themes, and that no fill or frame changes shape.
 - **Text selection:** accent background with accent shadow ink; inside an accent fill, accent shadow ink background with accent text.
 
 ### Motion
