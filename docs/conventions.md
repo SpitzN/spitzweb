@@ -24,7 +24,7 @@ When the same review comment comes up a second time, it becomes a rule in its ho
 | Push                     | `pnpm check`                                                                              | The whole workspace. Turborepo's cache skips unchanged packages. |
 | CI on a PR and on `main` | Format check, Knip and sherif, then typecheck, lint, tests, build, Playwright e2e and axe | Packages affected relative to the base (`--affected`)            |
 
-lefthook runs the commit and push hooks. CI also checks the PR title. Unchanged apps skip their Vercel deploy (`turbo-ignore`).
+lefthook runs the commit and push hooks. CI also checks the PR title. An unchanged app skips its deploy: `turbo-ignore` on `main`, and the same check in the preview workflow on a PR.
 
 ## Git and pull requests
 
