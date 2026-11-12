@@ -21,8 +21,8 @@ export interface ProjectRowFacts {
  * The home page's Projects list (DESIGN.md, Project list row), with one row always selected: its
  * ground lifts and its title turns heavy in the accent ink. The pointer selects the row it moves
  * over, keyboard focus selects the row it lands on, and J and K move the selection, taking focus
- * with it so Enter opens the row as a link does. With nothing focused, Enter opens the selected
- * row. None of the keys do anything while a text field has focus.
+ * with it. Enter opens the selected row while focus is in the list or nowhere at all. None of the
+ * keys do anything while a text field has focus.
  */
 export function SelectableProjectList({ rows }: { rows: readonly ProjectRowFacts[] }) {
   const [selected, setSelected] = useState(0);
@@ -35,7 +35,9 @@ export function SelectableProjectList({ rows }: { rows: readonly ProjectRowFacts
       key: event.key,
       code: event.code,
       isModified: event.ctrlKey || event.altKey || event.metaKey,
-      focus: focusOf(document.activeElement),
+      focus: list.current?.contains(document.activeElement)
+        ? "list"
+        : focusOf(document.activeElement),
       selected,
       count: rows.length,
     });
@@ -87,8 +89,7 @@ export function SelectableProjectList({ rows }: { rows: readonly ProjectRowFacts
           </h3>
           <p className="text-ink-muted sm:col-span-5">{row.summary}</p>
           <p className="text-ink-muted sm:col-span-3 sm:text-end">
-            {/* The panel above holds the leading Featured Project, so a second one says why it
-                sits above newer Projects. */}
+            {/* A Featured Project in the list says why it sits above newer ones. */}
             {row.isFeatured ? <span className="font-semibold text-ink">Featured · </span> : null}
             <EntryYear date={row.date} />
             <br />

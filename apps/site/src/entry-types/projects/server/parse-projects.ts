@@ -56,6 +56,12 @@ const projectFrontmatterSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 
+/** What a Project's kind is called wherever it is shown. */
+export const KIND_LABELS = {
+  hosted: "Hosted",
+  external: "External",
+} satisfies Record<z.infer<typeof projectFrontmatterSchema>["kind"], string>;
+
 export type Project = z.infer<typeof projectFrontmatterSchema> & {
   type: "project";
   slug: z.infer<typeof entrySlugSchema>;

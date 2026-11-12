@@ -1,7 +1,6 @@
-import { listedEntries } from "@/domain/entry";
+import { featuredAndOthers, listedEntries } from "@/domain/entry";
 import { FeaturedProjectPanel } from "@/entry-types/projects/components/featured-project-panel";
 import { HomeProjectList } from "@/entry-types/projects/components/home-project-list";
-import { featuredAndOthers } from "@/entry-types/projects/featured-project";
 import { loadProjects } from "@/entry-types/projects/server/projects";
 import { LatestUpdate } from "@/entry-types/updates/components/latest-update";
 

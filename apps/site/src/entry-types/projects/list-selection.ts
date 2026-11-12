@@ -1,5 +1,8 @@
-/** Where keyboard focus is when a key is pressed. */
-type Focus = "nothing" | "text-field" | "elsewhere";
+/**
+ * Where keyboard focus is when a key is pressed: on nothing, in the list itself, in a text field,
+ * or on anything else.
+ */
+type Focus = "nothing" | "list" | "text-field" | "elsewhere";
 
 // Input types that take no typing, so a letter key pressed in one is not text.
 const UNTYPED_INPUTS = new Set([
@@ -21,7 +24,7 @@ const UNTYPED_INPUTS = new Set([
 type FocusedElement = Pick<Element, "tagName"> & { isContentEditable?: boolean; type?: string };
 
 /** Where focus is, given `document.activeElement`. A select counts as a text field: it types ahead. */
-export function focusOf(active: FocusedElement | null): Focus {
+export function focusOf(active: FocusedElement | null) {
   if (active === null || active.tagName === "BODY") return "nothing";
   if (active.isContentEditable === true || ["TEXTAREA", "SELECT"].includes(active.tagName)) {
     return "text-field";
@@ -60,9 +63,11 @@ interface ListKey {
 export function listKeyAction({ key, code, isModified, focus, selected, count }: ListKey) {
   if (isModified || focus === "text-field" || count === 0) return;
   if (key === "Enter") {
-    // A focused link or button handles Enter itself; only a page with nothing focused opens the
-    // selected row, so Enter never does two things at once.
-    return focus === "nothing" ? ({ kind: "open", index: selected } as const) : undefined;
+    // In the list, Enter opens the selected row even when the pointer has moved the selection off
+    // the focused one. Anything else that has focus handles Enter itself.
+    return focus === "nothing" || focus === "list"
+      ? ({ kind: "open", index: selected } as const)
+      : undefined;
   }
   const letter = letterOf(key, code);
   if (letter === "j") return { kind: "select", index: Math.min(selected + 1, count - 1) } as const;

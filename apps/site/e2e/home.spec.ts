@@ -120,6 +120,20 @@ test("the pointer selects the row it moves over, and Enter then opens it", async
   await expect(page).toHaveURL("/projects/published-older");
 });
 
+test("Enter opens the row the pointer selected, though J left focus on another", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await moveToLastRow(page);
+
+  await rowLink(page, EXTERNAL).hover();
+  await expectSelected(page, EXTERNAL);
+  await expect(rowLink(page, OLDER)).toBeFocused();
+
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL("/projects/published-external");
+});
+
 test("J, K and Enter do nothing while a text field has focus", async ({ page }) => {
   await page.goto("/");
   await moveToLastRow(page);

@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { EntryYear } from "@/components/entry-date";
 import { entryHref } from "@/domain/entry";
-import { STATUS_LABELS, type Project } from "@/entry-types/projects/server/parse-projects";
-
-const KIND_LABELS = { hosted: "Hosted", external: "External" } satisfies Record<
-  Project["kind"],
-  string
->;
+import {
+  KIND_LABELS,
+  STATUS_LABELS,
+  type Project,
+} from "@/entry-types/projects/server/parse-projects";
 
 /**
  * The home page's Featured panel (DESIGN.md, Featured panel): the page's one accent fill, because

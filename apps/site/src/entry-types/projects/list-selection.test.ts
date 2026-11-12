@@ -35,7 +35,14 @@ test("Enter opens the selected row when nothing has focus", () => {
   });
 });
 
-test("Enter is left to whatever has focus, such as a link, which opens itself", () => {
+test("Enter opens the selected row while focus is in the list, though the pointer moved the selection off the focused row", () => {
+  expect(listKeyAction({ ...atRest, key: "Enter", focus: "list", selected: 2 })).toStrictEqual({
+    kind: "open",
+    index: 2,
+  });
+});
+
+test("Enter is left to whatever has focus outside the list, such as a link, which opens itself", () => {
   expect(
     listKeyAction({ ...atRest, key: "Enter", focus: "elsewhere", selected: 2 }),
   ).toBeUndefined();

@@ -1,7 +1,11 @@
 import type { ReactNode } from "react";
 import { EntryYear } from "@/components/entry-date";
 import { TOPIC_LABELS } from "@/domain/topic";
-import { STATUS_LABELS, type Project } from "@/entry-types/projects/server/parse-projects";
+import {
+  KIND_LABELS,
+  STATUS_LABELS,
+  type Project,
+} from "@/entry-types/projects/server/parse-projects";
 import { SITE_HOST } from "@/lib/site";
 
 /** Where a Hosted project runs, written for reading: host and path, without the protocol. */
@@ -37,7 +41,7 @@ function AccentCell({ label, children }: { label: string; children: ReactNode })
 /** A Hosted project's cell: one target, "Open <title>", with where it runs beneath. */
 function HostedCell({ title, runsAt }: { title: string; runsAt: string }) {
   return (
-    <AccentCell label="Hosted">
+    <AccentCell label={KIND_LABELS.hosted}>
       {/* The link covers the whole cell, and its name stays the action. Its focus ring is drawn on
           that cover, so it rings the whole target. */}
       <a
@@ -55,7 +59,7 @@ function HostedCell({ title, runsAt }: { title: string; runsAt: string }) {
 /** An External project's cell: each place it lives, as its own link out. */
 function ExternalCell({ links }: { links: readonly { label: string; href: string }[] }) {
   return (
-    <AccentCell label="External">
+    <AccentCell label={KIND_LABELS.external}>
       <ul className="flex flex-col gap-1">
         {links.map(({ label, href }) => (
           <li key={href}>

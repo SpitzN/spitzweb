@@ -74,3 +74,16 @@ export function listedEntries<T extends Entry>(entries: readonly T[]) {
     .filter(({ state }) => isListed(state))
     .toSorted((a, b) => Number(b.featured) - Number(a.featured) || b.date.localeCompare(a.date));
 }
+
+/**
+ * Splits listed Entries for a page that shows one Featured Entry apart from its list, such as the
+ * home page's Featured panel above its Projects: the leading Entry when it is Featured, and every
+ * other Entry, so none is shown twice. With no Featured Entry, none is shown apart. Expects the
+ * order `listedEntries` gives (Featured first).
+ */
+export function featuredAndOthers<T extends Pick<Entry, "featured">>(listed: readonly T[]) {
+  const [first, ...rest] = listed;
+  return first?.featured
+    ? { featured: first, others: rest }
+    : { featured: undefined, others: [...listed] };
+}
