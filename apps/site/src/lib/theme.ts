@@ -10,23 +10,33 @@ type Theme = "dark" | "light";
 const STORAGE_KEY = "theme";
 
 /**
- * Applies the stored theme. The root layout inlines it in <head>, so it runs while the browser
- * parses the page, before the first paint, and a visitor who chose light never sees the dark
- * ground first. It is a string because it runs before any bundle loads.
+ * The script that applies the stored theme. The root layout inlines it in <head>, so it runs
+ * while the browser parses the page, before the first paint, and a visitor who chose light never
+ * sees the dark ground first. It is source text because it runs before any bundle loads.
  */
-export const APPLY_STORED_THEME = `try{if(localStorage.getItem("${STORAGE_KEY}")==="light")document.documentElement.dataset.theme="light"}catch(e){}`;
+export const APPLY_STORED_THEME_SCRIPT = `try{if(localStorage.getItem("${STORAGE_KEY}")==="light")document.documentElement.dataset.theme="light"}catch(e){}`;
+
+/** The default theme, and the one the server renders, since it can't read a visitor's storage. */
+export function defaultTheme() {
+  return "dark" as const;
+}
+
+/** Reads a stored or applied value as a theme: anything but "light" is the default. */
+function asTheme(value: string | null | undefined): Theme {
+  return value === "light" ? "light" : defaultTheme();
+}
 
 /** The theme the page shows now. */
 export function appliedTheme() {
-  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  return asTheme(document.documentElement.dataset.theme);
 }
 
-/** The theme the visitor chose last: dark when there is none, or when storage is unavailable. */
+/** The theme the visitor chose last: the default when there is none, or storage is unavailable. */
 export function storedTheme() {
   try {
-    return localStorage.getItem(STORAGE_KEY) === "light" ? "light" : "dark";
+    return asTheme(localStorage.getItem(STORAGE_KEY));
   } catch {
-    return "dark";
+    return defaultTheme();
   }
 }
 

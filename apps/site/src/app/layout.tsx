@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Funnel_Display, Funnel_Sans } from "next/font/google";
 import { SiteAnalytics } from "@/components/site-analytics";
 import { SiteHeader } from "@/components/site-header";
-import { APPLY_STORED_THEME } from "@/lib/theme";
+import { APPLY_STORED_THEME_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const funnelDisplay = Funnel_Display({
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         {/* A string child is written into the page as it is: the script runs before first paint. */}
-        <script>{APPLY_STORED_THEME}</script>
+        <script>{APPLY_STORED_THEME_SCRIPT}</script>
       </head>
       <body className="px-4 min-block-dvh sm:px-8">
         <SiteHeader />

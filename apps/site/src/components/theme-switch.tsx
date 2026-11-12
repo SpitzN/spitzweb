@@ -1,12 +1,14 @@
 "use client";
 
 import { useLayoutEffect, useSyncExternalStore } from "react";
-import { appliedTheme, applyTheme, chooseTheme, storedTheme, subscribeToTheme } from "@/lib/theme";
-
-/** The server can't read a visitor's storage, so it renders the default. */
-function defaultTheme() {
-  return "dark" as const;
-}
+import {
+  appliedTheme,
+  applyTheme,
+  chooseTheme,
+  defaultTheme,
+  storedTheme,
+  subscribeToTheme,
+} from "@/lib/theme";
 
 /**
  * The header's theme switch: Dark and Light, with the theme in use in heavier ink (DESIGN.md,

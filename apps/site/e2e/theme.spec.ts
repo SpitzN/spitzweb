@@ -1,11 +1,17 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
+import { THEMES } from "./accessibility";
 
 /** The page's ground in each theme (DESIGN.md: Drenched Ultramarine, Paper Ground). */
 const GROUND = { dark: "rgb(20, 26, 82)", light: "rgb(244, 241, 234)" };
 
 function themeSwitch(page: Page) {
   return page.getByRole("group", { name: "Theme" });
+}
+
+/** The switch's option for the theme in use: the one button it marks as pressed. */
+function themeInUse(page: Page) {
+  return themeSwitch(page).getByRole("button", { pressed: true });
 }
 
 async function groundOf(page: Page) {
@@ -19,14 +25,7 @@ async function inkOf(option: Locator) {
 test("a first visit is dark, and the theme switch says so", async ({ page }) => {
   await page.goto("/");
 
-  await expect(themeSwitch(page).getByRole("button", { name: "Dark" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  await expect(themeSwitch(page).getByRole("button", { name: "Light" })).toHaveAttribute(
-    "aria-pressed",
-    "false",
-  );
+  await expect(themeInUse(page)).toHaveAccessibleName("Dark");
   expect(await groundOf(page)).toBe(GROUND.dark);
 });
 
@@ -37,19 +36,16 @@ test("a chosen theme stays on every page and on the next visit", async ({ page }
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 
   await page.goto("/articles");
-  await expect(themeSwitch(page).getByRole("button", { name: "Light" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
+  await expect(themeInUse(page)).toHaveAccessibleName("Light");
   expect(await groundOf(page)).toBe(GROUND.light);
 
   await themeSwitch(page).getByRole("button", { name: "Dark" }).click();
   await page.reload();
-  await expect(page.locator("html")).not.toHaveAttribute("data-theme");
+  await expect(themeInUse(page)).toHaveAccessibleName("Dark");
   expect(await groundOf(page)).toBe(GROUND.dark);
 });
 
-for (const theme of ["dark", "light"] as const) {
+for (const theme of THEMES) {
   test(`a returning visitor's ${theme} theme is on the page from its first frame`, async ({
     page,
   }) => {

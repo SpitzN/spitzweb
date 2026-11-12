@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import { wcagViolations } from "./accessibility";
+import { switchTheme, THEMES, wcagViolations } from "./accessibility";
 
 const UNKNOWN_URL = "/no-such-page";
 
@@ -17,17 +17,23 @@ async function bodyColours(page: Page) {
   });
 }
 
-test("an unknown URL returns 404 with the site's not-found page, meeting WCAG 2.2 AA", async ({
-  page,
-}) => {
-  const response = await page.goto(UNKNOWN_URL);
+for (const theme of THEMES) {
+  test(`an unknown URL returns 404 with the site's not-found page, meeting WCAG 2.2 AA in the ${theme} theme`, async ({
+    page,
+  }) => {
+    // With reduced motion the theme lands at once, so axe never measures a colour mid-transition.
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const response = await page.goto(UNKNOWN_URL);
 
-  expect(response?.status()).toBe(404);
-  await expect(page.getByRole("heading", { level: 1, name: "Page not found." })).toBeVisible();
-  await expect(page).toHaveTitle("Page not found · spitzweb");
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole("heading", { level: 1, name: "Page not found." })).toBeVisible();
+    await expect(page).toHaveTitle("Page not found · spitzweb");
 
-  expect(await wcagViolations(page)).toEqual([]);
-});
+    await switchTheme(page, theme);
+
+    expect(await wcagViolations(page)).toEqual([]);
+  });
+}
 
 // Next.js's built-in 404 brought its own <style> that painted the body over the theme, and it
 // stayed in the document after navigating away (docs/tooling.md, Traps). The body must stay

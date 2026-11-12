@@ -291,7 +291,7 @@ The system is flat. There are no shadows. Depth is one tonal step: the lifted gr
 
 ## Shapes
 
-Square by default. The only radius in the build is the 2px corner on a text link's focus ring and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
+Square by default. The only radius in the build is the 2px corner on the focus ring of text that paints no box (a text link, or a button set as text, such as the theme switch's options) and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
 
 ## Components
 
