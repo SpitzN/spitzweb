@@ -4,7 +4,8 @@
     "config:recommended",
     ":semanticCommits",
     "group:allNonMajor",
-    "helpers:pinGitHubActionDigests"
+    "helpers:pinGitHubActionDigests",
+    "customManagers:githubActionsVersions"
   ],
   "schedule": ["before 6am on thursday"],
   "minimumReleaseAge": "3 days",
