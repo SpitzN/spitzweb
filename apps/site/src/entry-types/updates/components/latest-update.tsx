@@ -39,7 +39,7 @@ export function LatestUpdateLine({ update }: { update: ShownUpdate | undefined }
       {link === null ? null : (
         <>
           {" "}
-          <a href={link} className="wrap-anywhere text-ink text-link">
+          <a href={link} className="text-link wrap-anywhere text-ink">
             {linkLabel(link)}
           </a>
         </>

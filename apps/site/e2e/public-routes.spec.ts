@@ -1,19 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { switchTheme, THEMES, wcagViolations } from "./accessibility";
+import { PUBLIC_ROUTES } from "./routes";
 
-// Every public route is listed here, so each one gets the smoke and accessibility checks in both
-// themes. Entry routes point at fixtures in e2e/content.
-const PUBLIC_ROUTES = [
-  "/",
-  "/projects",
-  "/projects/published-featured",
-  "/projects/published-external",
-  "/projects/archived",
-  "/articles",
-  "/articles/published-featured",
-  "/articles/published-recent",
-  "/articles/archived",
-];
 // ADR 0007: these are enforced on every response. The full CSP is report-only and is checked by
 // its console reports below; only frame-ancestors is enforced, because browsers ignore it in a
 // report-only policy.

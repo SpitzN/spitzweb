@@ -214,8 +214,8 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 ### Primary
 
-- **Live Lime** (accent): the only accent. It fills the Featured panel and the cell that opens a Project in its Title block, colours the selected Project title, draws the focus ring and backs text selection. The accent is the same in both themes.
-- **Lime Ink** (accent-ink, accent-ink-light): the accent when it colours text on the ground. In dark it is the accent itself; in light it deepens to a dark olive so selected text keeps AA contrast on paper.
+- **Live Lime** (accent): the only accent. It fills the Featured panel and the cell that opens a Project in its Title block, colours the selected Project title and backs text selection. The accent is the same in both themes.
+- **Lime Ink** (accent-ink, accent-ink-light): the accent when it colours text or draws the focus ring on the ground. In dark it is the accent itself; in light it deepens to a dark olive, so selected text keeps AA contrast on paper and the ring stays well clear of 3:1 (6.9:1 on the paper ground, 6.3:1 on the lavender lift).
 - **Accent Shadow Ink** (on-accent): text and marks set on an accent fill, and the focus ring and selection ground inside one.
 - **Accent Shadow Muted** (on-accent-muted): secondary text, underlines and quiet fills inside an accent fill, such as where a Hosted project runs, an External project's link underlines, or the track of a live readout.
 
@@ -286,7 +286,7 @@ The system is flat. There are no shadows. Depth is one tonal step: the lifted gr
 
 ## Shapes
 
-Square by default. The only radius in the build is the 2px corner on the focus ring. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
+Square by default. The only radius in the build is the 2px corner on a text link's focus ring and on the ring drawn on a Hosted cell's cover; taking focus never changes the shape of a fill or a frame. The intended Featured panel has soft corners in the mock, but no radius token exists yet; one is added when the panel is built.
 
 ## Components
 
@@ -297,7 +297,7 @@ The site header: quiet, exact, on a hairline.
 - **Structure:** the wordmark, then the sections that ship (Projects, Articles), on a shared baseline with a hairline below. A section joins the nav with the ticket that builds its route; Activity arrives with its own.
 - **Default:** links in muted ink, body type.
 - **Hover:** links move to full ink through the shared ease-out.
-- **Focus:** the global ring (2px accent outline, 3px offset).
+- **Focus:** the global ring (2px Lime Ink outline, 3px offset).
 - **Narrow screens:** the row wraps; no menu toggle.
 
 ### Statement
@@ -371,7 +371,8 @@ The one accent fill on a page, marking the Featured Project that is running live
 
 ### Focus and selection
 
-- **Focus:** every focusable element shows a 2px accent outline at a 3px offset, with 2px corners. Inside an accent fill the ring is accent shadow ink instead (see Title block).
+- **Focus:** every focusable element shows a 2px outline at a 3px offset in Lime Ink: the lime itself in dark, the dark olive in light, where the lime would be 1.1:1 on paper. Inside an accent fill the ring is accent shadow ink instead (see Title block).
+- **The ring's corners:** an outline takes its corners from the element it rings. A text link paints no box, whether it is a link or a button set as one, so it carries the 2px corner and its ring is soft. A button, a field or a code block has a fill or a frame, so its ring is square like it, and taking focus never reshapes it. `e2e/focus-ring.spec.ts` tabs through every public route and the Admin panel's sign-in: it checks each ring's contrast in both themes, and that no fill or frame changes shape.
 - **Text selection:** accent background with accent shadow ink; inside an accent fill, accent shadow ink background with accent text.
 
 ### Motion
