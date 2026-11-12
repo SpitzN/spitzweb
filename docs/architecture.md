@@ -6,29 +6,30 @@ How spitzweb is built: the stack, the workspace, the code layout and where state
 
 ## Stack
 
-| Concern            | Choice                                                                                   | ADR                                                            |
-| ------------------ | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Repo               | pnpm workspaces + Turborepo; `apps/*` deploy, `packages/*` only for shared code          | [0001](adr/0001-monorepo-with-pnpm-and-turborepo.md)           |
-| Design system      | `@spitzweb/design-system`: atoms, molecules, organisms and the tokens, as TSX source     | [0014](adr/0014-the-design-system-is-a-workspace-package.md)   |
-| Hosted projects    | A slice in `apps/site`, moved out to `<name>.spitzweb.dev` when a trigger hits           | [0002](adr/0002-hosted-projects-graduate-to-subdomain-apps.md) |
-| Framework          | Next.js (App Router), React 19 with the React Compiler                                   | [0003](adr/0003-nextjs-over-astro.md)                          |
-| Rendering          | Cache Components: a static shell with dynamic holes in `<Suspense>`                      | [0011](adr/0011-cache-components-for-rendering.md)             |
-| Long-form content  | MDX in the repo                                                                          | [0004](adr/0004-neon-postgres-with-drizzle.md)                 |
-| Drafts             | MDX Drafts stay in a git-ignored folder; the public repo holds none                      | [0013](adr/0013-the-public-repo-holds-no-drafts.md)            |
-| Data               | Postgres on Neon via Drizzle; PGlite in tests                                            | [0004](adr/0004-neon-postgres-with-drizzle.md)                 |
-| Migrations         | Applied in the Vercel build; expand/contract                                             | [0009](adr/0009-migrations-run-in-the-vercel-build.md)         |
-| Auth               | Better Auth, GitHub, admin-only                                                          | [0005](adr/0005-admin-only-github-sign-in-with-better-auth.md) |
-| Hosting            | Vercel Hobby, kept portable                                                              | [0006](adr/0006-vercel-hosting-kept-portable.md)               |
-| Monitoring         | Sentry, security headers, report-only CSP, uptime monitor                                | [0007](adr/0007-production-monitoring-baseline.md)             |
-| Analytics          | Vercel Analytics, cookieless                                                             | [0008](adr/0008-vercel-analytics-without-cookies.md)           |
-| Field Web Vitals   | Vercel Speed Insights                                                                    | [0012](adr/0012-vercel-speed-insights-for-field-web-vitals.md) |
-| UI                 | Two registers on one token system (`DESIGN.md`); shadcn/ui on Base UI in the Admin panel | [0010](adr/0010-two-ui-registers-one-token-system.md)          |
-| Forms              | Base UI `Form` and `Field`, posting to a Server Action through `useActionState`          | [0015](adr/0015-forms-on-base-ui-form-with-server-actions.md)  |
-| Styling            | Tailwind v4, tokens in `packages/design-system/src/styles/tokens.css`                    |                                                                |
-| Design-system lint | `@shadcn/lint`: a caller sets a component's layout, never its look                       | [0016](adr/0016-shadcn-lint-enforces-the-design-system.md)     |
-| Validation         | zod at every boundary                                                                    |                                                                |
-| Tests              | Vitest beside the code; Playwright + axe in `apps/site/e2e/`                             |                                                                |
-| Tooling            | `docs/tooling.md`                                                                        |                                                                |
+| Concern            | Choice                                                                                   | ADR                                                               |
+| ------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Repo               | pnpm workspaces + Turborepo; `apps/*` deploy, `packages/*` only for shared code          | [0001](adr/0001-monorepo-with-pnpm-and-turborepo.md)              |
+| Design system      | `@spitzweb/design-system`: atoms, molecules, organisms and the tokens, as TSX source     | [0014](adr/0014-the-design-system-is-a-workspace-package.md)      |
+| Hosted projects    | A slice in `apps/site`, moved out to `<name>.spitzweb.dev` when a trigger hits           | [0002](adr/0002-hosted-projects-graduate-to-subdomain-apps.md)    |
+| Framework          | Next.js (App Router), React 19 with the React Compiler                                   | [0003](adr/0003-nextjs-over-astro.md)                             |
+| Rendering          | Cache Components: a static shell with dynamic holes in `<Suspense>`                      | [0011](adr/0011-cache-components-for-rendering.md)                |
+| Long-form content  | MDX in the repo                                                                          | [0004](adr/0004-neon-postgres-with-drizzle.md)                    |
+| Drafts             | MDX Drafts stay in a git-ignored folder; the public repo holds none                      | [0013](adr/0013-the-public-repo-holds-no-drafts.md)               |
+| Data               | Postgres on Neon via Drizzle; PGlite in tests                                            | [0004](adr/0004-neon-postgres-with-drizzle.md)                    |
+| Migrations         | Applied in the Vercel build; expand/contract                                             | [0009](adr/0009-migrations-run-in-the-vercel-build.md)            |
+| Preview databases  | A Neon branch per PR, made by GitHub Actions before the preview builds                   | [0017](adr/0017-preview-branches-are-created-before-the-build.md) |
+| Auth               | Better Auth, GitHub, admin-only                                                          | [0005](adr/0005-admin-only-github-sign-in-with-better-auth.md)    |
+| Hosting            | Vercel Hobby, kept portable                                                              | [0006](adr/0006-vercel-hosting-kept-portable.md)                  |
+| Monitoring         | Sentry, security headers, report-only CSP, uptime monitor                                | [0007](adr/0007-production-monitoring-baseline.md)                |
+| Analytics          | Vercel Analytics, cookieless                                                             | [0008](adr/0008-vercel-analytics-without-cookies.md)              |
+| Field Web Vitals   | Vercel Speed Insights                                                                    | [0012](adr/0012-vercel-speed-insights-for-field-web-vitals.md)    |
+| UI                 | Two registers on one token system (`DESIGN.md`); shadcn/ui on Base UI in the Admin panel | [0010](adr/0010-two-ui-registers-one-token-system.md)             |
+| Forms              | Base UI `Form` and `Field`, posting to a Server Action through `useActionState`          | [0015](adr/0015-forms-on-base-ui-form-with-server-actions.md)     |
+| Styling            | Tailwind v4, tokens in `packages/design-system/src/styles/tokens.css`                    |                                                                   |
+| Design-system lint | `@shadcn/lint`: a caller sets a component's layout, never its look                       | [0016](adr/0016-shadcn-lint-enforces-the-design-system.md)        |
+| Validation         | zod at every boundary                                                                    |                                                                   |
+| Tests              | Vitest beside the code; Playwright + axe in `apps/site/e2e/`                             |                                                                   |
+| Tooling            | `docs/tooling.md`                                                                        |                                                                   |
 
 ## Workspace
 
