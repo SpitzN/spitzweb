@@ -7,10 +7,7 @@ interface StarProps {
 function Sparkle({ className }: StarProps) {
   return (
     <svg viewBox="-5 -5 10 10" className={className}>
-      <path
-        d="M0 -5Q.6 -.6 5 0Q.6 .6 0 5Q-.6 .6 -5 0Q-.6 -.6 0 -5Z"
-        className="fill-ink theme-setting:animate-star-out theme-rising:animate-star-in"
-      />
+      <path d="M0 -5Q.6 -.6 5 0Q.6 .6 0 5Q-.6 .6 -5 0Q-.6 -.6 0 -5Z" className="star" />
     </svg>
   );
 }
@@ -19,24 +16,21 @@ function Sparkle({ className }: StarProps) {
 function Dot({ className }: StarProps) {
   return (
     <svg viewBox="-5 -5 10 10" className={className}>
-      <circle
-        r="5"
-        className="fill-ink theme-setting:animate-star-out theme-rising:animate-star-in"
-      />
+      <circle r="5" className="star" />
     </svg>
   );
 }
 
 /**
- * The stars along the site header in the dark theme (DESIGN.md, Navigation). It fills the header,
- * which must be positioned. Every star sits in the header's top or bottom padding, where no line
- * of text reaches at any width. Each is placed as a share of the header's width, so the stars keep
- * their order and their distance from one another as the header narrows. They are listed from the
- * moon outward, which is the order they come out in when night falls (app/theme-change.css). The
- * two nearest in the bottom padding move further out below `sm`, where a share
- * that small would put them under the theme switch.
+ * The stars along the site header in the dark theme, part of the theme switch's picture
+ * (DESIGN.md, Navigation). It fills the header, which must be positioned. Every star sits in the
+ * header's top or bottom padding, where no line of text reaches at any width. Each is placed as a
+ * share of the header's width, so the stars keep their order and their distance from one another
+ * as the header narrows. They are listed from the moon outward, which is the order they come out
+ * in when night falls (app/theme-change.css). The two nearest in the bottom padding move further
+ * out below `sm`, where a share that small would put them under the theme switch.
  */
-export function NightSky() {
+export function HeaderStars() {
   return (
     <span aria-hidden className="pointer-events-none absolute inset-0 light:hidden">
       <Sparkle className="absolute inset-e-1/14 inset-bs-1.75 block-2.25 inline-2.25 stagger-0" />

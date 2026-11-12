@@ -1,57 +1,47 @@
 import type { Theme } from "@/lib/theme";
 import { appliedTheme, applyTheme, storeTheme } from "@/lib/theme";
+import { spreadEdges } from "@/lib/theme-spread";
 
 /**
- * Plays the theme change (DESIGN.md, Motion). What is up in the sky sets, the new theme spreads
- * over the page from the horizon, and the other rises. The phase is marked on <html> as
- * `data-theme-change`, "setting" then "rising", and app/theme-change.css gives each part of the
- * picture its motion in that phase.
+ * Plays the theme change (DESIGN.md, Motion). What is up in the picture sets, the new theme
+ * spreads over the page, and the other rises. The phase is marked on <html> as
+ * `data-theme-change`: "setting", "turning" for the one step in which the page turns, then
+ * "rising". app/theme-change.css gives each part of the picture its motion in a phase.
  */
 
-/** How many steps the spread's keyframes are drawn in: enough for a curve to look smooth. */
-const SPREAD_STEPS = 48;
+/** Reads one of the change's motion tokens, which are plain numbers (app/theme-change.css). */
+function motionToken(name: string) {
+  return Number(getComputedStyle(document.documentElement).getPropertyValue(name));
+}
 
-/** The share of the spread's time in which the new theme climbs the header, above the horizon. */
-const CLIMB_SHARE = 0.3;
-
-/** How far an edge has travelled, by the share of its time: fast off the horizon, slow to land. */
-function travelled(time: number) {
-  return 1 - (1 - time) ** 2.4;
+function percent(share: number) {
+  return `${(share * 100).toFixed(3)}%`;
 }
 
 /**
- * The keyframes of the spread, for a horizon at a share of the viewport's height (0 to 100). A
- * band of the new theme opens on the horizon: its top edge climbs to the viewport's top quickly,
- * and its bottom edge falls to the foot. The old theme gets the same band cut out of it, wider by
- * the lime line (`--theme-spread-edge`), so the line shows on both moving edges.
+ * Spreads the page's new snapshot over its old one, from the scene's bottom edge. The old
+ * snapshot gets the new one's band cut out of it, wider by the lime line (`--theme-spread-edge`),
+ * so the line shows between them on both moving edges.
  */
-function spreadKeyframes(horizon: number) {
-  const incoming: Keyframe[] = [];
-  const outgoing: Keyframe[] = [];
-  for (let step = 0; step <= SPREAD_STEPS; step++) {
-    const time = step / SPREAD_STEPS;
-    const top = (horizon * (1 - travelled(Math.min(time / CLIMB_SHARE, 1)))).toFixed(3);
-    const bottom = (horizon + (100 - horizon) * travelled(time)).toFixed(3);
-    const lineTop = `calc(${top}% - var(--theme-spread-edge))`;
-    const lineBottom = `calc(${bottom}% + var(--theme-spread-edge))`;
-    incoming.push({ clipPath: `inset(${top}% 0% calc(100% - ${bottom}%) 0%)` });
-    outgoing.push({
+function spreadFrom(scene: Element) {
+  const { bottom: horizon } = scene.getBoundingClientRect();
+  const edges = spreadEdges({
+    horizon: Math.min(Math.max(horizon / innerHeight, 0), 1),
+    climb: motionToken("--theme-spread-climb"),
+    slowing: motionToken("--theme-spread-slowing"),
+  });
+  const incoming = edges.map(({ top, bottom }) => ({
+    clipPath: `inset(${percent(top)} 0% ${percent(1 - bottom)} 0%)`,
+  }));
+  const outgoing = edges.map(({ top, bottom }) => {
+    const lineTop = `calc(${percent(top)} - var(--theme-spread-edge))`;
+    const lineBottom = `calc(${percent(bottom)} + var(--theme-spread-edge))`;
+    return {
       clipPath: `polygon(evenodd, 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 0% ${lineTop}, 100% ${lineTop}, 100% ${lineBottom}, 0% ${lineBottom}, 0% ${lineTop})`,
-    });
-  }
-  return { incoming, outgoing };
-}
-
-/** Spreads the new snapshot of the page over the old one, from the sky's bottom edge. */
-function spreadFromHorizon(sky: Element) {
+    };
+  });
+  const timing = { duration: motionToken("--theme-spread-ms"), fill: "both" } as const;
   const root = document.documentElement;
-  const horizon = (sky.getBoundingClientRect().bottom / innerHeight) * 100;
-  const { incoming, outgoing } = spreadKeyframes(Math.min(Math.max(horizon, 0), 100));
-  const timing = {
-    // The token is a count of milliseconds (app/theme-change.css).
-    duration: Number(getComputedStyle(root).getPropertyValue("--theme-spread-ms")),
-    fill: "both",
-  } as const;
   return [
     root.animate(incoming, { ...timing, pseudoElement: "::view-transition-new(root)" }),
     root.animate(outgoing, { ...timing, pseudoElement: "::view-transition-old(root)" }),
@@ -70,52 +60,77 @@ async function animationsEnd(scope: Element) {
 }
 
 /**
- * Turns the page to a theme and starts the rising phase. Where the browser has view transitions
- * and the visitor hasn't asked for reduced motion, the new theme spreads from the horizon; the
- * new snapshot is live, so what rises is seen rising. Otherwise the page turns at once.
+ * Shows a theme on the page in one step. For that step the phase is "turning", in which the
+ * stylesheet lets nothing ease: a link easing to its new ink would otherwise show the old
+ * theme's ink on the new ground for as long as it took.
  */
-async function turnPage(theme: Theme, sky: Element) {
-  function turn() {
-    applyTheme(theme);
+function showThemeAtOnce(theme: Theme) {
+  const root = document.documentElement;
+  const { themeChange: phase } = root.dataset;
+  root.dataset.themeChange = "turning";
+  applyTheme(theme);
+  // Asking for a computed style makes the browser take in the new theme now, while nothing eases.
+  getComputedStyle(root).getPropertyValue("color");
+  if (phase === undefined) delete root.dataset.themeChange;
+  else root.dataset.themeChange = phase;
+}
+
+/**
+ * Turns the page to a theme inside a view transition, the new theme spreading from the scene's
+ * bottom edge, and starts the rising phase as it turns. The new snapshot is live, so what rises
+ * is seen rising.
+ */
+async function turnPage(theme: Theme, scene: Element) {
+  const transition = document.startViewTransition(() => {
+    showThemeAtOnce(theme);
     document.documentElement.dataset.themeChange = "rising";
-  }
-
-  // The stylesheet's reduced-motion rule can't reach an animation made by script.
-  const isStill = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (isStill || !("startViewTransition" in document)) {
-    turn();
-    return;
-  }
-
-  const transition = document.startViewTransition(turn);
+  });
   let spread: Animation[] = [];
   try {
     await transition.ready;
-    spread = spreadFromHorizon(sky);
-    await transition.finished;
+    spread = spreadFrom(scene);
   } catch {
-    // The browser skipped the transition (a hidden tab, a resize). The page has turned all the same.
+    // The browser skipped the transition (a hidden tab, a resize): the page turns with no spread.
   }
+  // Skipped or not, the page has turned once this settles: a skipped one still runs its callback.
+  await transition.finished;
   // Safari keeps a script-made animation alive after its transition, and it blocks the next one.
   for (const animation of spread) animation.cancel();
 }
 
 /**
- * Switches the page to the other theme, keeps the choice for the next visit, and plays the
- * change. `sky` holds everything that sets and rises, and its bottom edge is the horizon. A call
- * while a change is playing does nothing.
+ * Whether the change can be played. It needs view transitions, and a visitor who asked for
+ * reduced motion gets none of it; the stylesheet's rule for that can't reach an animation made
+ * by script.
  */
-export async function switchTheme(sky: Element) {
+function canPlayChange() {
+  return (
+    "startViewTransition" in document && !matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+/**
+ * Switches the page to the other theme and keeps the choice for the next visit. Where the change
+ * can be played, it plays; otherwise the page changes at once. `scene` is the element the picture
+ * is drawn in: its animations are the setting and the rising, and its bottom edge is where the
+ * new theme spreads from. A call while a change is playing does nothing.
+ */
+export async function switchTheme(scene: Element) {
   const root = document.documentElement;
   if (root.dataset.themeChange) return;
 
   const theme = appliedTheme() === "dark" ? "light" : "dark";
   storeTheme(theme);
+  if (!canPlayChange()) {
+    showThemeAtOnce(theme);
+    return;
+  }
+
   root.dataset.themeChange = "setting";
   try {
-    await animationsEnd(sky);
-    await turnPage(theme, sky);
-    await animationsEnd(sky);
+    await animationsEnd(scene);
+    await turnPage(theme, scene);
+    await animationsEnd(scene);
   } finally {
     delete root.dataset.themeChange;
   }

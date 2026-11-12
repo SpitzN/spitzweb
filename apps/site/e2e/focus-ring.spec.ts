@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import { switchTheme, THEMES } from "./accessibility";
+import { reloadInTheme, THEMES } from "./accessibility";
 import { PUBLIC_ROUTES } from "./routes";
 
 // Every page a visitor can reach, and the Admin panel's sign-in for its button. The Admin
@@ -131,7 +131,7 @@ for (const route of ROUTES) {
       // A focused row changes ground through a transition; with reduced motion it lands at once.
       await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto(route);
-      await switchTheme(page, theme);
+      await reloadInTheme(page, theme);
 
       const focusStops = await tabThrough(page);
 

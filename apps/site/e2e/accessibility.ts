@@ -10,7 +10,7 @@ export const THEMES = ["dark", "light"] as const;
  * switch stores it, and the page's inline script applies it (lib/theme.ts). The page is in the
  * theme once its theme switch offers the other one.
  */
-export async function switchTheme(page: Page, theme: (typeof THEMES)[number]) {
+export async function reloadInTheme(page: Page, theme: (typeof THEMES)[number]) {
   await page.evaluate((name) => {
     localStorage.setItem("theme", name);
   }, theme);

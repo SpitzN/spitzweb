@@ -107,10 +107,9 @@ components:
   theme-switch-line:
     textColor: "{colors.ink}"
   theme-switch-name:
-    backgroundColor: "{colors.ground}"
     textColor: "{colors.ink-muted}"
     typography: "{typography.body}"
-  night-sky-star:
+  header-star:
     textColor: "{colors.ink}"
   theme-change-line:
     backgroundColor: "{colors.accent}"
@@ -243,7 +242,7 @@ A drenched ultramarine world with warm paper ink and a single lime accent kept f
 
 ### Named Rules
 
-**The Live Thing Rule.** The accent marks only the live or selected thing: the running Featured Project, the cell that opens a Project, the selected row, focus, selection, and the theme in use (the theme switch's disc). It never decorates, never fills a primary button by default, and never colours a heading for emphasis.
+**The Live Thing Rule.** The accent marks only the live or selected thing: the running Featured Project, the cell that opens a Project, the selected row, focus, selection, the theme in use (the theme switch's disc), and a theme change as it crosses the page (its line). It never decorates, never fills a primary button by default, and never colours a heading for emphasis.
 
 **The Token-Only Rule.** Every colour comes from a theme token defined for both themes. The Tailwind palette is reset (`--color-*: initial`) and lint rejects arbitrary values and raw palette colours (apps/site/eslint.config.js, docs/tooling.md). Components use the generated utilities (`bg-ground`, `text-ink-muted`, `border-rule`), never the CSS variables directly.
 
@@ -303,7 +302,7 @@ Square by default. The only radius in the build is the 2px corner on the focus r
 
 ### Named Rules
 
-**The One Picture Rule.** The theme switch is the only picture on the site: a sun, a moon and stars, standing on the header's hairline. It is drawn in the system's own inks (the accent for the disc, ink for its outline, rays and stars) and adds no colour. Nothing else is illustrated: no icons, no glyphs, no decoration.
+**The One Picture Rule.** The theme switch's picture is the only picture on the site: a sun, a moon and the night's stars, on the header's hairline. It is drawn in the system's own inks (the accent for the disc, ink for its outline, rays and stars) and adds no colour. Nothing else is illustrated: no icons, no glyphs, no ornament.
 
 ## Components
 
@@ -315,15 +314,15 @@ The site header: quiet, exact, on a hairline.
 - **Default:** links in muted ink, body type.
 - **Hover:** links move to full ink through the shared ease-out.
 - **Focus:** the global ring (2px Lime Ink outline, 3px offset).
-- **Narrow screens:** the row wraps; no menu toggle. The theme switch takes the second line, at its end.
+- **Narrow screens:** the row wraps; no menu toggle. Below about 620px the theme switch, with the room its name takes, has the second line, at its end.
 - **Theme switch:** one button, 3rem wide and 2.75rem tall, that reaches down through the header's bottom padding so its picture stands on the hairline: the hairline is the horizon.
   - **Light theme:** a lime disc half-risen on the hairline, outlined in ink because lime alone is 1.1:1 on paper, with five ink rays.
   - **Dark theme:** the same disc as a crescent moon above the hairline, with three stars beside it.
   - **Drawing:** SVG, 1.5px strokes with round caps. It follows `<html>` through the `light:` variant, so it is right from the first paint.
-  - **Name:** its action, "Switch to the light theme" or "Switch to the dark theme". It is body type in muted ink on the ground, and it shows beside the picture, on its start side, on hover and on keyboard focus; it stays while the pointer rests on it, and stays out while a theme change plays.
+  - **Name:** its action, "Switch to the light theme" or "Switch to the dark theme". It is body type in muted ink, level with the nav, and it shows beside the picture, on its start side, on hover and on keyboard focus. It stays while the pointer rests on it, and stays out while a theme change plays. It keeps its room in the header's row whether it shows or not, so it never lies over a nav link.
   - **Hover and focus:** the sun's rays reach out, or the moon tips and its stars swell, through the shared ease-out. Focus adds the global ring.
   - **Choosing a theme** plays the theme change (Motion).
-- **Night sky:** in the dark theme, eleven stars sit along the header: four-pointed sparkles and points in ink, at 45% to 100% opacity. Each is placed as a share of the header's width, in the header's top or bottom padding only, so none meets the wordmark, a nav link or the theme switch at any width. They are decoration and hidden from assistive technology.
+- **Stars:** in the dark theme, eleven stars sit along the header: four-pointed sparkles and points in ink, at 45% to 100% opacity. Each is placed as a share of the header's width, in the header's top or bottom padding only, so none meets the wordmark, a nav link or the theme switch at any width. They are part of the theme switch's picture, and hidden from assistive technology.
 
 ### Statement
 
@@ -404,19 +403,19 @@ The one accent fill on a page, marking the Featured Project that is running live
 
 One exponential ease-out, `cubic-bezier(0.16, 1, 0.3, 1)`, at 450ms is the default for every transition, so weight and colour changes share one grammar.
 
-The theme change is the one authored sequence, and the one exception to that duration. Its motion is in `apps/site/src/app/theme-change.css`, and `lib/theme-change.ts` plays it in three steps:
+The theme change is the one authored sequence, and the one exception to that duration and, in its first step, to that easing. Its motion is in `apps/site/src/app/theme-change.css`, and `lib/theme-change.ts` plays it in three steps:
 
-1. **Setting** (about 0.35s). What is up goes down behind the hairline on a quick ease-in, `cubic-bezier(0.55, 0, 0.85, 0.35)`: the sun's rays draw in and the disc sinks, or the stars go out from the furthest inward and the moon sinks and tips.
-2. **The page turns** (0.85s). A band of the new theme opens on the hairline, climbs the header in the first 0.25s and falls to the foot of the page, with a 1.5px lime line on each moving edge. It is a view transition whose snapshots script draws, and the page takes no input while it runs.
+1. **Setting** (about 0.35s). What is up goes down behind the hairline on a quick ease-in, `cubic-bezier(0.55, 0, 0.85, 0.35)`: the sun's rays draw in and the disc sinks, or the stars go out and the moon sinks and tips.
+2. **The page turns** (0.85s). A band of the new theme opens on the hairline, climbs the header in the first 0.25s and falls to the foot of the page, with a 1.5px lime line on each moving edge. It is a view transition whose snapshots script draws, and the page takes no input while it runs. Every colour changes in the one step in which the page turns; nothing eases to its new colour behind the line.
 3. **Rising**, alongside the turn. The other comes up from behind the hairline on the shared ease-out: the sun in 0.65s, then its rays, the middle one first; or the moon in 0.8s, then the stars one by one from the moon outward.
 
 The page has turned about 1.3s after the click, and the last star is out about 0.4s later. A second click while it plays does nothing. With `prefers-reduced-motion`, or in a browser without view transitions, the theme and the picture change at once.
 
-Under `prefers-reduced-motion` every transition and animation drops to zero duration and zero delay.
+Under `prefers-reduced-motion` every transition and animation drops to zero duration.
 
 ### Admin panel primitives
 
-Built from shadcn/ui on Base UI (ADR 0010), in the design-system package `@spitzweb/design-system` (`packages/design-system`, ADR 0014). It is laid out in atomic levels: `atoms/` holds every primitive, `molecules/` and `organisms/` compose them, and `styles/tokens.css` holds the tokens this document specifies. Each primitive's variants map onto these tokens: ground and ground-raised for surfaces, ink and ink-muted for text, rule for borders and dividers, the shared focus ring and ease-out. Targets are at least 44 by 44 px there. A caller places a primitive (margin, width, flex and grid placement) but never restyles it: a new look is a new variant in the package (ADR 0016).
+Built from shadcn/ui on Base UI (ADR 0010), in the design-system package `@spitzweb/design-system` (`packages/design-system`, ADR 0014). It is laid out in atomic levels: `atoms/` holds every primitive, `molecules/` and `organisms/` compose them, and `styles/tokens.css` holds the tokens this document specifies, except the theme change's motion, which lives with the picture it moves (`apps/site/src/app/theme-change.css`). Each primitive's variants map onto these tokens: ground and ground-raised for surfaces, ink and ink-muted for text, rule for borders and dividers, the shared focus ring and ease-out. Targets are at least 44 by 44 px there. A caller places a primitive (margin, width, flex and grid placement) but never restyles it: a new look is a new variant in the package (ADR 0016).
 
 - **Button** (`atoms/button.tsx`): square, Funnel Sans semibold, at least 44 px each way. `default` is an ink fill with ground text that eases to muted ink under pointer, for the one action a screen exists for; `outline` is a hairline frame in the rule colour that takes the lifted ground under pointer. Neither uses the accent. Its busy state is below.
 - **Input and Textarea** (`atoms/input.tsx`, `atoms/textarea.tsx`): a hairline frame in the rule colour on the ground, ink text, 44 px tall (the Textarea grows in the block direction only). The frame firms to muted ink under pointer and to ink when the field is invalid. The caller sets the width; the Admin panel's forms make them full width.
@@ -441,7 +440,7 @@ Built from shadcn/ui on Base UI (ADR 0010), in the design-system package `@spitz
 - **Do** set Article body text in Funnel Sans at 1.125rem on a 36rem measure.
 - **Do** give rows that lift their ground the row bleed and matching inline padding (1rem below `sm`, 0.75rem from `sm`), so hairlines span the lift.
 - **Do** use logical properties and utilities only.
-- **Do** run every transition on the shared ease-out and let reduced motion still it.
+- **Do** run every transition on the shared ease-out and let reduced motion still it; the theme change's first step is the one exception (Motion).
 - **Do** meet WCAG 2.2 AA in both themes.
 - **Do** keep the theme switch as the site's one picture, drawn in ground, ink and the accent.
 

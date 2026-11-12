@@ -47,15 +47,13 @@
     border-radius: 2px;
   }
 
-  /* Reduced motion: every change lands at once, a staggered one included. */
+  /* The theme change is played by script, which leaves it out under reduced motion itself. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
       transition-duration: 0s !important;
-      transition-delay: 0s !important;
       animation-duration: 0s !important;
-      animation-delay: 0s !important;
     }
   }
 }

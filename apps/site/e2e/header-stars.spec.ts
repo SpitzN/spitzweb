@@ -1,9 +1,9 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import { switchTheme } from "./accessibility";
+import { reloadInTheme } from "./accessibility";
 import { PUBLIC_ROUTES } from "./routes";
 
-/** The night's stars: the drawings in the header's decorative layer (DESIGN.md, Navigation). */
+/** The header's stars: the drawings in its layer that assistive technology skips (DESIGN.md, Navigation). */
 function headerStars(page: Page) {
   return page.getByRole("banner").locator(":scope > [aria-hidden='true'] > svg");
 }
@@ -15,7 +15,7 @@ interface Box {
   bottom: number;
 }
 
-async function boxesOf(locator: Locator): Promise<Box[]> {
+async function boxesOf(locator: Locator) {
   return locator.evaluateAll((elements) =>
     elements.map((element) => {
       const { left, right, top, bottom } = element.getBoundingClientRect();
@@ -43,7 +43,7 @@ for (const route of PUBLIC_ROUTES) {
     expect(stars.length).toBeGreaterThan(0);
     for (const star of stars) await expect(star).toBeVisible();
 
-    await switchTheme(page, "light");
+    await reloadInTheme(page, "light");
     const starsByDay = await headerStars(page).all();
     for (const star of starsByDay) await expect(star).toBeHidden();
   });
@@ -58,10 +58,12 @@ for (const width of [320, 390, 768, 1280]) {
     await page.goto("/");
 
     const stars = await boxesOf(headerStars(page));
-    const things = await boxesOf(page.getByRole("banner").locator("a, button"));
+    const obstacles = await boxesOf(page.getByRole("banner").locator("a, button"));
 
     expect(stars.length).toBeGreaterThan(0);
-    expect(things.length).toBeGreaterThan(0);
-    expect(stars.filter((star) => things.some((thing) => overlaps(star, thing)))).toEqual([]);
+    expect(obstacles.length).toBeGreaterThan(0);
+    expect(stars.filter((star) => obstacles.some((obstacle) => overlaps(star, obstacle)))).toEqual(
+      [],
+    );
   });
 }

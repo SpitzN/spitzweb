@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { switchTheme, THEMES, wcagViolations } from "./accessibility";
+import { reloadInTheme, THEMES, wcagViolations } from "./accessibility";
 import { PUBLIC_ROUTES } from "./routes";
 
 // ADR 0007: these are enforced on every response. The full CSP is report-only and is checked by
@@ -73,7 +73,7 @@ for (const route of PUBLIC_ROUTES) {
       expect(response?.status()).toBe(200);
       await expect(page.locator("html")).toHaveAttribute("lang", "en");
 
-      await switchTheme(page, theme);
+      await reloadInTheme(page, theme);
 
       expect(await wcagViolations(page)).toEqual([]);
     });
