@@ -1,8 +1,10 @@
 name: PR title
 
 # The PR title becomes the squash commit on main, so it follows Conventional Commits too.
+# It runs on `pull_request`, not `pull_request_target`: it only reads the title, which the
+# read-only token can do, and GitHub blocks `pull_request_target` on public repos by default.
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, edited, synchronize, reopened]
 
 permissions:
