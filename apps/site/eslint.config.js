@@ -181,6 +181,25 @@ export default defineConfig(
     },
   },
 
+  // --- Forms (ADR 0015): every form is the design system's Form, which still posts without
+  // JavaScript and lets Base UI wire each Field's label, description and error.
+  {
+    files: ["src/**/*.tsx"],
+    rules: {
+      "react/forbid-elements": [
+        "error",
+        {
+          forbid: [
+            {
+              element: "form",
+              message: "use Form from @spitzweb/design-system/atoms/form (ADR 0015)",
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Prettier owns formatting: keep this last.
   formatting,
 );

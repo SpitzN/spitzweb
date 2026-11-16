@@ -11,5 +11,6 @@ The design system wraps Base UI's `Field`, not shadcn's `Field`: shadcn's is pla
 
 ## Consequences
 
+- A form with no fields, such as a single button that posts to a Server Action, is still `Form`. Lint rejects a plain `<form>` in the site (`react/forbid-elements`).
 - Revisit this decision with the first form that needs field arrays, dependent fields or multiple steps. React Hook Form and TanStack Form are the candidates.
 - Client-side validation, when it comes, runs the Server Action's own zod schemas through `Field`'s `validate` prop.

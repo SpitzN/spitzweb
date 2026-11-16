@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { connection } from "next/server";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
+import { Form } from "@spitzweb/design-system/atoms/form";
 import { SubmitButton } from "@spitzweb/design-system/molecules/submit-button";
 import { checkAdminSession } from "@/admin/server/admin-session";
 import { signOut } from "@/admin/server/sign-in-actions";
@@ -36,11 +37,11 @@ async function AdminBar({ children }: { children: ReactNode }) {
         <p className="truncate text-ink-muted min-inline-0" title={name}>
           Signed in as <span className="text-ink">{name}</span>
         </p>
-        <form action={signOut}>
+        <Form action={signOut}>
           <SubmitButton variant="outline" pendingLabel="Signing out…">
             Sign out
           </SubmitButton>
-        </form>
+        </Form>
       </section>
       {children}
     </>
