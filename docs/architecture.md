@@ -25,6 +25,7 @@ How spitzweb is built: the stack, the workspace, the code layout and where state
 | Field Web Vitals   | Vercel Speed Insights                                                                    | [0012](adr/0012-vercel-speed-insights-for-field-web-vitals.md)    |
 | UI                 | Two registers on one token system (`DESIGN.md`); shadcn/ui on Base UI in the Admin panel | [0010](adr/0010-two-ui-registers-one-token-system.md)             |
 | Forms              | Base UI `Form` and `Field`, posting to a Server Action through `useActionState`          | [0015](adr/0015-forms-on-base-ui-form-with-server-actions.md)     |
+| Keyboard shortcuts | TanStack Hotkeys (`@tanstack/react-hotkeys`), in client components                       |                                                                   |
 | Styling            | Tailwind v4; tokens in the design system's `tokens.css`, the theme change's in the site  |                                                                   |
 | Design-system lint | `@shadcn/lint`: a caller sets a component's layout, never its look                       | [0016](adr/0016-shadcn-lint-enforces-the-design-system.md)        |
 | Validation         | zod at every boundary                                                                    |                                                                   |

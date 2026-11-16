@@ -4,6 +4,7 @@ import {
   entryHref,
   entryHrefSchema,
   entrySlugSchema,
+  splitFeatured,
   listedEntries,
 } from "@/domain/entry";
 
@@ -70,6 +71,32 @@ describe("listedEntries", () => {
     listedEntries(entries);
 
     expect(slugs(entries)).toStrictEqual(["a", "b"]);
+  });
+});
+
+describe("splitFeatured", () => {
+  // Listed Entries arrive Featured first, then newest first, as listedEntries gives them.
+  const lead = entry("lead", { featured: true });
+  const secondFeatured = entry("second-featured", { featured: true });
+  const newer = entry("newer");
+  const older = entry("older");
+
+  test("the leading Featured Entry is shown apart and the rest are listed", () => {
+    expect(splitFeatured([lead, secondFeatured, newer, older])).toStrictEqual({
+      featured: lead,
+      others: [secondFeatured, newer, older],
+    });
+  });
+
+  test("with no Featured Entry none is shown apart, and every Entry is listed", () => {
+    expect(splitFeatured([newer, older])).toStrictEqual({
+      featured: undefined,
+      others: [newer, older],
+    });
+  });
+
+  test("with no Entries there is nothing to show", () => {
+    expect(splitFeatured([])).toStrictEqual({ featured: undefined, others: [] });
   });
 });
 

@@ -15,7 +15,7 @@ interface Box {
   bottom: number;
 }
 
-async function boxesOf(locator: Locator) {
+async function getBoundingBoxes(locator: Locator) {
   return locator.evaluateAll((elements) =>
     elements.map((element) => {
       const { left, right, top, bottom } = element.getBoundingClientRect();
@@ -57,8 +57,8 @@ for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto("/");
 
-    const stars = await boxesOf(headerStars(page));
-    const obstacles = await boxesOf(page.getByRole("banner").locator("a, button"));
+    const stars = await getBoundingBoxes(headerStars(page));
+    const obstacles = await getBoundingBoxes(page.getByRole("banner").locator("a, button"));
 
     expect(stars.length).toBeGreaterThan(0);
     expect(obstacles.length).toBeGreaterThan(0);

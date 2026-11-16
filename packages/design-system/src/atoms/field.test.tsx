@@ -8,7 +8,7 @@ import { Textarea } from "@spitzweb/design-system/atoms/textarea";
 // checked inside a real Field. A plain <textarea> in place of Textarea fails both tests.
 
 /** The attributes of the first `<tag>` in the markup, by name. */
-function attributesOf(markup: string, tag: string) {
+function parseTagAttributes(markup: string, tag: string) {
   const element = new RegExp(String.raw`<${tag}(?:\s[^>]*)?>`).exec(markup)?.[0] ?? "";
   return new Map(
     element
@@ -27,11 +27,11 @@ describe.each([
       {control}
     </Field>,
   );
-  const attributes = attributesOf(markup, tag);
+  const attributes = parseTagAttributes(markup, tag);
 
   test("is named by the field's label", () => {
     expect(attributes.get("id")).toBeTruthy();
-    expect(attributesOf(markup, "label").get("for")).toBe(attributes.get("id"));
+    expect(parseTagAttributes(markup, "label").get("for")).toBe(attributes.get("id"));
   });
 
   test("submits under the field's name and keeps its own attributes", () => {
@@ -42,6 +42,6 @@ describe.each([
 
 test("a Textarea keeps its rows and starting text", () => {
   const markup = renderToStaticMarkup(<Textarea defaultValue="Shipping" rows={3} />);
-  expect(attributesOf(markup, "textarea").get("rows")).toBe("3");
+  expect(parseTagAttributes(markup, "textarea").get("rows")).toBe("3");
   expect(markup).toContain(">Shipping</textarea>");
 });

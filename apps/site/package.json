@@ -23,6 +23,7 @@
     "@sentry/nextjs": "^11.10.0",
     "@spitzweb/design-system": "workspace:*",
     "@stefanprobst/rehype-extract-toc": "^3.0.0",
+    "@tanstack/react-hotkeys": "0.25.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "better-auth": "^1.7.16",

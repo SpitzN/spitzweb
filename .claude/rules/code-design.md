@@ -20,13 +20,29 @@ Lint enforces the mechanical conventions (`docs/tooling.md`). These are the rule
 - **Build for a caller that exists.** Add a prop, option, parameter or abstraction only when this version uses it. `className` is the exception: a component takes it whether or not a caller passes one yet, so a caller can place it (`.claude/rules/ui.md`, Design system).
 - **One source for each fact.** Option lists, states and types are derived from their schema. A rule lives in one place, and everything else reads it.
 - **Extract on the third use.** Two similar pieces of code stay separate until a third shows what they share.
-- **The library's feature first.** Check a library's own API and examples before writing project code that does the same job.
+- **The library's feature first.** Check a library's own API and examples before writing project code that does the same job. Before hand-writing a general concern (keyboard shortcuts, timing, forms, data fetching), look for a maintained open-source package first, TanStack's included.
 
 ## Functions
 
 - Guard clauses and early returns keep the main path unindented.
 - A boolean parameter that switches behaviour becomes two functions.
 - Names use the glossary's terms, and a name says what a function returns.
+- A function's name starts with the standard word for its role:
+
+  | Role        | Name                    | Example                         |
+  | ----------- | ----------------------- | ------------------------------- |
+  | Getter      | `get…`                  | `getBackgroundColor(page)`      |
+  | Converter   | `convertTo…`            | `convertToFormData(fields)`     |
+  | Transformer | a verb, or `transform…` | `splitFeatured(listed)`         |
+  | Parser      | `parse…`                | `parseMdxFile(file, schema)`    |
+  | Guard       | `is…` / `has…`          | `isRecord(value)`               |
+  | Validator   | `validate…`             | none yet; zod schemas           |
+  | Factory     | `create…`               | `createTestDatabase()`          |
+  | Formatter   | `format…`               | `formatIssues(path, error)`     |
+  | Assertion   | `expect…` (tests)       | `expectRowSelected(page, name)` |
+
+  A name never ends in `…Of` and never starts with `as…`, which reads like a type assertion.
+
 - A function that can fail for a known reason returns `{ ok: true, value } | { ok: false, error }`. Throw only for bugs and broken invariants.
 
 ## Types
