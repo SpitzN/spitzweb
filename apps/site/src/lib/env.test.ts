@@ -1,48 +1,68 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { readServerEnv } from "@/lib/env";
-
-// Fake values, like the ones CI builds on.
-const FAKE_SERVER_ENV = {
-  DATABASE_URL: "postgresql://user:password@localhost:5432/spitzweb",
-  BETTER_AUTH_SECRET: "a-fake-secret-that-is-at-least-32-characters-long",
-  BETTER_AUTH_URL: "http://localhost:3000",
-  GITHUB_CLIENT_ID: "fake-client-id",
-  GITHUB_CLIENT_SECRET: "fake-client-secret",
-};
-
-function stubServerEnv(overrides: Partial<Record<keyof typeof FAKE_SERVER_ENV, string>> = {}) {
-  const env = { ...FAKE_SERVER_ENV, ...overrides };
-  for (const [name, value] of Object.entries(env)) {
-    vi.stubEnv(name, value);
-  }
-}
+import { readAuthEnv, readDatabaseEnv } from "@/lib/env";
+import {
+  FAKE_AUTH_ENV,
+  FAKE_DATABASE_ENV,
+  stubAuthEnv,
+  stubEnv,
+  stubPreviewEnv,
+} from "@/lib/test-env";
 
 afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe("readServerEnv", () => {
-  test("returns the server env when every value is well formed", () => {
-    stubServerEnv();
+describe("readDatabaseEnv", () => {
+  test("returns the database URL", () => {
+    stubAuthEnv();
 
-    expect(readServerEnv()).toStrictEqual(FAKE_SERVER_ENV);
+    expect(readDatabaseEnv()).toStrictEqual(FAKE_DATABASE_ENV);
   });
 
-  test("throws when a value is missing", () => {
-    stubServerEnv({ GITHUB_CLIENT_SECRET: "" });
+  test("reads the database on a deployment without the auth env, like a preview", () => {
+    stubPreviewEnv();
 
-    expect(() => readServerEnv()).toThrow(/GITHUB_CLIENT_SECRET/);
+    expect(readDatabaseEnv()).toStrictEqual(FAKE_DATABASE_ENV);
   });
 
   test("throws when the database URL is not a URL", () => {
-    stubServerEnv({ DATABASE_URL: "not a url" });
+    stubEnv({ DATABASE_URL: "not a url" });
 
-    expect(() => readServerEnv()).toThrow(/DATABASE_URL/);
+    expect(() => readDatabaseEnv()).toThrow(/DATABASE_URL/);
+  });
+});
+
+describe("readAuthEnv", () => {
+  test("returns the auth env when every value is well formed", () => {
+    stubAuthEnv();
+
+    expect(readAuthEnv()).toStrictEqual({ ok: true, value: FAKE_AUTH_ENV });
+  });
+
+  test("says sign-in isn't configured when none of the auth env is set, like a preview", () => {
+    stubPreviewEnv();
+
+    expect(readAuthEnv()).toStrictEqual({ ok: false, error: "not-configured" });
+  });
+
+  test("throws, naming it, when one auth variable is missing and the rest are set", () => {
+    stubAuthEnv();
+    stubEnv({ GITHUB_CLIENT_SECRET: undefined });
+
+    expect(() => readAuthEnv()).toThrow(/GITHUB_CLIENT_SECRET/);
+  });
+
+  test("throws when a GitHub credential is empty", () => {
+    stubAuthEnv();
+    stubEnv({ GITHUB_CLIENT_ID: "" });
+
+    expect(() => readAuthEnv()).toThrow(/GITHUB_CLIENT_ID/);
   });
 
   test("throws when the auth secret is too short to sign sessions safely", () => {
-    stubServerEnv({ BETTER_AUTH_SECRET: "short" });
+    stubAuthEnv();
+    stubEnv({ BETTER_AUTH_SECRET: "short" });
 
-    expect(() => readServerEnv()).toThrow(/BETTER_AUTH_SECRET/);
+    expect(() => readAuthEnv()).toThrow(/BETTER_AUTH_SECRET/);
   });
 });

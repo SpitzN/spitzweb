@@ -1,6 +1,8 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import { getAuth, SIGN_IN_PATH } from "@/lib/auth";
 import { account, session, user } from "@/lib/auth-schema";
 import { createTestAuth, createTestDatabase, signInAsGitHubAccount } from "@/lib/test-auth";
+import { stubPreviewEnv } from "@/lib/test-env";
 
 const NADAV_GITHUB_ID = 40_166_316;
 const OTHER_GITHUB_ID = 1_234_567;
@@ -47,5 +49,19 @@ describe("GitHub sign-in", () => {
     expect(response.ok).toBe(false);
     expect(await db.select().from(user)).toStrictEqual([]);
     expect(await db.select().from(session)).toStrictEqual([]);
+  });
+});
+
+describe("the app's Better Auth", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  test("on a deployment without the auth env, like a preview, sends the request to sign-in", () => {
+    stubPreviewEnv();
+
+    expect(() => getAuth()).toThrow(
+      expect.objectContaining({ digest: `NEXT_REDIRECT;replace;${SIGN_IN_PATH};307;` }),
+    );
   });
 });

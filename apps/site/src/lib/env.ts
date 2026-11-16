@@ -15,9 +15,22 @@ export function readPublicEnv() {
   });
 }
 
-const serverEnvSchema = z.object({
+const databaseEnvSchema = z.object({
   // Neon's pooled connection string. Migrations use the direct one, read by drizzle.config.ts.
   DATABASE_URL: z.url(),
+});
+
+/**
+ * The database's env, parsed: only what the database client needs, so a deployment without the
+ * auth env (every preview) still reads its database. Call it where the value is used, never at
+ * module top level, so the build runs without it (.claude/rules/server.md, Env). Throws, naming
+ * the variable, when it is missing or malformed.
+ */
+export function readDatabaseEnv() {
+  return databaseEnvSchema.parse(process.env);
+}
+
+const authEnvSchema = z.object({
   // Signs session cookies. Better Auth refuses anything shorter in production.
   BETTER_AUTH_SECRET: z.string().min(32),
   // The site's own origin. A preview leaves it unset, and Better Auth takes the request's origin.
@@ -26,11 +39,18 @@ const serverEnvSchema = z.object({
   GITHUB_CLIENT_SECRET: z.string().min(1),
 });
 
+/** The names of Better Auth's env, from its schema. */
+export const AUTH_ENV_NAMES = Object.keys(authEnvSchema.shape);
+
 /**
- * Env only the server may read, parsed. Call it where a value is used, never at module top level,
- * so the build runs without it (.claude/rules/server.md, Env). Throws, naming each bad variable,
- * when a value is missing or malformed. Only the variables named in the schema are returned.
+ * Better Auth's env, parsed, as a result: `ok: false` when the deployment sets none of it, like
+ * every preview, so sign-in is unavailable rather than broken (the OAuth apps call back only to
+ * production and localhost; docs/setup.md). Throws, naming each bad variable, when only some of it
+ * is set or a value is malformed. Call it where the value is used.
  */
-export function readServerEnv() {
-  return serverEnvSchema.parse(process.env);
+export function readAuthEnv() {
+  const isConfigured = AUTH_ENV_NAMES.some((name) => Object.hasOwn(process.env, name));
+  return isConfigured
+    ? { ok: true as const, value: authEnvSchema.parse(process.env) }
+    : { ok: false as const, error: "not-configured" as const };
 }

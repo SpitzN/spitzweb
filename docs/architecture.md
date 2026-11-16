@@ -71,7 +71,7 @@ apps/site/src/
 
 MDX reaches the code in one place: `lib/content-glob.ts` lets the bundler find every file in `content/` at build time, and `lib/mdx-files.ts` hands an Entry type its collection unparsed. The Entry type parses each file with its own schema through `lib/parse-mdx-file.ts`, which names the file and every bad field when the build fails. No page reads the filesystem at request time. `src/mdx-components.tsx` sits outside the layers because `@next/mdx` requires it there; it stays empty, and each Entry type styles its own MDX.
 
-The database reaches the code in one place too. `lib/db.ts` builds the Drizzle client on Neon's HTTP driver: each query is one request, so there is no pool to keep alive between serverless invocations. `lib/auth.ts` builds Better Auth on that client, and its tables live in `lib/auth-schema.ts`. Both are built per call from the env accessor, never at module top level, so the build needs no database. drizzle-kit finds every slice's `schema.ts` and generates migrations into `drizzle/`; tests apply the same migrations to PGlite (`lib/test-auth.ts`).
+The database reaches the code in one place too. `lib/db.ts` builds the Drizzle client on Neon's HTTP driver: each query is one request, so there is no pool to keep alive between serverless invocations. `lib/auth.ts` builds Better Auth on that client, and its tables live in `lib/auth-schema.ts`. Both are built per call from their own env accessor (`readDatabaseEnv`, `readAuthEnv`), never at module top level, so the build needs no database. A preview has the database env but no auth env, so it reads its database while sign-in says it isn’t available there. drizzle-kit finds every slice's `schema.ts` and generates migrations into `drizzle/`; tests apply the same migrations to PGlite (`lib/test-auth.ts`).
 
 The Admin panel builds from `@spitzweb/design-system` and never imports Base UI. A slice imports each design-system file by its path (`@spitzweb/design-system/atoms/field`) and passes it plain values; the package holds no domain meaning and imports nothing from the app.
 
@@ -114,14 +114,14 @@ Undecided until their tickets: where a Hosted project's per-visitor rate limits 
 
 Data from outside the type system is parsed where it enters. Inside, types are trusted.
 
-| Boundary                                      | Where it is parsed                      |
-| --------------------------------------------- | --------------------------------------- |
-| Environment variables                         | One accessor in `lib/`, read where used |
-| MDX frontmatter                               | The Entry type's loader, at load        |
-| Route params and search params                | The route, before it calls a slice      |
-| Server Action input (`FormData`)              | The Server Action, first thing          |
-| Route Handler input (webhooks, OAuth, feeds)  | The Route Handler, first thing          |
-| Third-party API responses (GitHub, paid APIs) | The adapter that calls the API          |
-| Input to a Hosted project                     | The Hosted project's own entry points   |
+| Boundary                                      | Where it is parsed                                       |
+| --------------------------------------------- | -------------------------------------------------------- |
+| Environment variables                         | One accessor per caller in `lib/env.ts`, read where used |
+| MDX frontmatter                               | The Entry type's loader, at load                         |
+| Route params and search params                | The route, before it calls a slice                       |
+| Server Action input (`FormData`)              | The Server Action, first thing                           |
+| Route Handler input (webhooks, OAuth, feeds)  | The Route Handler, first thing                           |
+| Third-party API responses (GitHub, paid APIs) | The adapter that calls the API                           |
+| Input to a Hosted project                     | The Hosted project's own entry points                    |
 
 Database rows are not on this list: Drizzle types them from the slice's `schema.ts`.
