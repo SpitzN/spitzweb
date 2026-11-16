@@ -8,3 +8,8 @@ allowBuilds:
   esbuild: false
   sharp: false
   unrs-resolver: false
+
+permissions:
+  "@tanstack/react-hotkeys":
+    build: true
+    skills: true
