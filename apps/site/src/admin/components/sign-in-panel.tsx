@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { Form } from "@spitzweb/design-system/atoms/form";
 import { SubmitButton } from "@spitzweb/design-system/molecules/submit-button";
 import { signInWithGitHub } from "@/admin/server/sign-in-actions";
 import { NOT_ADMIN_REASON } from "@/lib/auth";
@@ -20,9 +21,9 @@ async function SignInOptions({ failureReason }: { failureReason: Promise<string 
   return (
     <>
       <p className="pbs-2 text-ink-muted">Sign in with Nadav’s GitHub account.</p>
-      <form action={signInWithGitHub} className="pbs-8">
+      <Form action={signInWithGitHub} className="mbs-8">
         <SubmitButton pendingLabel="Opening GitHub…">Sign in with GitHub</SubmitButton>
-      </form>
+      </Form>
       {reason === undefined ? null : (
         <p role="alert" className="pbs-4 font-semibold">
           {failureMessageFor(reason)}

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { EntryDate } from "@/components/entry-date";
+import { Form } from "@spitzweb/design-system/atoms/form";
 import { SubmitButton } from "@spitzweb/design-system/molecules/submit-button";
 import { UpdateForm } from "@/entry-types/updates/components/update-form";
 import { readAsAdmin } from "@/entry-types/updates/server/read-as-admin";
@@ -121,12 +122,12 @@ async function EditUpdateBody({ id }: { id: Promise<string | undefined> }) {
         <p className="pbs-1 pbe-4 text-ink-muted">
           It leaves the site at once, and it can’t be brought back.
         </p>
-        <form action={deleteUpdateAction}>
+        <Form action={deleteUpdateAction}>
           <input type="hidden" name="id" value={foundId} />
           <SubmitButton variant="outline" pendingLabel="Deleting…">
             Delete Update
           </SubmitButton>
-        </form>
+        </Form>
       </section>
     </>
   );
