@@ -20,7 +20,7 @@ The security invariants these rules serve are listed in `docs/conventions.md`.
 
 ## Env
 
-Env is read through zod-validated accessors in `lib/env.ts`, each parsing only what its caller needs, called where the value is used and never at module top level. A deployment that leaves out a whole optional group, like every preview without the auth env, gets a result saying so rather than a throw (#47). Builds and CI run on fake values, with no real secrets.
+Env is read through zod-validated accessors in `lib/env.ts`, each parsing only what its caller needs, called where the value is used and never at module top level. Builds and CI run on fake values, with no real secrets.
 
 ## Rendering
 

@@ -27,7 +27,7 @@ export type UpdateFormState =
   | { status: "failed"; message: string; submitted: z.infer<typeof submittedSchema> };
 
 async function adminRequest() {
-  // The request first: building Better Auth reads the server env (docs/tooling.md, Traps).
+  // The request first: building Better Auth reads the auth env (docs/tooling.md, Traps).
   const requestHeaders = await headers();
   return { auth: getAuth(), db: getDatabase(), requestHeaders };
 }

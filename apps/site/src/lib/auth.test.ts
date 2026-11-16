@@ -1,16 +1,11 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { getAuth } from "@/lib/auth";
+import { getAuth, SIGN_IN_PATH } from "@/lib/auth";
 import { account, session, user } from "@/lib/auth-schema";
 import { createTestAuth, createTestDatabase, signInAsGitHubAccount } from "@/lib/test-auth";
+import { stubPreviewEnv } from "@/lib/test-env";
 
 const NADAV_GITHUB_ID = 40_166_316;
 const OTHER_GITHUB_ID = 1_234_567;
-const AUTH_ENV_NAMES = [
-  "BETTER_AUTH_SECRET",
-  "BETTER_AUTH_URL",
-  "GITHUB_CLIENT_ID",
-  "GITHUB_CLIENT_SECRET",
-];
 
 describe("GitHub sign-in", () => {
   test("Nadav's GitHub account signs in, lands in the Admin panel and has a session", async () => {
@@ -63,11 +58,10 @@ describe("the app's Better Auth", () => {
   });
 
   test("on a deployment without the auth env, like a preview, sends the request to sign-in", () => {
-    vi.stubEnv("DATABASE_URL", "postgresql://user:password@localhost:5432/spitzweb");
-    for (const name of AUTH_ENV_NAMES) vi.stubEnv(name, undefined);
+    stubPreviewEnv();
 
     expect(() => getAuth()).toThrow(
-      expect.objectContaining({ digest: "NEXT_REDIRECT;replace;/admin/sign-in;307;" }),
+      expect.objectContaining({ digest: `NEXT_REDIRECT;replace;${SIGN_IN_PATH};307;` }),
     );
   });
 });

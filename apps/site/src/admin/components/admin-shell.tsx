@@ -8,7 +8,7 @@ import { checkAdminSession } from "@/admin/server/admin-session";
 import { signOut } from "@/admin/server/sign-in-actions";
 
 async function AdminBar({ children }: { children: ReactNode }) {
-  // The request comes first, so Better Auth is never built (and the server env never read) while
+  // The request comes first, so Better Auth is never built (and the auth env never read) while
   // the page is prerendered. Headers alone still allow a prerender at request time, which Better
   // Auth's random ids break; connection() keeps this render to a real request.
   await connection();

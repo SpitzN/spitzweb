@@ -39,6 +39,9 @@ const authEnvSchema = z.object({
   GITHUB_CLIENT_SECRET: z.string().min(1),
 });
 
+/** The names of Better Auth's env, from its schema. */
+export const AUTH_ENV_NAMES = Object.keys(authEnvSchema.shape);
+
 /**
  * Better Auth's env, parsed, as a result: `ok: false` when the deployment sets none of it, like
  * every preview, so sign-in is unavailable rather than broken (the OAuth apps call back only to
@@ -46,9 +49,7 @@ const authEnvSchema = z.object({
  * is set or a value is malformed. Call it where the value is used.
  */
 export function readAuthEnv() {
-  const isConfigured = Object.values(authEnvSchema.partial().parse(process.env)).some(
-    (value) => value !== undefined,
-  );
+  const isConfigured = AUTH_ENV_NAMES.some((name) => Object.hasOwn(process.env, name));
   return isConfigured
     ? { ok: true as const, value: authEnvSchema.parse(process.env) }
     : { ok: false as const, error: "not-configured" as const };
