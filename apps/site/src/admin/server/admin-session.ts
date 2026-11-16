@@ -12,8 +12,8 @@ export async function endAdminSession(auth: Auth, headers: Headers) {
 
 /**
  * The app's admin session behind this request, as a result: `ok: false` when it can't be checked
- * (the database is down, or this deployment has no auth env, like a preview). Still redirects to
- * sign-in when there is no session, so a failure never lets anything through.
+ * (the database is down). Still redirects to sign-in when there is no session, or when this
+ * deployment has no auth env, like a preview, so a failure never lets anything through.
  */
 export async function checkAdminSession(headers: Headers) {
   try {

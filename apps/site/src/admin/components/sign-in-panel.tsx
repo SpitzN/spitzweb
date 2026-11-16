@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { SubmitButton } from "@spitzweb/design-system/molecules/submit-button";
 import { signInWithGitHub } from "@/admin/server/sign-in-actions";
 import { NOT_ADMIN_REASON } from "@/lib/auth";
+import { readAuthEnv } from "@/lib/env";
 
 // Any reason but NOT_ADMIN_REASON is a sign-in that didn't finish.
 function failureMessageFor(reason: string) {
@@ -20,9 +21,20 @@ async function SignInFailure({ reason }: { reason: Promise<string | undefined> }
 
 /**
  * The Admin panel's way in: one GitHub sign-in, and why the last attempt failed when
- * `failureReason` resolves to a reason. Only that message waits on the request.
+ * `failureReason` resolves to a reason. Only that message waits on the request. A deployment
+ * without the auth env, like every preview, can't sign anyone in, so it says so and offers nothing
+ * to press.
  */
 export function SignInPanel({ failureReason }: { failureReason: Promise<string | undefined> }) {
+  if (!readAuthEnv().ok) {
+    return (
+      <main className="pbs-16 pbe-24 max-inline-md">
+        <h1 className="font-display text-title font-extrabold">Admin panel</h1>
+        <p className="pbs-2 text-ink-muted">Sign-in isn’t available on this deployment.</p>
+      </main>
+    );
+  }
+
   return (
     <main className="pbs-16 pbe-24 max-inline-md">
       <h1 className="font-display text-title font-extrabold">Admin panel</h1>

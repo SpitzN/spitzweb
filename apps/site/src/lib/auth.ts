@@ -2,10 +2,11 @@ import "server-only";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { redirect } from "next/navigation";
 import * as authSchema from "@/lib/auth-schema";
 import type { Database } from "@/lib/db";
 import { getDatabase } from "@/lib/db";
-import { readServerEnv } from "@/lib/env";
+import { readAuthEnv } from "@/lib/env";
 
 /**
  * Nadav's GitHub account, the only one that may sign in (ADR 0005). Matched by numeric id, which
@@ -64,14 +65,17 @@ export function createAuth(db: Database, { secret, baseURL, github }: AuthConfig
 export type Auth = ReturnType<typeof createAuth>;
 
 /**
- * The app's Better Auth, built from the server env and the app's database. Building it is cheap
- * and connects nothing, so each caller builds its own.
+ * The app's Better Auth, built from its env and the app's database. Building it is cheap and
+ * connects nothing, so each caller builds its own. On a deployment without the auth env, like
+ * every preview, it redirects to sign-in instead, which says sign-in isn't available there; call
+ * it only while handling a request.
  */
 export function getAuth() {
-  const env = readServerEnv();
+  const env = readAuthEnv();
+  if (!env.ok) redirect(SIGN_IN_PATH);
   return createAuth(getDatabase(), {
-    secret: env.BETTER_AUTH_SECRET,
-    baseURL: env.BETTER_AUTH_URL,
-    github: { clientId: env.GITHUB_CLIENT_ID, clientSecret: env.GITHUB_CLIENT_SECRET },
+    secret: env.value.BETTER_AUTH_SECRET,
+    baseURL: env.value.BETTER_AUTH_URL,
+    github: { clientId: env.value.GITHUB_CLIENT_ID, clientSecret: env.value.GITHUB_CLIENT_SECRET },
   });
 }
