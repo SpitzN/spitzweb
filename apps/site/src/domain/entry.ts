@@ -81,7 +81,7 @@ export function listedEntries<T extends Entry>(entries: readonly T[]) {
  * other Entry, so none is shown twice. With no Featured Entry, none is shown apart. Expects the
  * order `listedEntries` gives (Featured first).
  */
-export function featuredAndOthers<T extends Pick<Entry, "featured">>(listed: readonly T[]) {
+export function splitFeatured<T extends Pick<Entry, "featured">>(listed: readonly T[]) {
   const [first, ...rest] = listed;
   return first?.featured
     ? { featured: first, others: rest }

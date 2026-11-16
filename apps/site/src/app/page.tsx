@@ -1,4 +1,4 @@
-import { featuredAndOthers, listedEntries } from "@/domain/entry";
+import { splitFeatured, listedEntries } from "@/domain/entry";
 import { FeaturedProjectPanel } from "@/entry-types/projects/components/featured-project-panel";
 import { HomeProjectList } from "@/entry-types/projects/components/home-project-list";
 import { loadProjects } from "@/entry-types/projects/server/projects";
@@ -14,7 +14,7 @@ const STAND_IN_STATEMENT = "Nadav Spitzer builds software you can poke at.";
  * list beneath. Below `lg` they stack.
  */
 export default function HomePage() {
-  const { featured, others } = featuredAndOthers(listedEntries(loadProjects()));
+  const { featured, others } = splitFeatured(listedEntries(loadProjects()));
 
   return (
     <main className="pbs-16 pbe-24">

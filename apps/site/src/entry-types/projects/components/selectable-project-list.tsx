@@ -1,13 +1,13 @@
 "use client";
 
+import { useHotkeys } from "@tanstack/react-hotkeys";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { EntryYear } from "@/components/entry-date";
-import { focusOf, listKeyAction } from "@/entry-types/projects/list-selection";
 
 /** One Project as its row shows it, in plain values a client component can receive. */
-export interface ProjectRowFacts {
+export interface ProjectRow {
   href: string;
   title: string;
   summary: string;
@@ -21,45 +21,44 @@ export interface ProjectRowFacts {
  * The home page's Projects list (DESIGN.md, Project list row), with one row always selected: its
  * ground lifts and its title turns heavy in the accent ink. The pointer selects the row it moves
  * over, keyboard focus selects the row it lands on, and J and K move the selection, taking focus
- * with it. Enter opens the selected row while focus is in the list or nowhere at all. None of the
- * keys do anything while a text field has focus.
+ * with it. Enter opens the selected row. None of the keys do anything while a text field has focus
+ * or a modifier is held; TanStack Hotkeys enforces both.
  */
-export function SelectableProjectList({ rows }: { rows: readonly ProjectRowFacts[] }) {
+export function SelectableProjectList({ rows }: { rows: readonly ProjectRow[] }) {
   const [selected, setSelected] = useState(0);
   const list = useRef<HTMLOListElement>(null);
   const router = useRouter();
 
-  const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
-    if (event.defaultPrevented) return;
-    const action = listKeyAction({
-      key: event.key,
-      code: event.code,
-      isModified: event.ctrlKey || event.altKey || event.metaKey,
-      focus: list.current?.contains(document.activeElement)
-        ? "list"
-        : focusOf(document.activeElement),
-      selected,
-      count: rows.length,
-    });
-    if (action === undefined) return;
+  // Focus moves with the selection, and the row's onFocus selects it.
+  function focusRow(index: number) {
+    const clamped = Math.min(Math.max(index, 0), rows.length - 1);
+    list.current?.querySelectorAll("a").item(clamped).focus();
+  }
 
-    event.preventDefault();
-    if (action.kind === "open") {
-      const row = rows[action.index];
-      if (row) router.push(row.href);
-      return;
-    }
-    setSelected(action.index);
-    list.current?.querySelectorAll("a").item(action.index).focus();
-  });
-
-  // The keys work wherever the visitor is on the page, not only inside the list.
-  useEffect(() => {
-    addEventListener("keydown", onKeyDown);
-    return () => {
-      removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
+  // The keys work wherever the visitor is on the page. While a row link has focus, Hotkeys leaves
+  // Enter to the link, which opens the selected row: the pointer moves focus along with the
+  // selection whenever focus is already in the list.
+  useHotkeys([
+    {
+      hotkey: "J",
+      callback: () => {
+        focusRow(selected + 1);
+      },
+    },
+    {
+      hotkey: "K",
+      callback: () => {
+        focusRow(selected - 1);
+      },
+    },
+    {
+      hotkey: "Enter",
+      callback: () => {
+        const row = rows[selected];
+        if (row) router.push(row.href);
+      },
+    },
+  ]);
 
   return (
     // The list bleeds past the page column by the amount each row pads, so the hairlines span the
@@ -76,8 +75,11 @@ export function SelectableProjectList({ rows }: { rows: readonly ProjectRowFacts
                 its name stays the title. */}
             <Link
               href={row.href}
-              onPointerEnter={() => {
+              onPointerEnter={(event) => {
                 setSelected(index);
+                if (list.current?.contains(document.activeElement)) {
+                  event.currentTarget.focus({ preventScroll: true });
+                }
               }}
               onFocus={() => {
                 setSelected(index);

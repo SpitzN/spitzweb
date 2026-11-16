@@ -29,7 +29,7 @@ async function visit(page: Page, theme: Theme, path = "/") {
   await page.goto(path);
 }
 
-async function groundOf(page: Page) {
+async function getBackgroundColor(page: Page) {
   return page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
 }
 
@@ -60,7 +60,7 @@ interface Box {
   bottom: number;
 }
 
-async function boxesOf(locator: Locator) {
+async function getBoundingBoxes(locator: Locator) {
   return locator.evaluateAll((elements) =>
     elements.map((element) => {
       const { left, right, top, bottom } = element.getBoundingClientRect();
@@ -86,7 +86,7 @@ test("a first visit is dark: the moon is up, and the switch offers the light the
   await page.goto("/");
 
   await expect(themeSwitch(page)).toHaveAccessibleName("Switch to the light theme");
-  expect(await groundOf(page)).toBe(GROUND.dark);
+  expect(await getBackgroundColor(page)).toBe(GROUND.dark);
   expect(await discPlace(page)).toEqual(PICTURE.dark);
 });
 
@@ -98,7 +98,7 @@ test("the switch stands on the header's hairline", async ({ page }) => {
     const { top, bottom } = element.getBoundingClientRect();
     return { bottom, hairlineTop: top + element.clientTop + element.clientHeight };
   });
-  const [button] = await boxesOf(themeSwitch(page));
+  const [button] = await getBoundingBoxes(themeSwitch(page));
 
   expect(header.bottom).toBeGreaterThan(header.hairlineTop);
   expect(button?.bottom).toBe(header.hairlineTop);
@@ -112,14 +112,14 @@ test("a chosen theme stays on every page and on the next visit", async ({ page }
 
   await page.goto("/articles");
   await expect(themeSwitch(page)).toHaveAccessibleName("Switch to the dark theme");
-  expect(await groundOf(page)).toBe(GROUND.light);
+  expect(await getBackgroundColor(page)).toBe(GROUND.light);
   expect(await discPlace(page)).toEqual(PICTURE.light);
 
   await themeSwitch(page).click();
   await expect(page.locator("html")).not.toHaveAttribute("data-theme", "light");
   await page.reload();
   await expect(themeSwitch(page)).toHaveAccessibleName("Switch to the light theme");
-  expect(await groundOf(page)).toBe(GROUND.dark);
+  expect(await getBackgroundColor(page)).toBe(GROUND.dark);
 });
 
 for (const theme of THEMES) {
@@ -154,7 +154,7 @@ test("with none of the site's script loaded, a light theme still has its picture
 
   await visit(page, "light");
 
-  expect(await groundOf(page)).toBe(GROUND.light);
+  expect(await getBackgroundColor(page)).toBe(GROUND.light);
   expect(await discPlace(page)).toEqual(PICTURE.light);
   await expect(themeSwitch(page)).toHaveAccessibleName("Switch to the dark theme");
 });
@@ -175,7 +175,7 @@ test("with storage unavailable, a visit is dark, the switch still works, and not
   });
 
   await page.goto("/");
-  expect(await groundOf(page)).toBe(GROUND.dark);
+  expect(await getBackgroundColor(page)).toBe(GROUND.dark);
 
   await themeSwitch(page).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
@@ -244,8 +244,8 @@ for (const width of [320, 412, 540, 768, 1280]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto("/");
 
-    const [name] = await boxesOf(switchName(page));
-    const links = await boxesOf(page.getByRole("banner").getByRole("link"));
+    const [name] = await getBoundingBoxes(switchName(page));
+    const links = await getBoundingBoxes(page.getByRole("banner").getByRole("link"));
 
     expect(name).toBeDefined();
     expect(links.filter((link) => name && overlaps(link, name))).toEqual([]);
@@ -259,8 +259,8 @@ for (const width of [320, 390, 412, 540]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto("/");
 
-    const [button] = await boxesOf(themeSwitch(page));
-    const links = await boxesOf(page.getByRole("banner").getByRole("link"));
+    const [button] = await getBoundingBoxes(themeSwitch(page));
+    const links = await getBoundingBoxes(page.getByRole("banner").getByRole("link"));
 
     expect(button?.top).toBeGreaterThanOrEqual(Math.max(...links.map((link) => link.bottom)));
   });
@@ -465,7 +465,7 @@ for (const theme of THEMES) {
     // The page's edge is read for the change's colours, so the page has no accent fill there: on a
     // phone the home page's Featured panel runs to the screen's edge.
     await visit(page, theme, "/articles");
-    const [header] = await boxesOf(page.getByRole("banner"));
+    const [header] = await getBoundingBoxes(page.getByRole("banner"));
     const hairline = header?.bottom ?? 0;
     await themeSwitch(page).click();
 

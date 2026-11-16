@@ -1,3 +1,4 @@
+import { basename } from "node:path/posix";
 import type { MDXContent } from "mdx/types";
 import { z } from "zod";
 import type { MdxFile } from "@/lib/mdx-files";
@@ -5,16 +6,11 @@ import type { MdxFile } from "@/lib/mdx-files";
 /** The component an MDX module exports by default: its body. */
 export const mdxContentSchema = z.custom<MDXContent>((value) => typeof value === "function");
 
-function fileNameOf(path: string) {
-  return path.slice(path.lastIndexOf("/") + 1, -".mdx".length);
+function isRecord(value: unknown) {
+  return typeof value === "object" && value !== null;
 }
 
-// A module namespace is an object; anything else parses as having no exports.
-function asObject(value: unknown) {
-  return typeof value === "object" && value !== null ? { ...value } : {};
-}
-
-function describeIssues(path: string, error: z.ZodError) {
+function formatIssues(path: string, error: z.ZodError) {
   const lines = error.issues.map(({ path: field, message }) => {
     // Issues under the module's other exports are build bugs, not content errors; show the full path.
     const name = field[0] === "frontmatter" ? field.slice(1).join(".") : field.join(".");
@@ -29,7 +25,9 @@ function describeIssues(path: string, error: z.ZodError) {
  * throws with the file and every failing field, and the build that loads it fails.
  */
 export function parseMdxFile<S extends z.ZodType>({ path, module }: MdxFile, schema: S) {
-  const parsed = schema.safeParse({ slug: fileNameOf(path), ...asObject(module) });
-  if (!parsed.success) throw new Error(describeIssues(path, parsed.error));
+  // A module namespace is an object; anything else parses as having no exports.
+  const exports = isRecord(module) ? module : {};
+  const parsed = schema.safeParse({ slug: basename(path, ".mdx"), ...exports });
+  if (!parsed.success) throw new Error(formatIssues(path, parsed.error));
   return parsed.data;
 }

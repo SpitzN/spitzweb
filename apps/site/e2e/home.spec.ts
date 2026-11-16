@@ -23,7 +23,7 @@ function rowLink(page: Page, name: string) {
 }
 
 // The selected row's title is heavy; every other title sits at 400 (DESIGN.md, Weight carries state).
-async function expectSelected(page: Page, name: string) {
+async function expectRowSelected(page: Page, name: string) {
   await expect(rowTitle(page, name)).toHaveCSS("font-weight", "800");
 }
 
@@ -74,7 +74,7 @@ test("the Projects list shows the other Published Projects, newest first, with t
   await page.goto("/");
 
   await expect(projectsList(page).getByRole("heading", { level: 3 })).toHaveText([EXTERNAL, OLDER]);
-  await expectSelected(page, EXTERNAL);
+  await expectRowSelected(page, EXTERNAL);
   await expect(rowTitle(page, OLDER)).toHaveCSS("font-weight", "400");
 });
 
@@ -84,12 +84,12 @@ test("J and K move the selection and focus, and Enter opens the selected Project
   await page.goto("/");
 
   await moveToLastRow(page);
-  await expectSelected(page, OLDER);
+  await expectRowSelected(page, OLDER);
   await expect(rowTitle(page, EXTERNAL)).toHaveCSS("font-weight", "400");
 
   await page.keyboard.press("k");
   await expect(rowLink(page, EXTERNAL)).toBeFocused();
-  await expectSelected(page, EXTERNAL);
+  await expectRowSelected(page, EXTERNAL);
 
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL("/projects/published-external");
@@ -101,7 +101,7 @@ test("keyboard focus selects the row it lands on", async ({ page }) => {
   await expect(async () => {
     await rowLink(page, OLDER).blur();
     await rowLink(page, OLDER).focus();
-    await expectSelected(page, OLDER);
+    await expectRowSelected(page, OLDER);
   }).toPass();
 });
 
@@ -120,18 +120,38 @@ test("the pointer selects the row it moves over, and Enter then opens it", async
   await expect(page).toHaveURL("/projects/published-older");
 });
 
-test("Enter opens the row the pointer selected, though J left focus on another", async ({
+test("once focus is in the list, the pointer moves it with the selection, so Enter opens that row", async ({
   page,
 }) => {
   await page.goto("/");
   await moveToLastRow(page);
 
   await rowLink(page, EXTERNAL).hover();
-  await expectSelected(page, EXTERNAL);
-  await expect(rowLink(page, OLDER)).toBeFocused();
+  await expectRowSelected(page, EXTERNAL);
+  await expect(rowLink(page, EXTERNAL)).toBeFocused();
 
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL("/projects/published-external");
+});
+
+test("J moves the selection with Caps Lock on, and on a Hebrew layout", async ({ page }) => {
+  await page.goto("/");
+  await moveToLastRow(page);
+  await page.keyboard.press("k");
+  await expectRowSelected(page, EXTERNAL);
+
+  // Caps Lock types "J" without Shift; a Hebrew layout types "ח" on the J key.
+  for (const key of ["J", "ח"]) {
+    await page.evaluate((typed) => {
+      document.activeElement?.dispatchEvent(
+        new KeyboardEvent("keydown", { key: typed, code: "KeyJ", bubbles: true }),
+      );
+    }, key);
+    await expect(rowLink(page, OLDER)).toBeFocused();
+    await expectRowSelected(page, OLDER);
+    await page.keyboard.press("k");
+    await expectRowSelected(page, EXTERNAL);
+  }
 });
 
 test("J, K and Enter do nothing while a text field has focus", async ({ page }) => {
@@ -152,7 +172,7 @@ test("J, K and Enter do nothing while a text field has focus", async ({ page }) 
   await expect(field).toHaveValue("kj");
   await expect(field).toBeFocused();
   await expect(page).toHaveURL("/");
-  await expectSelected(page, OLDER);
+  await expectRowSelected(page, OLDER);
 });
 
 test("weight and colour change on the shared ease-out, and at once under reduced motion", async ({

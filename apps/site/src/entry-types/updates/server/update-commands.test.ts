@@ -6,7 +6,7 @@ import { createTestAuth, createTestDatabase, signInAsGitHubAccount } from "@/lib
 // The insecure protocol on its own, so these links are written as plain http on purpose.
 const INSECURE = "http:";
 
-function formDataOf(fields: Record<string, string>) {
+function convertToFormData(fields: Record<string, string>) {
   const formData = new FormData();
   for (const [name, value] of Object.entries(fields)) formData.set(name, value);
   return formData;
@@ -30,7 +30,10 @@ describe("postUpdate", () => {
 
     const result = await postUpdate(
       request,
-      formDataOf({ text: "Rebuilding this site.", link: "https://github.com/SpitzN/spitzweb" }),
+      convertToFormData({
+        text: "Rebuilding this site.",
+        link: "https://github.com/SpitzN/spitzweb",
+      }),
     );
 
     expect(result).toStrictEqual({ ok: true });
@@ -44,7 +47,7 @@ describe("postUpdate", () => {
   test("posts an Update without a link when the link is left empty", async () => {
     const request = await nadavsRequest();
 
-    await postUpdate(request, formDataOf({ text: "Rebuilding this site.", link: "" }));
+    await postUpdate(request, convertToFormData({ text: "Rebuilding this site.", link: "" }));
 
     expect(await latestUpdate(request.db)).toMatchObject({ link: null });
   });
@@ -52,7 +55,7 @@ describe("postUpdate", () => {
   test("an empty Update is turned back with an error on its text, and nothing is posted", async () => {
     const request = await nadavsRequest();
 
-    const result = await postUpdate(request, formDataOf({ text: " \t\n", link: "" }));
+    const result = await postUpdate(request, convertToFormData({ text: " \t\n", link: "" }));
 
     expect(result).toStrictEqual({
       ok: false,
@@ -64,7 +67,7 @@ describe("postUpdate", () => {
   test("an Update longer than 280 characters is turned back", async () => {
     const request = await nadavsRequest();
 
-    const result = await postUpdate(request, formDataOf({ text: "a".repeat(281) }));
+    const result = await postUpdate(request, convertToFormData({ text: "a".repeat(281) }));
 
     expect(result).toStrictEqual({
       ok: false,
@@ -75,7 +78,7 @@ describe("postUpdate", () => {
   test("line breaks and repeated spaces in the text become single spaces", async () => {
     const request = await nadavsRequest();
 
-    await postUpdate(request, formDataOf({ text: "\tRebuilding\n\nthis \tsite.\n" }));
+    await postUpdate(request, convertToFormData({ text: "\tRebuilding\n\nthis \tsite.\n" }));
 
     expect(await latestUpdate(request.db)).toMatchObject({ text: "Rebuilding this site." });
   });
@@ -92,7 +95,10 @@ describe("postUpdate", () => {
   ])("the link %s is turned back with an error on the link", async (link) => {
     const request = await nadavsRequest();
 
-    const result = await postUpdate(request, formDataOf({ text: "Rebuilding this site.", link }));
+    const result = await postUpdate(
+      request,
+      convertToFormData({ text: "Rebuilding this site.", link }),
+    );
 
     expect(result).toStrictEqual({
       ok: false,
@@ -105,14 +111,14 @@ describe("postUpdate", () => {
     const request = await signedOutRequest();
 
     await expect(
-      postUpdate(request, formDataOf({ text: "Rebuilding this site." })),
+      postUpdate(request, convertToFormData({ text: "Rebuilding this site." })),
     ).rejects.toHaveProperty("digest", "NEXT_REDIRECT;replace;/admin/sign-in;307;");
     expect(await listUpdates(request.db)).toStrictEqual([]);
   });
 });
 
 async function postedUpdate(request: Awaited<ReturnType<typeof nadavsRequest>>, text: string) {
-  await postUpdate(request, formDataOf({ text }));
+  await postUpdate(request, convertToFormData({ text }));
   const posted = await latestUpdate(request.db);
   if (!posted) throw new Error("The Update wasn't posted.");
   return posted;
@@ -125,7 +131,7 @@ describe("editUpdate", () => {
 
     const result = await editUpdate(
       request,
-      formDataOf({ id: posted.id, text: "Shipping Updates.", link: "https://spitzweb.dev" }),
+      convertToFormData({ id: posted.id, text: "Shipping Updates.", link: "https://spitzweb.dev" }),
     );
 
     expect(result).toStrictEqual({ ok: true });
@@ -145,7 +151,11 @@ describe("editUpdate", () => {
 
     const result = await editUpdate(
       request,
-      formDataOf({ id: posted.id, text: "Shipping Updates.", link: `${INSECURE}//spitzweb.dev` }),
+      convertToFormData({
+        id: posted.id,
+        text: "Shipping Updates.",
+        link: `${INSECURE}//spitzweb.dev`,
+      }),
     );
 
     expect(result).toStrictEqual({
@@ -161,7 +171,10 @@ describe("editUpdate", () => {
     await expect(
       editUpdate(
         request,
-        formDataOf({ id: "00000000-0000-4000-8000-000000000000", text: "Shipping Updates." }),
+        convertToFormData({
+          id: "00000000-0000-4000-8000-000000000000",
+          text: "Shipping Updates.",
+        }),
       ),
     ).rejects.toHaveProperty("digest", "NEXT_HTTP_ERROR_FALLBACK;404");
   });
@@ -172,7 +185,7 @@ describe("editUpdate", () => {
     const signedOut = { ...request, requestHeaders: new Headers() };
 
     await expect(
-      editUpdate(signedOut, formDataOf({ id: posted.id, text: "Shipping Updates." })),
+      editUpdate(signedOut, convertToFormData({ id: posted.id, text: "Shipping Updates." })),
     ).rejects.toHaveProperty("digest", "NEXT_REDIRECT;replace;/admin/sign-in;307;");
     expect(await latestUpdate(request.db)).toStrictEqual(posted);
   });
@@ -184,7 +197,7 @@ describe("deleteUpdate", () => {
     const earlier = await postedUpdate(request, "Rebuilding this site.");
     const later = await postedUpdate(request, "Shipping Updates.");
 
-    await deleteUpdate(request, formDataOf({ id: later.id }));
+    await deleteUpdate(request, convertToFormData({ id: later.id }));
 
     expect(await listUpdates(request.db)).toStrictEqual([earlier]);
   });
@@ -194,10 +207,9 @@ describe("deleteUpdate", () => {
     const posted = await postedUpdate(request, "Rebuilding this site.");
     const signedOut = { ...request, requestHeaders: new Headers() };
 
-    await expect(deleteUpdate(signedOut, formDataOf({ id: posted.id }))).rejects.toHaveProperty(
-      "digest",
-      "NEXT_REDIRECT;replace;/admin/sign-in;307;",
-    );
+    await expect(
+      deleteUpdate(signedOut, convertToFormData({ id: posted.id })),
+    ).rejects.toHaveProperty("digest", "NEXT_REDIRECT;replace;/admin/sign-in;307;");
     expect(await listUpdates(request.db)).toStrictEqual([posted]);
   });
 });
