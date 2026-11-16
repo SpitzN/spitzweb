@@ -17,8 +17,7 @@
     "format:check": "prettier --check .",
     "knip": "knip",
     "sherif": "sherif",
-    "check": "turbo run typecheck lint test //#format:check //#knip //#sherif",
-    "prepare": "lefthook install"
+    "check": "turbo run typecheck lint test //#format:check //#knip //#sherif"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",

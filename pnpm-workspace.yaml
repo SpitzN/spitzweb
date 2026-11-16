@@ -4,7 +4,7 @@ packages:
 
 # pnpm runs a dependency's install script only when it is listed here.
 allowBuilds:
-  lefthook: false # the prepare script installs the hooks
+  lefthook: true # its postinstall installs the hooks, and skips them when CI is set (Vercel, GitHub Actions)
   esbuild: false
   sharp: false
   unrs-resolver: false
